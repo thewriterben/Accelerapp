@@ -1,0 +1,32 @@
+# Example: Arduino LED Controller
+device_name: "Arduino LED Controller"
+platform: "arduino"
+software_language: "python"
+ui_framework: "react"
+
+hardware:
+  mcu: "ATmega328P"
+  clock_speed: "16MHz"
+  memory: "32KB"
+
+pins:
+  LED_PIN: 13
+  STATUS_LED: 12
+
+timing:
+  BAUD_RATE: 9600
+  UPDATE_INTERVAL: 100
+
+peripherals:
+  - type: "led"
+    pin: 13
+    description: "Main control LED"
+  
+  - type: "led"
+    pin: 12
+    description: "Status indicator"
+
+communication:
+  protocol: "serial"
+  baudrate: 9600
+  data_format: "text"

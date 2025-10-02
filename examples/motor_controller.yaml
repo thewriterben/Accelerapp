@@ -1,0 +1,40 @@
+# Example: Motor Controller
+device_name: "Motor Controller"
+platform: "stm32"
+software_language: "cpp"
+ui_framework: "html"
+
+hardware:
+  mcu: "STM32F103"
+  clock_speed: "72MHz"
+  memory: "64KB"
+
+pins:
+  MOTOR_PWM: 3
+  MOTOR_DIR: 4
+  ENCODER_A: 5
+  ENCODER_B: 6
+  LIMIT_SWITCH: 7
+
+timing:
+  BAUD_RATE: 115200
+  PWM_FREQUENCY: 1000
+  CONTROL_LOOP_RATE: 100
+
+peripherals:
+  - type: "motor"
+    pin: 3
+    description: "DC motor PWM control"
+  
+  - type: "encoder"
+    pin: 5
+    description: "Position encoder"
+  
+  - type: "button"
+    pin: 7
+    description: "Limit switch"
+
+communication:
+  protocol: "serial"
+  baudrate: 115200
+  data_format: "binary"
