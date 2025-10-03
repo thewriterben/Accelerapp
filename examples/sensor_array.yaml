@@ -1,0 +1,48 @@
+# Example: Multi-Sensor Array System
+device_name: "Sensor Array System"
+platform: "esp32"
+software_language: "python"
+ui_framework: "react"
+
+hardware:
+  mcu: "ESP32"
+  clock_speed: "240MHz"
+  memory: "520KB"
+  wifi: true
+
+pins:
+  TEMP_SENSOR: 34
+  HUMIDITY_SENSOR: 35
+  PRESSURE_SENSOR: 36
+  STATUS_LED: 2
+
+timing:
+  BAUD_RATE: 115200
+  SAMPLE_RATE: 1000
+  UPDATE_INTERVAL: 5000
+
+peripherals:
+  - type: "sensor"
+    pin: 34
+    description: "Temperature sensor"
+    sensor_type: "analog"
+  
+  - type: "sensor"
+    pin: 35
+    description: "Humidity sensor"
+    sensor_type: "analog"
+  
+  - type: "sensor"
+    pin: 36
+    description: "Pressure sensor"
+    sensor_type: "analog"
+  
+  - type: "led"
+    pin: 2
+    description: "System status LED"
+
+communication:
+  protocol: "serial"
+  baudrate: 115200
+  data_format: "json"
+  wifi_enabled: true
