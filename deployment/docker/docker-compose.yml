@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Accelerapp main service
+  accelerapp:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+      target: production
+    container_name: accelerapp-main
+    volumes:
+      - accelerapp-models:/app/models
+      - accelerapp-cache:/app/cache
+      - accelerapp-output:/app/output
+    environment:
+      - ACCELERAPP_MODE=production
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+    networks:
+      - accelerapp-network
+    restart: unless-stopped
+
+  # Ollama service for local LLM
+  ollama:
+    image: ollama/ollama:latest
+    container_name: accelerapp-ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - accelerapp-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # Redis for message bus (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: accelerapp-redis
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - accelerapp-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Monitoring service
+  monitoring:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.monitoring
+    container_name: accelerapp-monitoring
+    ports:
+      - "8080:8080"
+    depends_on:
+      - accelerapp
+      - ollama
+    networks:
+      - accelerapp-network
+    restart: unless-stopped
+
+volumes:
+  accelerapp-models:
+    driver: local
+  accelerapp-cache:
+    driver: local
+  accelerapp-output:
+    driver: local
+  ollama-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  accelerapp-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
