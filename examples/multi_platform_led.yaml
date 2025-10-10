@@ -1,0 +1,49 @@
+# Multi-Platform LED Controller
+# Demonstrates platform abstraction - can be deployed to Arduino, ESP32, STM32, or MicroPython
+
+device_name: "Multi-Platform LED Controller"
+platform: "arduino"  # Change to: esp32, stm32, micropython
+software_language: "python"
+ui_framework: "react"
+
+# Hardware specifications
+hardware:
+  mcu: "ATmega328P"  # Will be adjusted based on platform
+  clock_speed: "16MHz"
+  memory: "2KB"
+
+# Pin definitions
+pins:
+  LED_RED: 13
+  LED_GREEN: 12
+  LED_BLUE: 11
+  BUTTON_PIN: 2
+
+# Timing configurations
+timing:
+  BAUD_RATE: 9600
+  BLINK_INTERVAL: 1000
+
+# Peripheral definitions
+peripherals:
+  - type: "led"
+    pin: 13
+    description: "Red LED"
+    
+  - type: "led"
+    pin: 12
+    description: "Green LED"
+    
+  - type: "led"
+    pin: 11
+    description: "Blue LED"
+    
+  - type: "button"
+    pin: 2
+    description: "Mode switch button"
+
+# Communication settings
+communication:
+  protocol: "serial"
+  baudrate: 9600
+  data_format: "json"
