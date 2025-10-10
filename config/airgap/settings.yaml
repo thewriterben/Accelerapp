@@ -1,0 +1,119 @@
+# Accelerapp Air-Gapped Configuration
+# This file contains settings for running Accelerapp in air-gapped environments
+
+# Air-gap mode settings
+airgap:
+  enabled: true
+  offline_mode: true
+  strict_mode: false  # If true, blocks all network access attempts
+  
+# Local LLM configuration
+llm:
+  backend: ollama  # ollama, localai, llamacpp
+  base_url: http://localhost:11434
+  timeout: 300
+  
+  # Default model for code generation
+  default_model: codellama:7b
+  
+  # Fallback models (tried in order if default fails)
+  fallback_models:
+    - codellama:13b
+    - llama2:7b
+    - mistral:7b
+  
+  # Model-specific settings
+  models:
+    codellama:7b:
+      temperature: 0.7
+      max_tokens: 2048
+      top_p: 0.95
+    codellama:13b:
+      temperature: 0.7
+      max_tokens: 4096
+      top_p: 0.95
+
+# Communication settings
+communication:
+  # Message bus configuration
+  message_bus:
+    type: local  # local, redis
+    max_queue_size: 1000
+    history_size: 1000
+  
+  # Agent coordination
+  coordinator:
+    strategy: sequential  # sequential, parallel, pipeline, swarm
+    max_concurrent_tasks: 4
+    task_timeout: 600
+
+# Knowledge management
+knowledge:
+  # Knowledge base settings
+  knowledge_base:
+    vocab_size: 1000
+    auto_rebuild_index: true
+  
+  # Template management
+  templates:
+    auto_versioning: true
+    cache_rendered: true
+  
+  # Pattern analysis
+  patterns:
+    enable_learning: true
+    min_frequency: 3
+
+# Storage paths
+storage:
+  base_dir: ~/.accelerapp
+  models_dir: ${base_dir}/models
+  cache_dir: ${base_dir}/cache
+  output_dir: ${base_dir}/output
+  knowledge_dir: ${base_dir}/knowledge
+  templates_dir: ${base_dir}/templates
+  logs_dir: ${base_dir}/logs
+
+# Security settings
+security:
+  # Enable authentication
+  authentication:
+    enabled: false
+    method: local  # local, none
+  
+  # Audit logging
+  audit:
+    enabled: true
+    log_level: info  # debug, info, warning, error
+  
+  # Access control
+  access_control:
+    enabled: false
+    default_role: developer  # viewer, developer, admin
+
+# Monitoring and health checks
+monitoring:
+  health_check_interval: 60  # seconds
+  metrics_enabled: true
+  log_level: info
+
+# Performance tuning
+performance:
+  # Parallel processing
+  max_workers: 4
+  
+  # Caching
+  enable_cache: true
+  cache_ttl: 3600  # seconds
+  
+  # Resource limits
+  memory_limit_mb: 4096
+  disk_space_warning_gb: 10
+
+# Feature flags
+features:
+  enable_llm: true
+  enable_agent_communication: true
+  enable_knowledge_base: true
+  enable_pattern_learning: true
+  enable_template_optimization: true

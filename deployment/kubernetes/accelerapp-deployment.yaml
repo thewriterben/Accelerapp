@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: accelerapp
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: accelerapp-config
+  namespace: accelerapp
+data:
+  ACCELERAPP_MODE: "production"
+  OLLAMA_HOST: "http://ollama-service:11434"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: accelerapp-models-pvc
+  namespace: accelerapp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: accelerapp-cache-pvc
+  namespace: accelerapp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accelerapp
+  namespace: accelerapp
+  labels:
+    app: accelerapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accelerapp
+  template:
+    metadata:
+      labels:
+        app: accelerapp
+    spec:
+      containers:
+      - name: accelerapp
+        image: accelerapp:latest
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: accelerapp-config
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: cache
+          mountPath: /app/cache
+        - name: output
+          mountPath: /app/output
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import accelerapp; print('healthy')"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import accelerapp; print('ready')"
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: accelerapp-models-pvc
+      - name: cache
+        persistentVolumeClaim:
+          claimName: accelerapp-cache-pvc
+      - name: output
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accelerapp-service
+  namespace: accelerapp
+spec:
+  selector:
+    app: accelerapp
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: accelerapp
+  labels:
+    app: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+          name: http
+        volumeMounts:
+        - name: ollama-data
+          mountPath: /root/.ollama
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: "2000m"
+          limits:
+            memory: "16Gi"
+            cpu: "4000m"
+      volumes:
+      - name: ollama-data
+        persistentVolumeClaim:
+          claimName: ollama-data-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-data-pvc
+  namespace: accelerapp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-service
+  namespace: accelerapp
+spec:
+  selector:
+    app: ollama
+  ports:
+  - protocol: TCP
+    port: 11434
+    targetPort: 11434
+  type: ClusterIP
