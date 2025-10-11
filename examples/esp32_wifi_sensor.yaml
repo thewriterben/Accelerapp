@@ -1,0 +1,53 @@
+# ESP32 WiFi-enabled Sensor Configuration
+# Demonstrates Phase 1-2 capabilities
+
+device_name: "ESP32 WiFi Sensor"
+platform: "esp32"
+software_language: "python"
+ui_framework: "react"
+
+# Hardware specifications
+hardware:
+  mcu: "ESP32-WROOM-32"
+  clock_speed: "240MHz"
+  memory: "520KB"
+  flash: "4MB"
+
+# Pin definitions
+pins:
+  LED_PIN: 2
+  SENSOR_PIN: 34
+  BUTTON_PIN: 0
+
+# Timing configurations
+timing:
+  BAUD_RATE: 115200
+  SAMPLE_RATE: 1000
+
+# WiFi configuration
+wifi:
+  ssid: "MyNetworkSSID"
+  password: "MyNetworkPassword"
+
+# Peripheral definitions
+peripherals:
+  - type: "led"
+    pin: 2
+    description: "Built-in status LED"
+  
+  - type: "sensor"
+    pin: 34
+    description: "Temperature sensor"
+    
+  - type: "button"
+    pin: 0
+    description: "Boot button"
+    
+  - type: "wifi_module"
+    description: "WiFi connectivity"
+
+# Communication settings
+communication:
+  protocol: "wifi"
+  data_format: "json"
+  port: 8080
