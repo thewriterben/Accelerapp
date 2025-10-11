@@ -133,7 +133,8 @@ Each agent specializes in a specific domain (firmware, software, or UI) and coll
 - ✅ Arduino (ATmega328P, ATmega2560)
 - ✅ STM32 (F1, F4 series)
 - ✅ ESP32 (WiFi/Bluetooth enabled)
-- 🔜 Raspberry Pi Pico
+- ✅ Raspberry Pi (3, 4, 5, Zero)
+- ✅ Raspberry Pi Pico (RP2040)
 - 🔜 Nordic nRF52
 
 ### Software Languages

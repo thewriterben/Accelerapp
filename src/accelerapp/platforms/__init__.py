@@ -8,6 +8,8 @@ from .arduino import ArduinoPlatform
 from .esp32 import ESP32Platform
 from .stm32 import STM32Platform
 from .micropython import MicroPythonPlatform
+from .raspberry_pi_pico import RaspberryPiPicoPlatform
+from .raspberry_pi import RaspberryPiPlatform
 
 __all__ = [
     'BasePlatform',
@@ -15,6 +17,8 @@ __all__ = [
     'ESP32Platform',
     'STM32Platform',
     'MicroPythonPlatform',
+    'RaspberryPiPicoPlatform',
+    'RaspberryPiPlatform',
     'get_platform',
 ]
 
@@ -24,7 +28,7 @@ def get_platform(platform_name: str) -> BasePlatform:
     Factory function to get platform instance by name.
     
     Args:
-        platform_name: Name of the platform (arduino, esp32, stm32, micropython)
+        platform_name: Name of the platform (arduino, esp32, stm32, micropython, raspberry_pi_pico, raspberry_pi)
         
     Returns:
         Platform instance
@@ -37,6 +41,8 @@ def get_platform(platform_name: str) -> BasePlatform:
         'esp32': ESP32Platform,
         'stm32': STM32Platform,
         'micropython': MicroPythonPlatform,
+        'raspberry_pi_pico': RaspberryPiPicoPlatform,
+        'raspberry_pi': RaspberryPiPlatform,
     }
     
     platform_class = platforms.get(platform_name.lower())
