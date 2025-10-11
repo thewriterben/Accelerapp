@@ -1,0 +1,30 @@
+// Auto-generated configuration header
+// Device: {{ device_name }}
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// Device information
+#define DEVICE_NAME "{{ device_name }}"
+#define PLATFORM "{{ platform | upper }}"
+
+{% if pins %}
+// Pin definitions
+{% for name, value in pins.items() %}
+#define {{ name | upper_snake_case }} {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if timing %}
+// Timing configurations
+{% for name, value in timing.items() %}
+#define {{ name | upper_snake_case }} {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if peripherals %}
+// Peripheral count
+#define NUM_PERIPHERALS {{ peripherals | length }}
+{% endif %}
+
+#endif // CONFIG_H
