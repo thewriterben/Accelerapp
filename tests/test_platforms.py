@@ -222,3 +222,172 @@ def test_platform_validation():
     }
     errors = platform.validate_config(invalid_config)
     assert len(errors) > 0
+
+
+def test_get_platform_raspberry_pi_pico():
+    """Test getting Raspberry Pi Pico platform."""
+    from accelerapp.platforms import get_platform
+    
+    platform = get_platform('raspberry_pi_pico')
+    assert platform is not None
+    assert platform.name == 'raspberry_pi_pico'
+
+
+def test_get_platform_raspberry_pi():
+    """Test getting Raspberry Pi platform."""
+    from accelerapp.platforms import get_platform
+    
+    platform = get_platform('raspberry_pi')
+    assert platform is not None
+    assert platform.name == 'raspberry_pi'
+
+
+def test_raspberry_pi_pico_platform_info():
+    """Test Raspberry Pi Pico platform information."""
+    from accelerapp.platforms import RaspberryPiPicoPlatform
+    
+    platform = RaspberryPiPicoPlatform()
+    info = platform.get_platform_info()
+    
+    assert info['name'] == 'raspberry_pi_pico'
+    assert 'gpio' in info['capabilities']
+    assert 'pio' in info['capabilities']
+    assert 'led' in info['peripherals']
+    assert info['mcu'] == 'RP2040'
+
+
+def test_raspberry_pi_pico_micropython_generation():
+    """Test Raspberry Pi Pico MicroPython code generation."""
+    from accelerapp.platforms import RaspberryPiPicoPlatform
+    
+    platform = RaspberryPiPicoPlatform()
+    
+    spec = {
+        'device_name': 'TestDevice',
+        'language': 'micropython',
+        'peripherals': [
+            {'type': 'led', 'pin': 25, 'name': 'led'},
+        ],
+    }
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir)
+        result = platform.generate_code(spec, output_dir)
+        
+        assert result['status'] == 'success'
+        assert result['platform'] == 'raspberry_pi_pico'
+        assert result['language'] == 'micropython'
+        assert len(result['files_generated']) > 0
+
+
+def test_raspberry_pi_pico_c_generation():
+    """Test Raspberry Pi Pico C code generation."""
+    from accelerapp.platforms import RaspberryPiPicoPlatform
+    
+    platform = RaspberryPiPicoPlatform()
+    
+    spec = {
+        'device_name': 'TestDevice',
+        'language': 'c',
+        'peripherals': [
+            {'type': 'led', 'pin': 25},
+        ],
+    }
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir)
+        result = platform.generate_code(spec, output_dir)
+        
+        assert result['status'] == 'success'
+        assert result['platform'] == 'raspberry_pi_pico'
+        assert result['language'] == 'c'
+        assert any('CMakeLists.txt' in f for f in result['files_generated'])
+
+
+def test_raspberry_pi_platform_info():
+    """Test Raspberry Pi platform information."""
+    from accelerapp.platforms import RaspberryPiPlatform
+    
+    platform = RaspberryPiPlatform()
+    info = platform.get_platform_info()
+    
+    assert info['name'] == 'raspberry_pi'
+    assert 'gpio' in info['capabilities']
+    assert 'wifi' in info['capabilities']
+    assert 'camera' in info['capabilities']
+    assert 'led' in info['peripherals']
+
+
+def test_raspberry_pi_python_generation():
+    """Test Raspberry Pi Python code generation."""
+    from accelerapp.platforms import RaspberryPiPlatform
+    
+    platform = RaspberryPiPlatform()
+    
+    spec = {
+        'device_name': 'TestDevice',
+        'language': 'python',
+        'peripherals': [
+            {'type': 'led', 'pin': 17, 'name': 'led'},
+        ],
+    }
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir)
+        result = platform.generate_code(spec, output_dir)
+        
+        assert result['status'] == 'success'
+        assert result['platform'] == 'raspberry_pi'
+        assert result['language'] == 'python'
+        assert any('requirements.txt' in f for f in result['files_generated'])
+
+
+def test_raspberry_pi_cpp_generation():
+    """Test Raspberry Pi C++ code generation."""
+    from accelerapp.platforms import RaspberryPiPlatform
+    
+    platform = RaspberryPiPlatform()
+    
+    spec = {
+        'device_name': 'TestDevice',
+        'language': 'cpp',
+        'peripherals': [
+            {'type': 'led', 'pin': 17, 'name': 'led'},
+        ],
+    }
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir)
+        result = platform.generate_code(spec, output_dir)
+        
+        assert result['status'] == 'success'
+        assert result['platform'] == 'raspberry_pi'
+        assert result['language'] == 'cpp'
+        assert any('Makefile' in f for f in result['files_generated'])
+
+
+def test_raspberry_pi_pico_validation():
+    """Test Raspberry Pi Pico configuration validation."""
+    from accelerapp.platforms import RaspberryPiPicoPlatform
+    
+    platform = RaspberryPiPicoPlatform()
+    
+    # Valid config
+    valid_config = {
+        'device_name': 'Test',
+        'peripherals': [
+            {'type': 'led', 'pin': 25},
+        ],
+    }
+    errors = platform.validate_config(valid_config)
+    assert len(errors) == 0
+    
+    # Invalid config - pin out of range
+    invalid_config = {
+        'device_name': 'Test',
+        'peripherals': [
+            {'type': 'led', 'pin': 50},
+        ],
+    }
+    errors = platform.validate_config(invalid_config)
+    assert len(errors) > 0
