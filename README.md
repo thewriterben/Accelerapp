@@ -159,11 +159,11 @@ Each agent specializes in a specific domain (firmware, software, or UI) and coll
 - [ ] Advanced hardware specifications (I2C, SPI, CAN)
 - [ ] Code optimization agents
 
-### Version 0.3.0
-- [ ] Cloud-based generation service
-- [ ] Template marketplace
-- [ ] Visual specification builder
-- [ ] Hardware-in-the-loop testing
+### Version 0.3.0 ✅ (Foundation Complete)
+- [x] Cloud-based generation service (foundation)
+- [x] Template marketplace (foundation)
+- [x] Visual specification builder (foundation)
+- [x] Hardware-in-the-loop testing (foundation)
 
 ### Version 1.0.0
 - [ ] Production-ready code generation

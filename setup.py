@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="accelerapp",
-    version="0.1.0",
+    version="0.3.0",
     author="The Writer Ben",
     description="Next Generation Hardware Control Firmware, Software, and User Interface Generation",
     long_description=long_description,

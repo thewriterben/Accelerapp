@@ -5,6 +5,56 @@ All notable changes to the Accelerapp project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-10-13
+
+### Added - Version 0.3.0 Foundation
+
+#### Cloud Generation Service
+- **CloudGenerationService**: Core service for distributed code generation
+- **CloudAPIHandler**: REST API endpoint infrastructure with routing
+- **AuthenticationManager**: Token-based authentication and authorization system
+- **JobQueue**: Priority-based job queue with worker thread support
+- Job submission, status tracking, and cancellation capabilities
+- Service health monitoring and metrics
+
+#### Template Marketplace
+- **TemplateRegistry**: Template registration and storage management
+- **TemplateMetadata**: Comprehensive template metadata schema
+- **TemplatePackage**: Package management with file handling
+- **TemplateSearch**: Advanced search and filtering capabilities
+- Support for template categories, tags, ratings, and downloads
+- Template versioning and dependency management
+- Import/export functionality for templates
+
+#### Visual Specification Builder
+- **VisualSpecification**: Visual hardware specification system
+- **ComponentLibrary**: Pre-built component definitions for common hardware
+- **Component & Connection**: Data structures for visual design
+- **SpecificationExporter**: Export to JSON, YAML, and Accelerapp config formats
+- Drag-and-drop ready specification structure
+- Component positioning and connection tracking
+- Validation system for specifications
+
+#### Hardware-in-the-Loop (HIL) Testing
+- **HILTestFramework**: Main testing framework with test registration
+- **TestCase**: Base class for HIL test cases with assertions
+- **TestResult**: Comprehensive test result tracking
+- **HardwareInterface**: Abstract hardware communication interface
+- **DeviceAdapter**: Device-specific hardware adapters
+- **SimulatedHardware**: Software simulation for testing without hardware
+- **TestRunner**: Test execution and HTML/JSON report generation
+- Support for digital/analog I/O testing
+
+### Technical Implementation
+- Modular architecture for easy extension
+- Full backward compatibility with 0.1.0 and 0.2.0 features
+- Type hints throughout all modules
+- Comprehensive docstrings for all classes and methods
+- Foundation ready for full implementation with deployment infrastructure
+
+### Notes
+This release provides the foundational architecture and interfaces for v0.3.0 features. Full cloud deployment, visual UI implementation, marketplace platform, and physical HIL testing infrastructure require additional deployment environments and frontend development.
+
 ## [0.1.0] - 2024-10-02
 
 ### Added - Initial Release
