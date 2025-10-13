@@ -5,6 +5,102 @@ All notable changes to the Accelerapp project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-10-13
+
+### Added - Major Feature Release
+
+#### LLM Integration for Intelligent Code Generation
+- Integrated local LLM support via Ollama provider (already in 0.1.x)
+- Multi-backend LLM support (Ollama, LocalAI, llama.cpp)
+- Context-aware code generation with specialized prompts
+- Support for multiple programming languages and frameworks
+- Zero external API dependencies for air-gapped operation
+
+#### Real-time Agent Collaboration
+- **WebSocket Server**: Real-time communication system for agent collaboration
+- Event-based architecture for code synchronization
+- Agent status tracking and broadcasting
+- Shared state management across connected agents
+- Support for multiple concurrent agent connections
+
+#### Advanced Hardware Protocol Support
+- **I2C Protocol**: Full Inter-Integrated Circuit protocol support
+  - Configurable address, speed, and pin assignments
+  - Code generation for Arduino, ESP32, and STM32 platforms
+  - Automatic read/write function generation
+- **SPI Protocol**: Serial Peripheral Interface implementation
+  - Mode configuration (0-3)
+  - Configurable speed and bit order
+  - Multi-platform support with platform-specific optimizations
+- **CAN Bus**: Controller Area Network support
+  - Standard baudrate configurations
+  - Message send/receive functionality
+  - ESP32 and STM32 implementations
+- **Device Drivers**: Automatic driver generation for common sensors
+  - BME280 (temperature/humidity/pressure)
+  - MPU6050 (accelerometer/gyroscope)
+  - INA219 (current/voltage monitoring)
+
+#### Code Optimization Agents
+- **PerformanceOptimizationAgent**: Identifies bottlenecks and suggests improvements
+  - Loop optimization detection
+  - Algorithm complexity analysis
+  - Blocking operation identification
+- **MemoryOptimizationAgent**: Memory usage and leak detection
+  - malloc/free tracking
+  - new/delete tracking
+  - Platform-specific optimizations (Arduino F() macro suggestions)
+  - Memory usage estimation
+- **CodeQualityAgent**: Best practices enforcement
+  - Function length analysis
+  - Comment density checking
+  - Magic number detection
+  - Error handling verification
+  - Quality score calculation (0-100 with letter grade)
+- **SecurityAnalysisAgent**: Vulnerability detection
+  - Buffer overflow detection (strcpy, gets, etc.)
+  - SQL injection risk identification
+  - Hardcoded credential detection
+  - Input validation checking
+  - Security score with risk level assessment
+- **RefactoringAgent**: Code smell detection and refactoring suggestions
+  - Duplicate code detection
+  - Long parameter list identification
+  - God object/class detection
+  - Nested conditional analysis
+
+#### API and Rate Limiting
+- **REST API Endpoints**: HTTP API for code generation
+  - `/api/generate/firmware` - Firmware generation
+  - `/api/generate/software` - Software SDK generation
+  - `/api/generate/ui` - UI code generation
+  - `/api/analyze/performance` - Performance analysis
+  - `/api/analyze/security` - Security analysis
+  - `/api/optimize/memory` - Memory optimization
+- **RateLimiter**: Token bucket rate limiting
+  - Per-client rate limiting
+  - Configurable time windows and burst sizes
+  - Token-based consumption
+  - Automatic cleanup of old client data
+- **APIKeyManager**: Secure API key management
+  - Secure key generation using secrets module
+  - Key validation and revocation
+  - Usage tracking and statistics
+  - Permission-based access control
+
+### Changed
+- Updated version to 0.2.0 in setup.py and __init__.py
+- Enhanced hardware abstraction layer with protocol support
+- Expanded agent capabilities with optimization agents
+- Communication module now includes optional WebSocket support
+
+### Technical Details
+- All new features maintain backward compatibility
+- Optional dependencies (websockets) gracefully handled
+- Comprehensive test coverage (200 tests passing)
+- Type hints and documentation for all new APIs
+- Thread-safe implementations for rate limiting and API key management
+
 ## [0.1.0] - 2024-10-02
 
 ### Added - Initial Release
