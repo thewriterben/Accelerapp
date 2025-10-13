@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="accelerapp",
-    version="0.2.0",
+    version="1.0.0",
     author="The Writer Ben",
     description="Next Generation Hardware Control Firmware, Software, and User Interface Generation",
     long_description=long_description,
@@ -17,7 +17,7 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Code Generators",
         "Topic :: System :: Hardware",
