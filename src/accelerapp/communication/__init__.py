@@ -8,14 +8,34 @@ from .agent_coordinator import AgentCoordinator, CoordinationStrategy
 from .shared_context import SharedContext, ContextScope
 from .collaboration_protocols import CollaborationProtocol, ProtocolType
 
-__all__ = [
-    "MessageBus",
-    "Message",
-    "MessagePriority",
-    "AgentCoordinator",
-    "CoordinationStrategy",
-    "SharedContext",
-    "ContextScope",
-    "CollaborationProtocol",
-    "ProtocolType"
-]
+# WebSocket support is optional
+try:
+    from .websocket_server import (
+        WebSocketCollaborationServer, 
+        EventType as WebSocketEventType
+    )
+    __all__ = [
+        "MessageBus",
+        "Message",
+        "MessagePriority",
+        "AgentCoordinator",
+        "CoordinationStrategy",
+        "SharedContext",
+        "ContextScope",
+        "CollaborationProtocol",
+        "ProtocolType",
+        "WebSocketCollaborationServer",
+        "WebSocketEventType"
+    ]
+except ImportError:
+    __all__ = [
+        "MessageBus",
+        "Message",
+        "MessagePriority",
+        "AgentCoordinator",
+        "CoordinationStrategy",
+        "SharedContext",
+        "ContextScope",
+        "CollaborationProtocol",
+        "ProtocolType"
+    ]
