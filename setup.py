@@ -16,7 +16,7 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Code Generators",
         "Topic :: System :: Hardware",

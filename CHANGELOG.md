@@ -153,13 +153,8 @@ See [README.md](README.md#roadmap) for detailed roadmap.
 - Advanced debugging support
 - Performance profiling
 
-### Planned for 1.0.0
-- Production-ready certification
-- Enterprise features
-- Advanced security features
-- Comprehensive test coverage
-- Full platform support
-
 ---
 
+[1.0.0]: https://github.com/thewriterben/Accelerapp/releases/tag/v1.0.0
+[0.2.0]: https://github.com/thewriterben/Accelerapp/releases/tag/v0.2.0
 [0.1.0]: https://github.com/thewriterben/Accelerapp/releases/tag/v0.1.0

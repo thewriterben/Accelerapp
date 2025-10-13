@@ -127,7 +127,7 @@ class CodeGenerationAPI:
                 
                 if path == '/health':
                     # Health check endpoint
-                    self._send_json({'status': 'healthy', 'version': '0.2.0'})
+                    self._send_json({'status': 'healthy', 'version': '1.0.0'})
                 
                 elif path == '/api/agents':
                     # List available agents
