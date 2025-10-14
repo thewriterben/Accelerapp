@@ -1,5 +1,7 @@
 # Accelerapp Demo Guide
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 This guide demonstrates the core capabilities of Accelerapp through practical examples.
 
 ## Setup

@@ -1,5 +1,7 @@
 # Contributing to Accelerapp
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 Thank you for your interest in contributing to Accelerapp! This document provides guidelines for contributing to the project.
 
 ## Ways to Contribute
@@ -32,25 +34,84 @@ Thank you for your interest in contributing to Accelerapp! This document provide
 
 ## Code Standards
 
-- Follow PEP 8 style guidelines for Python code
-- Add docstrings to all classes and functions
-- Include type hints where appropriate
-- Write unit tests for new functionality
-- Keep changes focused and atomic
+### Python Code Quality
+- Follow **PEP 8** style guidelines (enforced by flake8)
+- Use **Black** for code formatting (line length: 100)
+- Sort imports with **isort** (profile: black)
+- Add comprehensive **docstrings** to all classes and functions
+- Include **type hints** throughout (checked by mypy)
+- Write **unit tests** for new functionality (pytest)
+- Maintain or improve **code coverage** (target: 80%+)
+- Keep changes **focused and atomic**
+
+### Security Standards
+- Run **Bandit** security scanner before committing
+- Never commit secrets, API keys, or credentials
+- Follow secure coding practices
+- Review code for CWE vulnerabilities
+- Validate all user inputs
+
+### Documentation Standards
+- Update README.md for user-facing changes
+- Update relevant documentation files
+- Add docstrings with examples for complex functions
+- Keep CHANGELOG.md up to date
+- Document configuration options
 
 ## Testing
 
-Run the test suite:
+### Running Tests
+
+Run the full test suite:
 
 ```bash
+# Run all tests
 pytest tests/
+
+# Run with coverage
+pytest --cov=accelerapp --cov-report=html tests/
+
+# Run specific test file
+pytest tests/test_core.py -v
+
+# Run tests in parallel
+pytest tests/ -n auto
+
+# Run with specific markers
+pytest -m unit tests/
+pytest -m integration tests/
 ```
 
-Run with coverage:
+### Quality Checks
+
+Run all quality checks before committing:
 
 ```bash
-pytest --cov=accelerapp tests/
+# Format code
+black --line-length=100 src/
+
+# Sort imports
+isort --profile black --line-length=100 src/
+
+# Lint code
+flake8 src/ --max-line-length=100
+
+# Type check
+mypy src/ --ignore-missing-imports
+
+# Security scan
+bandit -r src/ -ll
+
+# Or use pre-commit to run all checks
+pre-commit run --all-files
 ```
+
+### Test Requirements
+- All new features must include tests
+- Tests must pass on Python 3.8-3.12
+- Maintain or improve code coverage (current: 71%, target: 80%+)
+- Tests should be fast (< 5 seconds per test)
+- Use fixtures for common setup code
 
 ## Pull Request Process
 

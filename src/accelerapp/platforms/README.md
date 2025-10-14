@@ -1,5 +1,7 @@
 # Platform Abstraction Layer
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 ## Overview
 
 The platform abstraction layer provides unified support for multiple hardware platforms, enabling seamless code generation across different microcontroller architectures.

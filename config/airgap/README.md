@@ -1,10 +1,12 @@
 # Air-Gapped Deployment Guide
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0 | **Status**: Production Ready
+
 This directory contains configuration files for running Accelerapp in air-gapped (offline) environments.
 
 ## Overview
 
-Accelerapp can operate entirely offline using local LLM models and autonomous agent collaboration. This enables secure, air-gapped code generation for sensitive environments.
+Accelerapp can operate entirely offline using local LLM models and autonomous agent collaboration. This enables secure, air-gapped code generation for sensitive environments without any external network dependencies.
 
 ## Features
 
@@ -380,7 +382,12 @@ For issues and questions:
 - Documentation: See main README.md
 - GitHub Issues: https://github.com/thewriterben/Accelerapp/issues
 - Deployment Guide: See deployment/README.md
+- Security: See SECURITY.md
 
 ## License
 
 MIT License - See LICENSE file in project root
+
+---
+
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0 | **Deployment Type**: Air-Gapped/Offline

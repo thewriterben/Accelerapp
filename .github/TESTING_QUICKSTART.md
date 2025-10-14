@@ -1,5 +1,7 @@
 # Testing Quick Start Guide
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 Quick reference for running tests and quality checks in Accelerapp.
 
 ## Prerequisites

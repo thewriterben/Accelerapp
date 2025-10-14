@@ -1,5 +1,7 @@
 # Accelerapp Architecture
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 ## Overview
 
 Accelerapp uses a modular, agent-based architecture to generate hardware control systems. The platform is built around the concept of "agentic coding swarms" where specialized agents collaborate to produce comprehensive solutions.

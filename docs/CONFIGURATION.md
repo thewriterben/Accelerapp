@@ -1,5 +1,7 @@
 # Configuration Reference
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 This document describes all configuration options available in Accelerapp hardware specification files.
 
 ## Basic Structure
