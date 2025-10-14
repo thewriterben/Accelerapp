@@ -1,0 +1,35 @@
+{{- if .Values.accelerapp.persistence.models.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "accelerapp.fullname" . }}-models
+  labels:
+    {{- include "accelerapp.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.accelerapp.persistence.models.storageClass }}
+  storageClassName: {{ .Values.accelerapp.persistence.models.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.accelerapp.persistence.models.size }}
+---
+{{- end }}
+{{- if .Values.accelerapp.persistence.cache.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "accelerapp.fullname" . }}-cache
+  labels:
+    {{- include "accelerapp.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.accelerapp.persistence.cache.storageClass }}
+  storageClassName: {{ .Values.accelerapp.persistence.cache.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.accelerapp.persistence.cache.size }}
+{{- end }}

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "accelerapp.fullname" . }}
+  labels:
+    {{- include "accelerapp.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.accelerapp.autoscaling.enabled }}
+  replicas: {{ .Values.accelerapp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "accelerapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "accelerapp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.security.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: accelerapp
+        image: "{{ .Values.accelerapp.image.repository }}:{{ .Values.accelerapp.image.tag }}"
+        imagePullPolicy: {{ .Values.accelerapp.image.pullPolicy }}
+        {{- with .Values.security.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.accelerapp.service.targetPort }}
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.accelerapp.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- if .Values.accelerapp.livenessProbe.enabled }}
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import accelerapp; print('healthy')"
+          initialDelaySeconds: {{ .Values.accelerapp.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.accelerapp.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.accelerapp.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.accelerapp.readinessProbe.enabled }}
+        readinessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import accelerapp; print('ready')"
+          initialDelaySeconds: {{ .Values.accelerapp.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.accelerapp.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.accelerapp.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.accelerapp.resources | nindent 10 }}
+        volumeMounts:
+        {{- if .Values.accelerapp.persistence.models.enabled }}
+        - name: models
+          mountPath: /app/models
+        {{- end }}
+        {{- if .Values.accelerapp.persistence.cache.enabled }}
+        - name: cache
+          mountPath: /app/cache
+        {{- end }}
+        - name: output
+          mountPath: /app/output
+      volumes:
+      {{- if .Values.accelerapp.persistence.models.enabled }}
+      - name: models
+        persistentVolumeClaim:
+          claimName: {{ include "accelerapp.fullname" . }}-models
+      {{- end }}
+      {{- if .Values.accelerapp.persistence.cache.enabled }}
+      - name: cache
+        persistentVolumeClaim:
+          claimName: {{ include "accelerapp.fullname" . }}-cache
+      {{- end }}
+      - name: output
+        emptyDir: {}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "accelerapp.fullname" . }}
+  labels:
+    {{- include "accelerapp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.accelerapp.service.type }}
+  ports:
+    - port: {{ .Values.accelerapp.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "accelerapp.selectorLabels" . | nindent 4 }}
