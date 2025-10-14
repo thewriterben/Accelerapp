@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ElastiCache Redis cluster for accelerapp-cache-cluster
+Resources:
+  CacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Subnet group for accelerapp-cache-cluster
+      SubnetIds:
+        Ref: PrivateSubnetIds
+      CacheSubnetGroupName: accelerapp-cache-cluster-subnet-group
+  CacheParameterGroup:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      CacheParameterGroupFamily: redis7
+      Description: Parameter group for accelerapp-cache-cluster
+      Properties:
+        maxmemory-policy: allkeys-lru
+        timeout: '300'
+  CacheReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupId: accelerapp-cache-cluster
+      ReplicationGroupDescription: Redis cluster for Accelerapp
+      Engine: redis
+      EngineVersion: '7.0'
+      CacheNodeType: cache.r6g.large
+      NumCacheClusters: 2
+      Port: 6379
+      CacheParameterGroupName:
+        Ref: CacheParameterGroup
+      CacheSubnetGroupName:
+        Ref: CacheSubnetGroup
+      SecurityGroupIds:
+      - Ref: CacheSecurityGroup
+      AutomaticFailoverEnabled: true
+      MultiAZEnabled: true
+      AtRestEncryptionEnabled: true
+      TransitEncryptionEnabled: true
+      SnapshotRetentionLimit: 5
+      SnapshotWindow: 03:00-05:00
+      PreferredMaintenanceWindow: mon:05:00-mon:07:00
+      AutoMinorVersionUpgrade: true
+      Tags:
+      - Key: Name
+        Value: accelerapp-cache-cluster
+      - Key: Environment
+        Value: production
+      - Key: ManagedBy
+        Value: accelerapp
+  CacheSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for accelerapp-cache-cluster
+      VpcId:
+        Ref: VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 6379
+        ToPort: 6379
+        SourceSecurityGroupId:
+          Ref: AppSecurityGroup
+      Tags:
+      - Key: Name
+        Value: accelerapp-cache-cluster-sg
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the cache cluster
+  PrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Private subnet IDs for the cache cluster
+  AppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security group of application instances
+Outputs:
+  CacheEndpoint:
+    Description: Cache cluster primary endpoint
+    Value:
+      Fn::GetAtt:
+      - CacheReplicationGroup
+      - PrimaryEndPoint.Address
+    Export:
+      Name: accelerapp-cache-cluster-endpoint
+  CachePort:
+    Description: Cache cluster port
+    Value:
+      Fn::GetAtt:
+      - CacheReplicationGroup
+      - PrimaryEndPoint.Port
+  CacheReaderEndpoint:
+    Description: Cache cluster reader endpoint
+    Value:
+      Fn::GetAtt:
+      - CacheReplicationGroup
+      - ReaderEndPoint.Address
+    Export:
+      Name: accelerapp-cache-cluster-reader-endpoint
