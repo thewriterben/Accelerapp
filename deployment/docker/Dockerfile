@@ -1,5 +1,5 @@
 # Accelerapp Air-Gapped Deployment Dockerfile
-FROM python:3.11-slim as base
+FROM python:3.11-slim AS base
 
 # Set working directory
 WORKDIR /app
@@ -39,7 +39,7 @@ CMD ["accelerapp", "info"]
 
 
 # Development stage with additional tools
-FROM base as development
+FROM base AS development
 
 # Install development dependencies
 RUN pip install --no-cache-dir \
@@ -56,7 +56,7 @@ CMD ["bash"]
 
 
 # Production stage - minimal image
-FROM base as production
+FROM base AS production
 
 # Remove unnecessary files
 RUN find /usr/local/lib/python3.11/site-packages -type d -name "tests" -exec rm -rf {} + || true
