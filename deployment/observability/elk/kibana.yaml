@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-config
+  namespace: observability
+data:
+  kibana.yml: |
+    server.host: "0.0.0.0"
+    server.name: "accelerapp-kibana"
+    elasticsearch.hosts: ["http://elasticsearch.observability:9200"]
+    monitoring.ui.container.elasticsearch.enabled: true
+    xpack.security.enabled: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: observability
+  labels:
+    app: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:8.10.0
+          ports:
+            - containerPort: 5601
+              name: web
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: "http://elasticsearch.observability:9200"
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/kibana/config/kibana.yml
+              subPath: kibana.yml
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 120
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 60
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: kibana-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: observability
+  labels:
+    app: kibana
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5601
+      targetPort: 5601
+      name: web
+  selector:
+    app: kibana

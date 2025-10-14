@@ -1,0 +1,114 @@
+# Prometheus Alert Rules for Accelerapp
+groups:
+  - name: accelerapp_alerts
+    interval: 30s
+    rules:
+      # High error rate
+      - alert: HighErrorRate
+        expr: rate(accelerapp_errors_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+
+      # Service down
+      - alert: ServiceDown
+        expr: up{job="accelerapp"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: infrastructure
+        annotations:
+          summary: "Accelerapp service is down"
+          description: "Service {{ $labels.instance }} has been down for more than 2 minutes"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (process_resident_memory_bytes / node_memory_MemTotal_bytes) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is at {{ $value | humanizePercentage }} (threshold: 85%)"
+
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is at {{ $value | humanizePercentage }} (threshold: 80%)"
+
+      # Slow response time
+      - alert: SlowResponseTime
+        expr: histogram_quantile(0.95, rate(accelerapp_request_duration_seconds_bucket[5m])) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "Slow response times detected"
+          description: "95th percentile response time is {{ $value }}s (threshold: 1s)"
+
+      # High request rate
+      - alert: HighRequestRate
+        expr: rate(accelerapp_requests_total[1m]) > 1000
+        for: 5m
+        labels:
+          severity: info
+          component: traffic
+        annotations:
+          summary: "High request rate"
+          description: "Request rate is {{ $value }} req/s (threshold: 1000 req/s)"
+
+      # Disk space low
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "Disk space running low"
+          description: "Only {{ $value | humanizePercentage }} disk space remaining (threshold: 10%)"
+
+      # LLM service unavailable
+      - alert: LLMServiceUnavailable
+        expr: up{job="ollama"} == 0
+        for: 2m
+        labels:
+          severity: high
+          component: ai
+        annotations:
+          summary: "LLM service (Ollama) is unavailable"
+          description: "Ollama service has been down for more than 2 minutes"
+
+      # Code generation failures
+      - alert: CodeGenerationFailures
+        expr: rate(accelerapp_code_generation_failures_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: high
+          component: application
+        annotations:
+          summary: "High code generation failure rate"
+          description: "Code generation failure rate is {{ $value | humanizePercentage }} (threshold: 10%)"
+
+      # Health check failures
+      - alert: HealthCheckFailing
+        expr: accelerapp_health_check_status{status="unhealthy"} > 0
+        for: 3m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "Health check failing"
+          description: "Health check {{ $labels.check_name }} is failing on {{ $labels.instance }}"
