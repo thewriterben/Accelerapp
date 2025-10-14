@@ -1,5 +1,7 @@
 # Getting Started with Accelerapp
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 Accelerapp is a next-generation platform for generating hardware control firmware, software SDKs, and user interfaces using advanced agentic coding swarms and emerging technologies.
 
 ## Installation

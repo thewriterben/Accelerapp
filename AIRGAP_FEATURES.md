@@ -1,5 +1,7 @@
 # Air-Gapped Code Swarming Platform - Implementation Summary
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 This document provides a comprehensive overview of the self-hosted, air-gapped code swarming platform implementation for Accelerapp.
 
 ## Executive Summary

@@ -1,5 +1,7 @@
 # Hardware Recommendations for Self-Hosted Air-Gapped Code Swarming Platform
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 ## Overview
 This document provides hardware recommendations for deploying the Accelerapp self-hosted air-gapped code swarming platform. These guidelines ensure optimal performance for local LLM inference, agent coordination, and code generation workflows.
 
