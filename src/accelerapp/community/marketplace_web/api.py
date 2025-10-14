@@ -61,7 +61,12 @@ class MarketplaceAPI:
         search = TemplateSearch(templates)
 
         results = search.search(
-            query=query, category=category, platform=platform, tags=tags, min_rating=min_rating, sort_by=sort_by
+            query=query,
+            category=category,
+            platform=platform,
+            tags=tags,
+            min_rating=min_rating,
+            sort_by=sort_by,
         )
 
         return [self._template_to_dict(t) for t in results]

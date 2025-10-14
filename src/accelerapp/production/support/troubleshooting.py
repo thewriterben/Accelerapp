@@ -264,7 +264,9 @@ class TroubleshootingGuide:
         """
         return self.tickets.get(ticket_id)
 
-    def list_tickets(self, status: Optional[str] = None, priority: Optional[str] = None) -> List[SupportTicket]:
+    def list_tickets(
+        self, status: Optional[str] = None, priority: Optional[str] = None
+    ) -> List[SupportTicket]:
         """
         List support tickets.
 

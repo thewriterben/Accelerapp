@@ -14,7 +14,9 @@ class AzureIntegration:
         """Initialize Azure integration."""
         self.configurations: Dict[str, Any] = {}
 
-    def generate_function_app_config(self, app_name: str, runtime: str = "python|3.10") -> Dict[str, Any]:
+    def generate_function_app_config(
+        self, app_name: str, runtime: str = "python|3.10"
+    ) -> Dict[str, Any]:
         """
         Generate Azure Function App configuration.
 
@@ -93,7 +95,11 @@ class AzureIntegration:
                             }
                         },
                         "routing": {
-                            "endpoints": {"serviceBusQueues": [], "serviceBusTopics": [], "eventHubs": []},
+                            "endpoints": {
+                                "serviceBusQueues": [],
+                                "serviceBusTopics": [],
+                                "eventHubs": [],
+                            },
                             "routes": [],
                             "fallbackRoute": {
                                 "name": "$fallback",

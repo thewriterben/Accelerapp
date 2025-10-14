@@ -41,9 +41,7 @@ class PerformanceBenchmark:
         """
         self.benchmarks[name] = func
 
-    def run_benchmark(
-        self, name: str, iterations: int = 1000, **kwargs
-    ) -> BenchmarkResult:
+    def run_benchmark(self, name: str, iterations: int = 1000, **kwargs) -> BenchmarkResult:
         """
         Run a benchmark test.
 
@@ -168,8 +166,12 @@ class PerformanceBenchmark:
         baseline = baseline_results[-1]
         current = current_results[-1]
 
-        duration_change = ((current.duration_ms - baseline.duration_ms) / baseline.duration_ms * 100)
-        ops_change = ((current.operations_per_second - baseline.operations_per_second) / baseline.operations_per_second * 100)
+        duration_change = (current.duration_ms - baseline.duration_ms) / baseline.duration_ms * 100
+        ops_change = (
+            (current.operations_per_second - baseline.operations_per_second)
+            / baseline.operations_per_second
+            * 100
+        )
 
         return {
             "baseline": baseline.name,
