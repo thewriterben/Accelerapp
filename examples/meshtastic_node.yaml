@@ -1,0 +1,143 @@
+# Meshtastic Node Configuration Example
+# This configuration demonstrates how to define a Meshtastic mesh network node
+
+device_name: "MyMeshtasticNode"
+platform: "meshtastic-esp32"
+
+# Hardware specification
+hardware:
+  board: "TTGO T-Beam v1.1"
+  mcu: "ESP32"
+  
+  # LoRa radio configuration
+  lora_radio:
+    model: "SX1276"
+    frequency: 915.0  # MHz (US ISM band)
+    bandwidth: 125.0  # kHz
+    spreading_factor: 7  # 6-12, higher = longer range but slower
+    coding_rate: 5  # 5-8, higher = more error correction
+    sync_word: 0x12
+    output_power: 20  # dBm, max 20 for SX1276
+    
+  # Pin assignments (TTGO T-Beam default)
+  pins:
+    lora_cs: 18
+    lora_dio0: 26
+    lora_rst: 23
+    lora_dio1: 33
+    
+  # Optional peripherals
+  peripherals:
+    - type: gps
+      model: "NEO-6M"
+      tx_pin: 12
+      rx_pin: 15
+      
+    - type: display
+      model: "SSD1306"
+      interface: "I2C"
+      address: 0x3C
+      
+    - type: button
+      pin: 38
+      function: "user_button"
+
+# Mesh network configuration
+mesh:
+  # Regional settings
+  region: "US"  # US, EU, etc. - determines frequency band and power limits
+  
+  # Network parameters
+  hop_limit: 3  # Maximum number of hops for messages
+  beacon_interval: 900  # Seconds between beacon broadcasts
+  timeout: 300  # Seconds before considering a node offline
+  
+  # Channels (can define multiple)
+  channels:
+    - name: "Primary"
+      psk: "AQ=="  # Base64 encoded pre-shared key (or use default)
+      uplink_enabled: true
+      downlink_enabled: true
+      
+    - name: "Secondary"
+      psk: "AQ=="
+      uplink_enabled: true
+      downlink_enabled: true
+
+# Node features
+features:
+  # Core features
+  wifi:
+    enabled: true
+    mode: "client"  # or "ap" for access point
+    ssid: "MyWiFi"
+    # password: "secret"  # In production, use environment variable
+    
+  bluetooth:
+    enabled: true
+    
+  gps:
+    enabled: true
+    update_interval: 30  # Seconds
+    
+  # Display features
+  display:
+    enabled: true
+    show_stats: true
+    show_messages: true
+    
+  # Power management
+  power:
+    deep_sleep_enabled: false
+    battery_monitoring: true
+    low_power_mode: false
+
+# Device role
+role: "router"  # router, client, or router_client
+
+# Position (if GPS not available or for fixed installations)
+position:
+  latitude: 37.7749
+  longitude: -122.4194
+  altitude: 52  # meters
+  fixed: false  # Set to true for stationary nodes
+
+# Advanced settings
+advanced:
+  # Serial console
+  serial:
+    enabled: true
+    baud_rate: 115200
+    
+  # OTA updates
+  ota:
+    enabled: true
+    password: ""  # Set for production
+    
+  # Telemetry
+  telemetry:
+    device_update_interval: 900  # Seconds
+    environment_update_interval: 900
+    
+  # Encryption
+  encryption:
+    enabled: true
+    algorithm: "AES256"
+
+# Digital twin integration (Accelerapp-specific)
+digital_twin:
+  enabled: true
+  sync_interval: 60  # Seconds
+  metrics:
+    - battery_level
+    - signal_strength
+    - message_count
+    - uptime
+    - gps_location
+
+# Air-gapped deployment support
+airgap:
+  offline_mode: false
+  local_firmware_repo: true
+  cache_messages: true
+  max_cached_messages: 100

@@ -18,6 +18,7 @@ from .optimization_agents import (
 from .predictive_maintenance_agent import PredictiveMaintenanceAgent
 from .self_healing_agent import SelfHealingAgent
 from .firmware_patch_agent import FirmwarePatchAgent
+from .meshtastic_agent import MeshtasticAgent
 
 __all__ = [
     "AgentOrchestrator",
@@ -33,4 +34,5 @@ __all__ = [
     "PredictiveMaintenanceAgent",
     "SelfHealingAgent",
     "FirmwarePatchAgent",
+    "MeshtasticAgent",
 ]
