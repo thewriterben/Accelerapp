@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 bucket for accelerapp-backups
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: accelerapp-backups
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+      - Key: Purpose
+        Value: Backups
+      - Key: Environment
+        Value: production
+      - Key: ManagedBy
+        Value: accelerapp
+      LifecycleConfiguration:
+        Rules:
+        - Id: TransitionToGlacier
+          Status: Enabled
+          Transitions:
+          - Days: 30
+            StorageClass: GLACIER
+          ExpirationInDays: 365
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: S3Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: DenyInsecureConnections
+          Effect: Deny
+          Principal: '*'
+          Action: s3:*
+          Resource:
+          - Fn::GetAtt:
+            - S3Bucket
+            - Arn
+          - Fn::Join:
+            - ''
+            - - Fn::GetAtt:
+                - S3Bucket
+                - Arn
+              - /*
+          Condition:
+            Bool:
+              aws:SecureTransport: 'false'
+Outputs:
+  BucketName:
+    Description: Name of the S3 bucket
+    Value:
+      Ref: S3Bucket
+    Export:
+      Name: accelerapp-backups-name
+  BucketArn:
+    Description: ARN of the S3 bucket
+    Value:
+      Fn::GetAtt:
+      - S3Bucket
+      - Arn
+    Export:
+      Name: accelerapp-backups-arn
+  BucketDomainName:
+    Description: Domain name of the S3 bucket
+    Value:
+      Fn::GetAtt:
+      - S3Bucket
+      - DomainName
