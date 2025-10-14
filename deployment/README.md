@@ -1,6 +1,8 @@
 # Accelerapp Deployment Guide
 
-This directory contains deployment configurations for running Accelerapp in various environments, including air-gapped and offline installations.
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0 | **Status**: Production Ready
+
+This directory contains deployment configurations for running Accelerapp in various environments, including Docker, Kubernetes, air-gapped, and offline installations.
 
 ## Directory Structure
 
@@ -105,11 +107,12 @@ kubectl apply -f deployment/kubernetes/
 
 #### System Requirements
 
-- Linux (Ubuntu 20.04+ or CentOS 8+)
-- Python 3.8 or higher
-- 10GB disk space minimum
-- 4GB RAM minimum
-- CPU with AVX2 support (for LLM inference)
+- **OS**: Linux (Ubuntu 20.04+, CentOS 8+, RHEL 8+) or macOS 11+
+- **Python**: 3.8, 3.9, 3.10, 3.11, or 3.12
+- **Disk Space**: 10GB minimum, 20GB recommended
+- **RAM**: 4GB minimum, 8GB recommended (16GB+ for 13B models)
+- **CPU**: Modern multi-core CPU with AVX2 support (for LLM inference)
+- **Network**: Not required for air-gapped deployment
 
 #### Installation Steps
 
@@ -342,3 +345,7 @@ du -sh ~/.ollama/models/
 ## License
 
 MIT License - See LICENSE file in project root
+
+---
+
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0 | **Deployment Status**: Production Ready
