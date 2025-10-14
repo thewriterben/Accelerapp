@@ -5,6 +5,63 @@ All notable changes to the Accelerapp project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added - Zero-Trust Hardware Security Architecture
+
+#### Security Features (5 new modules)
+- **Device Identity Management**: Cryptographic identities for hardware devices
+  - `DeviceIdentityManager`: Create and manage device identities with PKI
+  - Certificate-based authentication with device fingerprinting
+  - Identity rotation and revocation support
+  - Deterministic device ID generation from hardware characteristics
+- **Continuous Authentication**: Behavioral analysis and trust scoring
+  - `DeviceAuthenticationService`: Session management with trust levels
+  - Real-time trust score updates based on device behavior
+  - Anomaly detection using statistical analysis
+  - Trust levels: UNTRUSTED, LOW, MEDIUM, HIGH, FULL
+- **Network Segmentation**: Micro-segmented device networks
+  - `NetworkSegmentationService`: Create isolated network segments
+  - Fine-grained communication policies with protocol/port filtering
+  - Network zones: PUBLIC, DMZ, INTERNAL, RESTRICTED, CRITICAL
+  - Device isolation for incident response
+- **Post-Quantum Cryptography**: Future-proof cryptographic algorithms
+  - `PostQuantumCrypto`: Lattice-based cryptography (Kyber-768, Dilithium-3)
+  - Quantum random number generation for entropy
+  - Post-quantum message signing and verification
+  - Key pair generation and management
+- **Hybrid Cryptography**: Combined classical and post-quantum security
+  - `HybridCryptoManager`: Hybrid cryptographic identities
+  - Combined classical ECDH + lattice-based KEM
+  - Defense-in-depth with dual-layer key exchange
+  - Backward compatibility with classical systems
+- **Zero-Trust Orchestrator**: Integrated security architecture
+  - `ZeroTrustArchitecture`: Complete zero-trust workflow orchestration
+  - Device onboarding with automatic segmentation
+  - Communication authorization with trust checks
+  - Incident response and device isolation
+  - Credential rotation and lifecycle management
+
+#### Documentation
+- Comprehensive zero-trust architecture documentation
+- Usage examples and best practices
+- Performance characteristics and troubleshooting guide
+- Integration guide for industrial IoT, edge computing, and SCADA systems
+
+#### Examples
+- Complete zero-trust demo with all features
+- Device onboarding and authentication examples
+- Network segmentation scenarios
+- Post-quantum crypto demonstrations
+
+#### Tests
+- 33 comprehensive tests for zero-trust architecture
+- Device identity management tests
+- Authentication and behavioral analysis tests
+- Network segmentation tests
+- Post-quantum crypto tests
+- Integration tests for complete workflows
+
 ## [1.1.0] - 2025-10-14
 
 ### Added - Phase 3: Advanced Features and Enterprise Capabilities
