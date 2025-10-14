@@ -1,0 +1,101 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "CloudFront distribution for accelerapp-cdn",
+  "Resources": {
+    "CloudFrontDistribution": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Comment": "accelerapp-cdn",
+          "Enabled": true,
+          "DefaultRootObject": "index.html",
+          "PriceClass": "PriceClass_100",
+          "Origins": [
+            {
+              "Id": "S3Origin",
+              "DomainName": "accelerapp-assets.s3.amazonaws.com",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Sub": "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
+                }
+              }
+            }
+          ],
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "S3Origin",
+            "ViewerProtocolPolicy": "redirect-to-https",
+            "AllowedMethods": [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ],
+            "CachedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "Compress": true,
+            "ForwardedValues": {
+              "QueryString": false,
+              "Cookies": {
+                "Forward": "none"
+              }
+            },
+            "MinTTL": 0,
+            "DefaultTTL": 86400,
+            "MaxTTL": 31536000
+          },
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": true,
+            "MinimumProtocolVersion": "TLSv1.2_2021",
+            "SslSupportMethod": "sni-only"
+          }
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "accelerapp-cdn"
+          },
+          {
+            "Key": "Environment",
+            "Value": "production"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "accelerapp"
+          }
+        ]
+      }
+    },
+    "CloudFrontOriginAccessIdentity": {
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": "OAI for accelerapp-cdn"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "DistributionId": {
+      "Description": "CloudFront distribution ID",
+      "Value": {
+        "Ref": "CloudFrontDistribution"
+      },
+      "Export": {
+        "Name": "accelerapp-cdn-id"
+      }
+    },
+    "DistributionDomainName": {
+      "Description": "CloudFront distribution domain name",
+      "Value": {
+        "Fn::GetAtt": [
+          "CloudFrontDistribution",
+          "DomainName"
+        ]
+      },
+      "Export": {
+        "Name": "accelerapp-cdn-domain"
+      }
+    }
+  }
+}

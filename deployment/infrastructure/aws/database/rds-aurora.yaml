@@ -1,0 +1,150 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RDS Aurora PostgreSQL cluster for accelerapp-db-cluster
+Resources:
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for accelerapp-db-cluster
+      SubnetIds:
+        Ref: PrivateSubnetIds
+      Tags:
+      - Key: Name
+        Value: accelerapp-db-cluster-subnet-group
+      - Key: Environment
+        Value: production
+  DBClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Properties:
+      Description: Cluster parameter group for accelerapp-db-cluster
+      Family: aurora-postgresql-15
+      Parameters:
+        shared_preload_libraries: pg_stat_statements
+        log_statement: all
+        log_min_duration_statement: '1000'
+      Tags:
+      - Key: Name
+        Value: accelerapp-db-cluster-cluster-params
+  DBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: '15.3'
+      DatabaseName: accelerapp
+      MasterUsername: admin
+      MasterUserPassword:
+        Ref: DBMasterPassword
+      DBSubnetGroupName:
+        Ref: DBSubnetGroup
+      VpcSecurityGroupIds:
+      - Ref: DBSecurityGroup
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 03:00-04:00
+      PreferredMaintenanceWindow: mon:04:00-mon:05:00
+      StorageEncrypted: true
+      KmsKeyId:
+        Ref: DBEncryptionKey
+      DeletionProtection: true
+      DBClusterParameterGroupName:
+        Ref: DBClusterParameterGroup
+      EnableCloudwatchLogsExports:
+      - postgresql
+      Tags:
+      - Key: Name
+        Value: accelerapp-db-cluster
+      - Key: Environment
+        Value: production
+      - Key: ManagedBy
+        Value: accelerapp
+  DBInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier:
+        Ref: DBCluster
+      DBInstanceClass: db.r6g.large
+      Engine: aurora-postgresql
+      PubliclyAccessible: false
+      EnablePerformanceInsights: true
+      PerformanceInsightsRetentionPeriod: 7
+      Tags:
+      - Key: Name
+        Value: accelerapp-db-cluster-instance-1
+  DBInstance2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier:
+        Ref: DBCluster
+      DBInstanceClass: db.r6g.large
+      Engine: aurora-postgresql
+      PubliclyAccessible: false
+      EnablePerformanceInsights: true
+      PerformanceInsightsRetentionPeriod: 7
+      Tags:
+      - Key: Name
+        Value: accelerapp-db-cluster-instance-2
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for accelerapp-db-cluster
+      VpcId:
+        Ref: VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 5432
+        ToPort: 5432
+        SourceSecurityGroupId:
+          Ref: AppSecurityGroup
+      Tags:
+      - Key: Name
+        Value: accelerapp-db-cluster-sg
+  DBEncryptionKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Encryption key for accelerapp-db-cluster
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: Enable IAM User Permissions
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
+          Action: kms:*
+          Resource: '*'
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the database
+  PrivateSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Private subnet IDs for the database
+  AppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security group of application instances
+  DBMasterPassword:
+    Type: String
+    NoEcho: true
+    Description: Master password for the database
+    MinLength: 8
+Outputs:
+  DBClusterEndpoint:
+    Description: Database cluster endpoint
+    Value:
+      Fn::GetAtt:
+      - DBCluster
+      - Endpoint.Address
+    Export:
+      Name: accelerapp-db-cluster-endpoint
+  DBClusterReadEndpoint:
+    Description: Database cluster read endpoint
+    Value:
+      Fn::GetAtt:
+      - DBCluster
+      - ReadEndpoint.Address
+    Export:
+      Name: accelerapp-db-cluster-read-endpoint
+  DBClusterPort:
+    Description: Database port
+    Value:
+      Fn::GetAtt:
+      - DBCluster
+      - Endpoint.Port
