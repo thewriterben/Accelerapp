@@ -17,5 +17,5 @@ __all__ = [
     "PatternAnalyzer",
     "CodePattern",
     "OfflineDocumentation",
-    "DocEntry"
+    "DocEntry",
 ]

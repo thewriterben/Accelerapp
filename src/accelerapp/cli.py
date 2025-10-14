@@ -13,40 +13,41 @@ from . import __version__
 def main():
     """
     Accelerapp - Next Generation Hardware Control Platform
-    
+
     Generate firmware, software, and UI from hardware specifications.
     """
     pass
 
 
 @main.command()
-@click.argument('config_file', type=click.Path(exists=True))
-@click.option('--output', '-o', default='./generated_output', 
-              help='Output directory for generated code')
-@click.option('--firmware-only', is_flag=True, help='Generate only firmware')
-@click.option('--software-only', is_flag=True, help='Generate only software')
-@click.option('--ui-only', is_flag=True, help='Generate only UI')
+@click.argument("config_file", type=click.Path(exists=True))
+@click.option(
+    "--output", "-o", default="./generated_output", help="Output directory for generated code"
+)
+@click.option("--firmware-only", is_flag=True, help="Generate only firmware")
+@click.option("--software-only", is_flag=True, help="Generate only software")
+@click.option("--ui-only", is_flag=True, help="Generate only UI")
 def generate(config_file, output, firmware_only, software_only, ui_only):
     """
     Generate code from a hardware specification file.
-    
+
     CONFIG_FILE: Path to YAML configuration file with hardware specs
     """
     click.echo(f"Loading configuration from: {config_file}")
-    
+
     # Initialize core
     core = AccelerappCore(Path(config_file))
     output_dir = Path(output)
-    
+
     # Determine what to generate
     if not (firmware_only or software_only or ui_only):
         # Generate everything
         click.echo("Generating complete stack: firmware, software, and UI...")
         results = core.generate_all(output_dir)
-        
+
         click.echo("\n✓ Generation complete!")
         for component, result in results.items():
-            if result['status'] == 'success':
+            if result["status"] == "success":
                 click.echo(f"  {component}: {result['output_dir']}")
             else:
                 click.echo(f"  {component}: ERROR - {result.get('error', 'Unknown error')}")
@@ -54,35 +55,35 @@ def generate(config_file, output, firmware_only, software_only, ui_only):
         # Generate specific components
         if firmware_only:
             click.echo("Generating firmware...")
-            result = core.generate_firmware(output_dir / 'firmware')
-            if result['status'] == 'success':
+            result = core.generate_firmware(output_dir / "firmware")
+            if result["status"] == "success":
                 click.echo(f"✓ Firmware generated: {result['output_dir']}")
             else:
                 click.echo(f"✗ Error: {result.get('error')}")
-        
+
         if software_only:
             click.echo("Generating software...")
-            result = core.generate_software(output_dir / 'software')
-            if result['status'] == 'success':
+            result = core.generate_software(output_dir / "software")
+            if result["status"] == "success":
                 click.echo(f"✓ Software generated: {result['output_dir']}")
             else:
                 click.echo(f"✗ Error: {result.get('error')}")
-        
+
         if ui_only:
             click.echo("Generating UI...")
-            result = core.generate_ui(output_dir / 'ui')
-            if result['status'] == 'success':
+            result = core.generate_ui(output_dir / "ui")
+            if result["status"] == "success":
                 click.echo(f"✓ UI generated: {result['output_dir']}")
             else:
                 click.echo(f"✗ Error: {result.get('error')}")
 
 
 @main.command()
-@click.argument('output_file', type=click.Path())
+@click.argument("output_file", type=click.Path())
 def init(output_file):
     """
     Create a sample configuration file.
-    
+
     OUTPUT_FILE: Path where the sample config will be created
     """
     sample_config = """# Accelerapp Hardware Configuration
@@ -128,7 +129,7 @@ communication:
   baudrate: 9600
   data_format: "json"
 """
-    
+
     output_path = Path(output_file)
     output_path.write_text(sample_config)
     click.echo(f"✓ Sample configuration created: {output_file}")
@@ -154,5 +155,5 @@ def info():
     click.echo("  https://github.com/thewriterben/Accelerapp")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

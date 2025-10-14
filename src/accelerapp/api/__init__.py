@@ -8,13 +8,7 @@ from .rate_limiter import RateLimiter, APIKeyManager
 # HTTP endpoints are optional
 try:
     from .endpoints import CodeGenerationAPI
-    __all__ = [
-        "CodeGenerationAPI",
-        "RateLimiter",
-        "APIKeyManager"
-    ]
+
+    __all__ = ["CodeGenerationAPI", "RateLimiter", "APIKeyManager"]
 except ImportError:
-    __all__ = [
-        "RateLimiter",
-        "APIKeyManager"
-    ]
+    __all__ = ["RateLimiter", "APIKeyManager"]

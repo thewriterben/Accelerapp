@@ -9,8 +9,8 @@ from .auth import AuthenticationManager
 from .queue import JobQueue
 
 __all__ = [
-    'CloudGenerationService',
-    'CloudAPIHandler', 
-    'AuthenticationManager',
-    'JobQueue',
+    "CloudGenerationService",
+    "CloudAPIHandler",
+    "AuthenticationManager",
+    "JobQueue",
 ]

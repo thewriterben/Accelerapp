@@ -16,7 +16,7 @@ class BaseAgent(ABC):
     def __init__(self, name: str, capabilities: List[str]):
         """
         Initialize the agent.
-        
+
         Args:
             name: Agent identifier
             capabilities: List of capabilities this agent provides
@@ -29,11 +29,11 @@ class BaseAgent(ABC):
     def generate(self, spec: Dict[str, Any], context: Dict[str, Any]) -> str:
         """
         Generate code based on specification and context.
-        
+
         Args:
             spec: Hardware or component specification
             context: Additional context for generation
-            
+
         Returns:
             Generated code as string
         """
@@ -45,10 +45,7 @@ class BaseAgent(ABC):
 
     def log_action(self, action: str, details: Dict[str, Any]) -> None:
         """Log an action performed by this agent."""
-        self.history.append({
-            'action': action,
-            'details': details
-        })
+        self.history.append({"action": action, "details": details})
 
     def get_history(self) -> List[Dict[str, Any]]:
         """Get the action history for this agent."""
