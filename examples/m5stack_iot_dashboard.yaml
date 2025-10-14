@@ -1,0 +1,97 @@
+# M5Stack IoT Dashboard Configuration
+# Demonstrates M5Stack as an IoT monitoring dashboard with multiple sensors
+
+device_name: "M5Stack IoT Dashboard"
+platform: "m5stack"
+m5stack_model: "core"
+software_language: "python"
+ui_framework: "react"
+
+# Hardware specifications
+hardware:
+  mcu: "ESP32-WROOM-32"
+  clock_speed: "240MHz"
+  memory: "520KB"
+  flash: "4MB"
+  display: "320x240 TFT"
+
+# Pin definitions
+pins:
+  BUTTON_A: 39
+  BUTTON_B: 38
+  BUTTON_C: 37
+  SPEAKER: 25
+  I2C_SDA: 21
+  I2C_SCL: 22
+  TEMP_SENSOR: 36
+  HUMIDITY_SENSOR: 34
+  LED_PIN: 2
+
+# Timing configurations
+timing:
+  BAUD_RATE: 115200
+  SAMPLE_RATE: 5000
+  UPDATE_RATE: 100
+  DISPLAY_REFRESH: 1000
+
+# WiFi configuration
+wifi:
+  ssid: "IoTNetwork"
+  password: "SecurePassword123"
+
+# Peripheral definitions
+peripherals:
+  - type: "display"
+    description: "Built-in 320x240 TFT display for dashboard"
+  
+  - type: "button"
+    pin: 39
+    name: "Button A"
+    description: "Cycle dashboard pages"
+    
+  - type: "button"
+    pin: 38
+    name: "Button B"
+    description: "Refresh data"
+    
+  - type: "button"
+    pin: 37
+    name: "Button C"
+    description: "Settings menu"
+    
+  - type: "speaker"
+    pin: 25
+    description: "Alert notifications"
+    
+  - type: "temperature"
+    pin: 36
+    description: "Temperature sensor"
+    
+  - type: "humidity"
+    pin: 34
+    description: "Humidity sensor"
+    
+  - type: "led"
+    pin: 2
+    description: "Status indicator"
+    
+  - type: "wifi_module"
+    description: "WiFi for IoT connectivity"
+
+# IoT dashboard settings
+dashboard:
+  screens:
+    - name: "Overview"
+      widgets: ["temperature", "humidity", "wifi_status"]
+    - name: "Sensors"
+      widgets: ["sensor_graph", "sensor_values"]
+    - name: "Network"
+      widgets: ["wifi_info", "connection_status"]
+
+# Communication settings
+communication:
+  protocol: "wifi"
+  data_format: "json"
+  port: 8080
+  mqtt_broker: "mqtt.example.com"
+  mqtt_port: 1883

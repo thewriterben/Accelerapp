@@ -1,0 +1,88 @@
+# M5Stack Remote Control Configuration
+# Demonstrates M5Stack as a WiFi-based remote control with display feedback
+
+device_name: "M5Stack Remote Control"
+platform: "m5stack"
+m5stack_model: "core"
+software_language: "python"
+ui_framework: "react"
+
+# Hardware specifications
+hardware:
+  mcu: "ESP32-WROOM-32"
+  clock_speed: "240MHz"
+  memory: "520KB"
+  flash: "4MB"
+  display: "320x240 TFT"
+
+# Pin definitions
+pins:
+  BUTTON_A: 39
+  BUTTON_B: 38
+  BUTTON_C: 37
+  SPEAKER: 25
+  I2C_SDA: 21
+  I2C_SCL: 22
+  IR_LED: 13
+
+# Timing configurations
+timing:
+  BAUD_RATE: 115200
+  UPDATE_RATE: 50
+  BUTTON_DEBOUNCE: 50
+
+# WiFi configuration
+wifi:
+  ssid: "HomeNetwork"
+  password: "MyPassword123"
+
+# Peripheral definitions
+peripherals:
+  - type: "display"
+    description: "Built-in 320x240 TFT display for UI"
+  
+  - type: "button"
+    pin: 39
+    name: "Button A"
+    description: "Action 1 / Page Up"
+    
+  - type: "button"
+    pin: 38
+    name: "Button B"
+    description: "Action 2 / Select"
+    
+  - type: "button"
+    pin: 37
+    name: "Button C"
+    description: "Action 3 / Page Down"
+    
+  - type: "speaker"
+    pin: 25
+    description: "Button click feedback"
+    
+  - type: "led"
+    pin: 13
+    description: "IR transmitter LED"
+    
+  - type: "wifi_module"
+    description: "WiFi for remote control"
+
+# Remote control settings
+remote_control:
+  control_type: "wifi"
+  target_devices:
+    - name: "Living Room Lights"
+      protocol: "http"
+      endpoint: "http://192.168.1.100/api/lights"
+    - name: "Smart TV"
+      protocol: "http"
+      endpoint: "http://192.168.1.101/api/control"
+    - name: "Thermostat"
+      protocol: "mqtt"
+      topic: "home/thermostat/control"
+
+# Communication settings
+communication:
+  protocol: "wifi"
+  data_format: "json"
+  port: 8080

@@ -1,0 +1,60 @@
+# Basic M5Stack Core Configuration
+# Demonstrates basic M5Stack setup with display and buttons
+
+device_name: "M5Stack Basic Demo"
+platform: "m5stack"
+m5stack_model: "core"
+software_language: "python"
+ui_framework: "react"
+
+# Hardware specifications
+hardware:
+  mcu: "ESP32-WROOM-32"
+  clock_speed: "240MHz"
+  memory: "520KB"
+  flash: "4MB"
+  display: "320x240 TFT"
+
+# Pin definitions (M5Stack built-in pins)
+pins:
+  BUTTON_A: 39
+  BUTTON_B: 38
+  BUTTON_C: 37
+  SPEAKER: 25
+  I2C_SDA: 21
+  I2C_SCL: 22
+
+# Timing configurations
+timing:
+  BAUD_RATE: 115200
+  UPDATE_RATE: 100
+
+# Peripheral definitions (M5Stack built-in peripherals)
+peripherals:
+  - type: "display"
+    description: "Built-in 320x240 TFT display"
+  
+  - type: "button"
+    pin: 39
+    name: "Button A"
+    description: "Left button"
+    
+  - type: "button"
+    pin: 38
+    name: "Button B"
+    description: "Middle button"
+    
+  - type: "button"
+    pin: 37
+    name: "Button C"
+    description: "Right button"
+    
+  - type: "speaker"
+    pin: 25
+    description: "Built-in speaker"
+
+# Communication settings
+communication:
+  protocol: "serial"
+  data_format: "json"
+  port: 115200

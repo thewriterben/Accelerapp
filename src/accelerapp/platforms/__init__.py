@@ -10,6 +10,7 @@ from .stm32 import STM32Platform
 from .micropython import MicroPythonPlatform
 from .raspberry_pi_pico import RaspberryPiPicoPlatform
 from .raspberry_pi import RaspberryPiPlatform
+from .m5stack import M5StackPlatform
 
 # Enhanced STM32 platforms
 from .stm32.f4_series import STM32F4Platform
@@ -29,6 +30,7 @@ __all__ = [
     "MicroPythonPlatform",
     "RaspberryPiPicoPlatform",
     "RaspberryPiPlatform",
+    "M5StackPlatform",
     "STM32F4Platform",
     "STM32H7Platform",
     "NRF52Platform",
@@ -43,7 +45,7 @@ def get_platform(platform_name: str) -> BasePlatform:
     Factory function to get platform instance by name.
 
     Args:
-        platform_name: Name of the platform (arduino, esp32, stm32, micropython, raspberry_pi_pico, raspberry_pi)
+        platform_name: Name of the platform (arduino, esp32, stm32, micropython, raspberry_pi_pico, raspberry_pi, m5stack)
 
     Returns:
         Platform instance
@@ -60,6 +62,9 @@ def get_platform(platform_name: str) -> BasePlatform:
         "micropython": MicroPythonPlatform,
         "raspberry_pi_pico": RaspberryPiPicoPlatform,
         "raspberry_pi": RaspberryPiPlatform,
+        "m5stack": M5StackPlatform,
+        "m5stack_core": M5StackPlatform,
+        "m5stack_core2": M5StackPlatform,
         "nrf52": NRF52Platform,
         "nrf52840": NRF52Platform,
         "nrf53": NRF53Platform,

@@ -20,6 +20,14 @@ The platform abstraction layer provides unified support for multiple hardware pl
 - **Capabilities**: GPIO, PWM, WiFi, Bluetooth, Camera, WebSocket
 - **Build System**: ESP-IDF, PlatformIO, Arduino
 
+### M5Stack
+- **MCU Family**: ESP32 (Xtensa LX6)
+- **Languages**: C, C++, Arduino
+- **Capabilities**: GPIO, PWM, WiFi, Bluetooth, Display (320x240 TFT), Buttons, Speaker, I2C, SD Card
+- **Build System**: PlatformIO, Arduino
+- **Models**: Core, Core2, StickC, StickC Plus, Atom, Stamp
+- **Special Features**: Built-in display, buttons, speaker, battery management
+
 ### STM32
 - **MCU Family**: ARM Cortex-M (32-bit)
 - **Languages**: C, C++
