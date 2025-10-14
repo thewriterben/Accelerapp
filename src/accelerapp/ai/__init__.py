@@ -8,6 +8,7 @@ from .ab_testing import ABTestingFramework
 from .prompt_engine import AdvancedPromptEngine
 from .performance_analyzer import ModelPerformanceAnalyzer
 from .swarm_orchestrator import AgentSwarmOrchestrator
+from .anomaly_detection import AnomalyDetector, AnomalyEvent
 
 __all__ = [
     "AIModelVersionManager",
@@ -15,4 +16,6 @@ __all__ = [
     "AdvancedPromptEngine",
     "ModelPerformanceAnalyzer",
     "AgentSwarmOrchestrator",
+    "AnomalyDetector",
+    "AnomalyEvent",
 ]
