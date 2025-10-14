@@ -1,0 +1,19 @@
+apiVersion: v2
+name: accelerapp
+description: A Helm chart for Accelerapp - Next Generation Hardware Control Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - accelerapp
+  - hardware-control
+  - ai-agents
+  - iot
+  - firmware-generation
+home: https://github.com/thewriterben/Accelerapp
+sources:
+  - https://github.com/thewriterben/Accelerapp
+maintainers:
+  - name: The Writer Ben
+    email: contact@accelerapp.io
+icon: https://accelerapp.io/icon.png

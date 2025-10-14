@@ -1,0 +1,153 @@
+# Default values for accelerapp Helm chart
+
+## Accelerapp configuration
+accelerapp:
+  replicaCount: 2
+  image:
+    repository: accelerapp
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+  
+  ## Horizontal Pod Autoscaler
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  
+  ## Environment variables
+  env:
+    ACCELERAPP_MODE: "production"
+    OLLAMA_HOST: "http://ollama-service:11434"
+  
+  ## Persistent storage
+  persistence:
+    models:
+      enabled: true
+      size: 50Gi
+      storageClass: ""
+    cache:
+      enabled: true
+      size: 10Gi
+      storageClass: ""
+  
+  ## Health checks
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 5
+  
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+## Ollama LLM service configuration
+ollama:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: ollama/ollama
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  
+  service:
+    type: ClusterIP
+    port: 11434
+    targetPort: 11434
+  
+  resources:
+    requests:
+      memory: "8Gi"
+      cpu: "2000m"
+    limits:
+      memory: "16Gi"
+      cpu: "4000m"
+  
+  persistence:
+    enabled: true
+    size: 100Gi
+    storageClass: ""
+
+## Redis configuration (optional)
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+
+## Ingress configuration
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: accelerapp.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: accelerapp-tls
+      hosts:
+        - accelerapp.example.com
+
+## Service mesh integration
+serviceMesh:
+  enabled: false
+  type: "istio"  # istio, linkerd, none
+
+## Monitoring and observability
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+    scrapeInterval: 30s
+  grafana:
+    enabled: true
+
+## Security settings
+security:
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+  
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: false
+
+## Network policies
+networkPolicy:
+  enabled: false
+  policyTypes:
+    - Ingress
+    - Egress
+
+## Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
