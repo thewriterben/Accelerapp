@@ -7,6 +7,7 @@ from .orchestrator import AgentOrchestrator
 from .base_agent import BaseAgent
 from .ai_agent import AIAgent
 from .firmware_agent import FirmwareAgent
+from .tinyml_agent import TinyMLAgent
 from .optimization_agents import (
     PerformanceOptimizationAgent,
     MemoryOptimizationAgent,
@@ -20,6 +21,7 @@ __all__ = [
     "BaseAgent",
     "AIAgent",
     "FirmwareAgent",
+    "TinyMLAgent",
     "PerformanceOptimizationAgent",
     "MemoryOptimizationAgent",
     "CodeQualityAgent",
