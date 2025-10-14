@@ -48,6 +48,16 @@ Accelerapp includes the following security features:
 - Input validation recommendations
 - Memory safety analysis
 
+### Zero-Trust Hardware Security (v1.0.0)
+- **Cryptographic device identities** with certificate-based authentication
+- **Continuous authentication** with behavioral analysis and trust scoring
+- **Micro-segmented device networks** with fine-grained communication policies
+- **Post-quantum cryptography** (Kyber-768, Dilithium-3, Quantum RNG)
+- **Hybrid classical/PQ crypto** for defense-in-depth
+- **Automated incident response** with device isolation capabilities
+
+See [Zero-Trust Architecture Documentation](docs/ZERO_TRUST_ARCHITECTURE.md) for details.
+
 ## Reporting a Vulnerability
 
 We take security vulnerabilities seriously. If you discover a security issue, please report it responsibly:
@@ -135,12 +145,21 @@ Future security enhancements planned:
 - Security incident response automation
 - Compliance reporting (SOC 2, ISO 27001)
 
+### Version 1.0.0 (Completed)
+- ✅ Zero-trust hardware security architecture
+  - Cryptographic device identities
+  - Continuous authentication with behavioral analysis
+  - Micro-segmented device networks
+  - Post-quantum cryptography (Kyber, Dilithium, Quantum RNG)
+  - Hybrid classical/post-quantum key exchange
+
 ### Version 2.0.0
 - End-to-end encryption for all communications
-- Zero-trust security architecture
 - Advanced DLP (Data Loss Prevention)
 - FIPS 140-2 cryptographic compliance
 - Hardware security module (HSM) integration
+- TPM (Trusted Platform Module) support
+- Remote attestation
 
 ## Compliance
 
