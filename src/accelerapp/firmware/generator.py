@@ -23,6 +23,7 @@ class FirmwareGenerator:
         self.hardware_spec = hardware_spec
         self.platform = hardware_spec.get("platform", "arduino")
         self.template_env = self._setup_templates()
+        self.ml_config = hardware_spec.get("ml_config", None)
 
     def _setup_templates(self) -> Environment:
         """Setup Jinja2 template environment."""
@@ -63,11 +64,17 @@ class FirmwareGenerator:
         config_file = output_dir / f"config.{self._get_header_extension()}"
         config_file.write_text(config)
 
+        # Generate ML inference code if ML config is present
+        ml_files = []
+        if self.ml_config:
+            ml_files = self._generate_ml_integration(output_dir)
+
         return {
             "status": "success",
             "platform": self.platform,
-            "files_generated": [str(f) for f in [main_file, config_file] + drivers],
+            "files_generated": [str(f) for f in [main_file, config_file] + drivers + ml_files],
             "output_dir": str(output_dir),
+            "ml_enabled": self.ml_config is not None,
         }
 
     def _generate_main(self) -> str:
@@ -88,6 +95,10 @@ class FirmwareGenerator:
         for peripheral in peripherals:
             code_parts.append(f'#include "{peripheral["type"]}.h"')
 
+        # Add ML includes if ML is enabled
+        if self.ml_config:
+            code_parts.append('#include "ml_inference.h"')
+
         code_parts.extend(
             [
                 "",
@@ -99,6 +110,16 @@ class FirmwareGenerator:
         # Initialize each peripheral
         for peripheral in peripherals:
             code_parts.append(f"    init_{peripheral['type']}();")
+
+        # Initialize ML if enabled
+        if self.ml_config:
+            code_parts.extend(
+                [
+                    "",
+                    "    // Initialize ML inference",
+                    "    ml_inference_init();",
+                ]
+            )
 
         code_parts.extend(
             [
@@ -225,3 +246,45 @@ class FirmwareGenerator:
     def _get_header_extension(self) -> str:
         """Get the appropriate header file extension."""
         return "h"
+
+    def _generate_ml_integration(self, output_dir: Path) -> list:
+        """
+        Generate ML inference integration code.
+
+        Args:
+            output_dir: Directory to write ML files
+
+        Returns:
+            List of generated ML files
+        """
+        try:
+            from accelerapp.agents.tinyml_agent import TinyMLAgent
+        except ImportError:
+            # TinyML agent not available
+            return []
+
+        agent = TinyMLAgent()
+
+        # Prepare ML specification from config
+        ml_spec = {
+            "task_type": self.ml_config.get("task_type", "inference"),
+            "platform": self.platform,
+            "model_type": self.ml_config.get("model_type", "classification"),
+            "input_shape": self.ml_config.get("input_shape", [1, 28, 28, 1]),
+            "num_classes": self.ml_config.get("num_classes", 10),
+        }
+
+        # Generate ML code
+        result = agent.generate(ml_spec)
+
+        if result["status"] != "success":
+            return []
+
+        # Save generated ML files
+        generated_files = []
+        for filename, content in result["files"].items():
+            filepath = output_dir / filename
+            filepath.write_text(content)
+            generated_files.append(filepath)
+
+        return generated_files
