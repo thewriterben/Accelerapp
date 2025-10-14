@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
     command: redis-server --appendonly yes
 
-  # Monitoring service
+  # Monitoring service (optional)
   monitoring:
     build:
       context: ../..
@@ -67,6 +67,8 @@ services:
     networks:
       - accelerapp-network
     restart: unless-stopped
+    profiles:
+      - monitoring
 
 volumes:
   accelerapp-models:
