@@ -1,0 +1,38 @@
+# Terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# Terraform variables
+*.auto.tfvars
+*.auto.tfvars.json
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+
+# Outputs
+outputs/*.txt
+
+# AWS credentials
+credentials.json
+*.pem
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
