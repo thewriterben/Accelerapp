@@ -340,11 +340,12 @@ def demo_credential_rotation(zt, devices):
         
         # Update device with new credentials
         device['fingerprint'] = new_creds['fingerprint']
+        device['device_id'] = new_creds['device_id']
         
         # Test authentication with new credentials
         print("\nTesting authentication with new credentials...")
         auth_result = zt.authenticate_and_connect(
-            device_id,
+            new_creds['device_id'],
             new_creds['fingerprint']
         )
         

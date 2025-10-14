@@ -27,6 +27,16 @@ Accelerapp is a powerful application designed to streamline workflows and enhanc
 - Role-based access control for enhanced security.
 - Multi-tenancy support to serve multiple clients from a single instance.
 
+## Zero-Trust Hardware Security
+- **Cryptographic Device Identities**: Unique PKI-based identities for every hardware device
+- **Continuous Authentication**: Real-time behavioral analysis with dynamic trust scoring
+- **Micro-Segmented Networks**: Isolated communication channels with fine-grained policies
+- **Post-Quantum Cryptography**: Future-proof security with Kyber-768 and Dilithium-3
+- **Hybrid Crypto**: Combined classical and post-quantum key exchange for defense-in-depth
+- **Incident Response**: Automated device isolation and credential rotation
+
+See [Zero-Trust Architecture Documentation](docs/ZERO_TRUST_ARCHITECTURE.md) for detailed information.
+
 ## AI Enhancements
 - Leveraging AI to provide intelligent recommendations and automation features.
 - Machine learning algorithms for predictive analytics.
