@@ -22,6 +22,14 @@ Accelerapp is a powerful application designed to streamline workflows and enhanc
 - Comprehensive analytics dashboard.
 - Real-time data visualization tools.
 
+### Digital Twin Platform
+- Real-time virtual replicas of physical hardware
+- Live state synchronization and monitoring
+- Blockchain-verifiable hardware operation logs
+- AR/VR interfaces for immersive hardware control
+- Complete REST API for remote management
+- See [DIGITAL_TWIN_FEATURES.md](DIGITAL_TWIN_FEATURES.md) for details
+
 ## Enterprise Capabilities
 - Scalable architecture to support large organizations.
 - Role-based access control for enhanced security.
