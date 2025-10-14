@@ -1,0 +1,55 @@
+# Grafana Datasource Configuration for Accelerapp
+apiVersion: 1
+
+datasources:
+  # Prometheus datasource
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus.observability:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: "15s"
+      queryTimeout: "60s"
+      httpMethod: "POST"
+
+  # Loki datasource for logs (if using Loki instead of ELK)
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki.observability:3100
+    editable: true
+    jsonData:
+      maxLines: 1000
+
+  # Jaeger datasource for traces
+  - name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger-query.observability:16686
+    editable: true
+    jsonData:
+      tracesToLogs:
+        datasourceUid: 'loki'
+        tags: ['job', 'instance', 'pod', 'namespace']
+        mappedTags: [{ key: 'service.name', value: 'service' }]
+        mapTagNamesEnabled: false
+        spanStartTimeShift: '-1h'
+        spanEndTimeShift: '1h'
+        filterByTraceID: true
+        filterBySpanID: false
+
+  # Elasticsearch datasource for ELK logs
+  - name: Elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch.observability:9200
+    database: "accelerapp-logs-*"
+    editable: true
+    jsonData:
+      esVersion: "8.0.0"
+      timeField: "@timestamp"
+      interval: Daily
+      logMessageField: message
+      logLevelField: level

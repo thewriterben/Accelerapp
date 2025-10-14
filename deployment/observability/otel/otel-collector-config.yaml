@@ -1,0 +1,149 @@
+# OpenTelemetry Collector Configuration for Accelerapp
+receivers:
+  # OTLP receiver for traces, metrics, and logs
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  # Prometheus receiver for scraping metrics
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otel-collector'
+          scrape_interval: 10s
+          static_configs:
+            - targets: ['0.0.0.0:8888']
+
+  # Jaeger receiver for legacy Jaeger traces
+  jaeger:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:14250
+      thrift_http:
+        endpoint: 0.0.0.0:14268
+
+  # Zipkin receiver
+  zipkin:
+    endpoint: 0.0.0.0:9411
+
+processors:
+  # Batch processor for better performance
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+
+  # Memory limiter to prevent OOM
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 1024
+    spike_limit_mib: 256
+
+  # Resource processor to add custom attributes
+  resource:
+    attributes:
+      - key: service.name
+        value: accelerapp
+        action: upsert
+      - key: deployment.environment
+        value: production
+        action: upsert
+      - key: service.version
+        from_attribute: app.version
+        action: upsert
+
+  # Span processor for trace modifications
+  span:
+    name:
+      # Rename spans
+      from_attributes: ["http.method", "http.route"]
+      separator: " "
+
+  # Attributes processor
+  attributes:
+    actions:
+      # Add correlation ID
+      - key: correlation.id
+        from_attribute: correlation_id
+        action: upsert
+      # Remove sensitive data
+      - key: http.request.header.authorization
+        action: delete
+      - key: http.request.header.cookie
+        action: delete
+
+exporters:
+  # Export to Jaeger
+  jaeger:
+    endpoint: jaeger-collector.observability:14250
+    tls:
+      insecure: true
+
+  # Export to Prometheus
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: accelerapp
+    const_labels:
+      environment: production
+
+  # Export to Elasticsearch (for logs)
+  elasticsearch:
+    endpoints: ["http://elasticsearch.observability:9200"]
+    logs_index: "accelerapp-traces"
+    traces_index: "accelerapp-traces"
+
+  # Export to stdout (for debugging)
+  logging:
+    loglevel: info
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+  # Export to OTLP (for forwarding to other collectors)
+  otlp:
+    endpoint: otel-collector:4317
+    tls:
+      insecure: true
+
+extensions:
+  # Health check extension
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  # Profiling extension
+  pprof:
+    endpoint: 0.0.0.0:1777
+
+  # zPages extension for debugging
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+  
+  pipelines:
+    # Traces pipeline
+    traces:
+      receivers: [otlp, jaeger, zipkin]
+      processors: [memory_limiter, batch, resource, span, attributes]
+      exporters: [jaeger, logging]
+    
+    # Metrics pipeline
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, batch, resource]
+      exporters: [prometheus, logging]
+    
+    # Logs pipeline
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resource, attributes]
+      exporters: [elasticsearch, logging]
+
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888

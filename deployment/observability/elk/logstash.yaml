@@ -1,0 +1,184 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: observability
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    path.config: /usr/share/logstash/pipeline
+    xpack.monitoring.enabled: false
+
+  logstash.conf: |
+    input {
+      # TCP input for structured logs
+      tcp {
+        port => 5000
+        codec => json
+      }
+      
+      # HTTP input for webhooks
+      http {
+        port => 8080
+        codec => json
+      }
+      
+      # Beats input (for Filebeat)
+      beats {
+        port => 5044
+      }
+    }
+
+    filter {
+      # Parse JSON logs
+      if [type] == "json" {
+        json {
+          source => "message"
+        }
+      }
+
+      # Add Kubernetes metadata
+      if [kubernetes] {
+        mutate {
+          add_field => {
+            "k8s_namespace" => "%{[kubernetes][namespace]}"
+            "k8s_pod" => "%{[kubernetes][pod_name]}"
+            "k8s_container" => "%{[kubernetes][container_name]}"
+          }
+        }
+      }
+
+      # Parse Accelerapp logs
+      if [app] == "accelerapp" {
+        # Extract correlation ID
+        if [correlation_id] {
+          mutate {
+            add_field => { "trace_id" => "%{correlation_id}" }
+          }
+        }
+        
+        # Categorize log level
+        if [level] {
+          mutate {
+            add_field => { "log_level" => "%{level}" }
+          }
+        }
+        
+        # Add timestamp
+        date {
+          match => [ "timestamp", "ISO8601" ]
+          target => "@timestamp"
+        }
+      }
+
+      # Grok pattern for unstructured logs
+      grok {
+        match => { "message" => "%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:level} %{GREEDYDATA:log_message}" }
+      }
+
+      # Remove unnecessary fields
+      mutate {
+        remove_field => ["host", "agent", "ecs", "tags"]
+      }
+    }
+
+    output {
+      # Send to Elasticsearch
+      elasticsearch {
+        hosts => ["elasticsearch.observability:9200"]
+        index => "accelerapp-logs-%{+YYYY.MM.dd}"
+        document_type => "_doc"
+      }
+
+      # Debug output (disable in production)
+      # stdout {
+      #   codec => rubydebug
+      # }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: observability
+  labels:
+    app: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:8.10.0
+          ports:
+            - containerPort: 5000
+              name: tcp
+            - containerPort: 5044
+              name: beats
+            - containerPort: 8080
+              name: http
+          env:
+            - name: LS_JAVA_OPTS
+              value: "-Xms1g -Xmx1g"
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/logstash/config/logstash.yml
+              subPath: logstash.yml
+            - name: pipeline
+              mountPath: /usr/share/logstash/pipeline/logstash.conf
+              subPath: logstash.conf
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9600
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9600
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: logstash-config
+        - name: pipeline
+          configMap:
+            name: logstash-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: observability
+  labels:
+    app: logstash
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: tcp
+    - port: 5044
+      targetPort: 5044
+      name: beats
+    - port: 8080
+      targetPort: 8080
+      name: http
+  selector:
+    app: logstash
