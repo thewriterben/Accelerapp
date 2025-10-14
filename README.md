@@ -22,12 +22,26 @@ All from a single YAML configuration file describing your hardware.
 
 Accelerapp 1.0.0 is **production-ready** with:
 
-- ✅ **200+ Passing Tests** - Comprehensive test coverage
+- ✅ **360+ Passing Tests** - Comprehensive test coverage (72%+ code coverage)
 - ✅ **Stable API** - Well-defined interfaces and contracts
 - ✅ **Security Features** - Encryption, access control, audit logging
 - ✅ **Multi-Platform Support** - Battle-tested on multiple architectures
 - ✅ **Enterprise-Ready** - API rate limiting, authentication, monitoring
 - ✅ **Production Code Generation** - Optimized, memory-safe, validated code
+
+### ✨ Phase 2 Enhancements (NEW)
+
+Phase 2 introduces enterprise-grade architecture and performance features:
+
+- 🏗️ **Modular Architecture** - Dependency injection, service layer, plugin system
+- ⚡ **Performance Optimization** - Caching (LRU), async processing, profiling tools
+- 📊 **Monitoring & Observability** - Prometheus-compatible metrics, structured logging, health checks
+- 🔌 **Plugin System** - Extensible architecture for third-party plugins
+- 📈 **Real-time Metrics** - Counter, gauge, and histogram metrics with automatic collection
+- 🎯 **Health Checks** - Critical and non-critical health monitoring
+- 🔄 **Workflow Engine** - Multi-step workflow orchestration with context passing
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed documentation.
 
 ## Key Features
 
@@ -90,6 +104,22 @@ This creates:
 
 ## Examples
 
+### Phase 2 Features Demo (NEW) ⭐
+
+```bash
+python examples/phase2_demo.py
+```
+
+Demonstrates all Phase 2 features:
+- Dependency injection container
+- Configuration management
+- Caching utilities with TTL
+- Performance profiling
+- Monitoring and metrics
+- Service layer (Hardware, AI, Workflow)
+- Health check system
+- Plugin system
+
 ### LED Controller
 
 ```bash
@@ -123,9 +153,106 @@ Produces an STM32 motor control system with:
 - C++ control library
 - Position/speed control UI
 
+## Phase 2 Usage Examples
+
+### Using Dependency Injection
+
+```python
+from accelerapp.core import ServiceContainer
+from accelerapp.services import HardwareService, AIService
+
+# Create and configure container
+container = ServiceContainer()
+container.register(HardwareService)
+container.register(AIService)
+
+# Resolve services
+hw_service = container.resolve(HardwareService)
+ai_service = container.resolve(AIService)
+```
+
+### Performance Profiling
+
+```python
+from accelerapp.utils import PerformanceProfiler, profile
+
+profiler = PerformanceProfiler()
+
+# Using context manager
+with profiler.measure("operation_name"):
+    # Your code here
+    pass
+
+# Using decorator
+@profile("function_name")
+def my_function():
+    # Your code here
+    pass
+
+# Get metrics
+metrics = profiler.get_metrics("operation_name")
+print(f"Avg time: {metrics['avg_time']:.3f}s")
+```
+
+### Caching with TTL
+
+```python
+from accelerapp.utils import CacheManager, cache_result
+
+# Manual caching
+cache = CacheManager(default_ttl=3600, max_size=1000)
+cache.set("key", "value", ttl=60)
+value = cache.get("key")
+
+# Decorator caching
+@cache_result(ttl=300)
+def expensive_function(param):
+    return compute_result(param)
+```
+
+### Monitoring and Metrics
+
+```python
+from accelerapp.monitoring import get_metrics, setup_logging, get_logger
+
+# Setup structured logging
+setup_logging(level="INFO", structured=True)
+logger = get_logger(__name__, correlation_id="req-123")
+
+# Collect metrics
+metrics = get_metrics()
+counter = metrics.counter("requests_total")
+counter.inc()
+
+gauge = metrics.gauge("active_connections")
+gauge.set(10)
+
+histogram = metrics.histogram("response_time")
+histogram.observe(0.245)
+```
+
+### Workflow Orchestration
+
+```python
+from accelerapp.services import WorkflowService
+from accelerapp.services.workflow_service import Workflow
+
+# Create workflow
+workflow = Workflow("data_processing", "Process sensor data")
+workflow.add_step("read", lambda ctx: {"data": read_sensor()})
+workflow.add_step("filter", lambda ctx: {"data": filter_data(ctx["data"])})
+workflow.add_step("store", lambda ctx: store_data(ctx["data"]))
+
+# Register and execute
+service = WorkflowService()
+await service.initialize()
+service.register_workflow(workflow)
+result = service.execute_workflow("data_processing")
+```
+
 ## Architecture
 
-Accelerapp uses an innovative **agentic coding swarm** architecture:
+Accelerapp uses an innovative **agentic coding swarm** architecture with Phase 2 enhancements:
 
 ```
 Hardware Specification → Agent Orchestrator → Specialized Agents
@@ -137,13 +264,30 @@ Hardware Specification → Agent Orchestrator → Specialized Agents
                     Generated Code
 ```
 
-Each agent specializes in a specific domain (firmware, software, or UI) and collaborates with others to produce a cohesive system.
+### Phase 2 Architecture Layers
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Application Layer (CLI, UI, Examples)                  │
+├─────────────────────────────────────────────────────────┤
+│  Service Layer (Hardware, AI, Workflow, Monitoring)     │
+├─────────────────────────────────────────────────────────┤
+│  Core Layer (DI, Config, Interfaces, Exceptions)        │
+├─────────────────────────────────────────────────────────┤
+│  Infrastructure (Caching, Async, Profiling, Logging)    │
+├─────────────────────────────────────────────────────────┤
+│  Plugin System (Generators, Analyzers, Transformers)    │
+└─────────────────────────────────────────────────────────┘
+```
+
+Each agent specializes in a specific domain and collaborates through the service layer for a cohesive system.
 
 ## Documentation
 
 - [Getting Started Guide](docs/GETTING_STARTED.md)
-- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Phase 2 Architecture](ARCHITECTURE.md) ⭐ **NEW**
 - [Configuration Reference](docs/CONFIGURATION.md)
+- [Phase 2 Demo Script](examples/phase2_demo.py) ⭐ **NEW**
 
 ## Supported Platforms
 
