@@ -19,6 +19,9 @@ from .stm32.h7_series import STM32H7Platform
 from .nordic.nrf52 import NRF52Platform
 from .nordic.nrf53 import NRF53Platform
 
+# Meshtastic mesh communication platform
+from .meshtastic import MeshtasticPlatform
+
 __all__ = [
     "BasePlatform",
     "ArduinoPlatform",
@@ -31,6 +34,7 @@ __all__ = [
     "STM32H7Platform",
     "NRF52Platform",
     "NRF53Platform",
+    "MeshtasticPlatform",
     "get_platform",
 ]
 
@@ -61,6 +65,7 @@ def get_platform(platform_name: str) -> BasePlatform:
         "nrf52840": NRF52Platform,
         "nrf53": NRF53Platform,
         "nrf5340": NRF53Platform,
+        "meshtastic": MeshtasticPlatform,
     }
 
     platform_class = platforms.get(platform_name.lower())
