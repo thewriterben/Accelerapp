@@ -1,0 +1,1 @@
+"""Partnership and vendor programs."""
