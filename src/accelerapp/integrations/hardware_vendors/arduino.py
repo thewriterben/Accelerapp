@@ -51,7 +51,9 @@ includes={library_name}.h
 
         return properties
 
-    def generate_library_header(self, library_name: str, includes: Optional[List[str]] = None) -> str:
+    def generate_library_header(
+        self, library_name: str, includes: Optional[List[str]] = None
+    ) -> str:
         """
         Generate Arduino library header file.
 

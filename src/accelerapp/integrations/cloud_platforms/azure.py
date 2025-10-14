@@ -14,7 +14,9 @@ class AzureIntegration:
         """Initialize Azure integration."""
         self.configurations: Dict[str, Any] = {}
 
-    def generate_function_app_config(self, app_name: str, runtime: str = "python|3.10") -> Dict[str, Any]:
+    def generate_function_app_config(
+        self, app_name: str, runtime: str = "python|3.10"
+    ) -> Dict[str, Any]:
         """
         Generate Azure Function App configuration.
 
@@ -25,8 +27,12 @@ class AzureIntegration:
         Returns:
             ARM template configuration
         """
+        schema_url = (
+            "https://schema.management.azure.com/schemas/"
+            "2019-04-01/deploymentTemplate.json#"
+        )
         config = {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "$schema": schema_url,
             "contentVersion": "1.0.0.0",
             "parameters": {
                 "appName": {"type": "string", "defaultValue": app_name},
@@ -72,8 +78,12 @@ class AzureIntegration:
         Returns:
             ARM template configuration
         """
+        schema_url = (
+            "https://schema.management.azure.com/schemas/"
+            "2019-04-01/deploymentTemplate.json#"
+        )
         config = {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "$schema": schema_url,
             "contentVersion": "1.0.0.0",
             "resources": [
                 {
@@ -93,7 +103,11 @@ class AzureIntegration:
                             }
                         },
                         "routing": {
-                            "endpoints": {"serviceBusQueues": [], "serviceBusTopics": [], "eventHubs": []},
+                            "endpoints": {
+                                "serviceBusQueues": [],
+                                "serviceBusTopics": [],
+                                "eventHubs": [],
+                            },
                             "routes": [],
                             "fallbackRoute": {
                                 "name": "$fallback",
@@ -124,8 +138,12 @@ class AzureIntegration:
         Returns:
             ARM template configuration
         """
+        schema_url = (
+            "https://schema.management.azure.com/schemas/"
+            "2019-04-01/deploymentTemplate.json#"
+        )
         config = {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "$schema": schema_url,
             "contentVersion": "1.0.0.0",
             "resources": [
                 {

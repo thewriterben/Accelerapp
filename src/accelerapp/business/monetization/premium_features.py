@@ -152,7 +152,11 @@ class PremiumFeatureManager:
             Created Subscription
         """
         # Get features for tier
-        tier_features = [f.id for f in self.features.values() if f.tier.value <= tier.value or f.enabled_by_default]
+        tier_features = [
+            f.id
+            for f in self.features.values()
+            if f.tier.value <= tier.value or f.enabled_by_default
+        ]
 
         subscription = Subscription(
             user_id=user_id, tier=tier, expires_at=expires_at, features=tier_features
@@ -179,7 +183,11 @@ class PremiumFeatureManager:
         subscription.tier = new_tier
 
         # Update features
-        tier_features = [f.id for f in self.features.values() if f.tier.value <= new_tier.value or f.enabled_by_default]
+        tier_features = [
+            f.id
+            for f in self.features.values()
+            if f.tier.value <= new_tier.value or f.enabled_by_default
+        ]
         subscription.features = tier_features
 
         return True
@@ -245,21 +253,31 @@ class PremiumFeatureManager:
                 "price_monthly": 0,
                 "price_yearly": 0,
                 "description": "Perfect for hobbyists and learning",
-                "features": [f.name for f in self.features.values() if f.tier == SubscriptionTier.FREE],
+                "features": [
+                    f.name for f in self.features.values() if f.tier == SubscriptionTier.FREE
+                ],
             },
             "basic": {
                 "name": "Basic",
                 "price_monthly": 19,
                 "price_yearly": 190,
                 "description": "For individual developers",
-                "features": [f.name for f in self.features.values() if f.tier == SubscriptionTier.BASIC or f.tier == SubscriptionTier.FREE],
+                "features": [
+                    f.name
+                    for f in self.features.values()
+                    if f.tier == SubscriptionTier.BASIC or f.tier == SubscriptionTier.FREE
+                ],
             },
             "professional": {
                 "name": "Professional",
                 "price_monthly": 49,
                 "price_yearly": 490,
                 "description": "For professional teams",
-                "features": [f.name for f in self.features.values() if f.tier.value <= SubscriptionTier.PROFESSIONAL.value],
+                "features": [
+                    f.name
+                    for f in self.features.values()
+                    if f.tier.value <= SubscriptionTier.PROFESSIONAL.value
+                ],
             },
             "enterprise": {
                 "name": "Enterprise",

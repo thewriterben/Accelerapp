@@ -2,7 +2,7 @@
 AWS integration for Accelerapp.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 
 class AWSIntegration:
@@ -14,7 +14,9 @@ class AWSIntegration:
         """Initialize AWS integration."""
         self.configurations: Dict[str, Any] = {}
 
-    def generate_lambda_deployment(self, function_name: str, runtime: str = "python3.10") -> Dict[str, Any]:
+    def generate_lambda_deployment(
+        self, function_name: str, runtime: str = "python3.10"
+    ) -> Dict[str, Any]:
         """
         Generate AWS Lambda deployment configuration.
 
@@ -69,7 +71,9 @@ class AWSIntegration:
 
         return config
 
-    def generate_iot_core_integration(self, thing_name: str, platforms: List[str]) -> Dict[str, Any]:
+    def generate_iot_core_integration(
+        self, thing_name: str, platforms: List[str]
+    ) -> Dict[str, Any]:
         """
         Generate AWS IoT Core integration for hardware devices.
 
@@ -105,7 +109,12 @@ class AWSIntegration:
                             "Statement": [
                                 {
                                     "Effect": "Allow",
-                                    "Action": ["iot:Connect", "iot:Publish", "iot:Subscribe", "iot:Receive"],
+                                    "Action": [
+                                        "iot:Connect",
+                                        "iot:Publish",
+                                        "iot:Subscribe",
+                                        "iot:Receive",
+                                    ],
                                     "Resource": "*",
                                 }
                             ],

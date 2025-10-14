@@ -170,7 +170,9 @@ class UsageAnalytics:
             "retention": retention,
         }
 
-    def generate_report(self, start_date: Optional[str] = None, end_date: Optional[str] = None) -> Dict[str, Any]:
+    def generate_report(
+        self, start_date: Optional[str] = None, end_date: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
         Generate analytics report.
 

@@ -163,7 +163,10 @@ class ContentManager:
         return content
 
     def list_content(
-        self, content_type: Optional[ContentType] = None, status: Optional[ContentStatus] = None, tags: Optional[List[str]] = None
+        self,
+        content_type: Optional[ContentType] = None,
+        status: Optional[ContentStatus] = None,
+        tags: Optional[List[str]] = None,
     ) -> List[Content]:
         """
         List content with optional filters.
@@ -216,7 +219,9 @@ class ContentManager:
         Returns:
             List of Content
         """
-        published_content = [c for c in self.content.values() if c.status == ContentStatus.PUBLISHED]
+        published_content = [
+            c for c in self.content.values() if c.status == ContentStatus.PUBLISHED
+        ]
         published_content.sort(key=lambda c: (c.views + c.shares), reverse=True)
         return published_content[:limit]
 
@@ -247,7 +252,9 @@ class ContentManager:
             Statistics dictionary
         """
         total_content = len(self.content)
-        published_content = sum(1 for c in self.content.values() if c.status == ContentStatus.PUBLISHED)
+        published_content = sum(
+            1 for c in self.content.values() if c.status == ContentStatus.PUBLISHED
+        )
         total_views = sum(c.views for c in self.content.values())
         total_shares = sum(c.shares for c in self.content.values())
 

@@ -146,7 +146,10 @@ class PartnershipManager:
         return self.partners.get(partner_id)
 
     def list_partners(
-        self, partner_type: Optional[PartnerType] = None, tier: Optional[PartnerTier] = None, active_only: bool = True
+        self,
+        partner_type: Optional[PartnerType] = None,
+        tier: Optional[PartnerTier] = None,
+        active_only: bool = True,
     ) -> List[Partner]:
         """
         List partners with optional filters.

@@ -2,8 +2,7 @@
 VS Code extension support for Accelerapp.
 """
 
-from typing import Dict, Any, List, Optional
-import json
+from typing import Dict, Any
 
 
 class VSCodeExtension:
