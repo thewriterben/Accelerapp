@@ -27,8 +27,12 @@ class AzureIntegration:
         Returns:
             ARM template configuration
         """
+        schema_url = (
+            "https://schema.management.azure.com/schemas/"
+            "2019-04-01/deploymentTemplate.json#"
+        )
         config = {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "$schema": schema_url,
             "contentVersion": "1.0.0.0",
             "parameters": {
                 "appName": {"type": "string", "defaultValue": app_name},
@@ -74,8 +78,12 @@ class AzureIntegration:
         Returns:
             ARM template configuration
         """
+        schema_url = (
+            "https://schema.management.azure.com/schemas/"
+            "2019-04-01/deploymentTemplate.json#"
+        )
         config = {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "$schema": schema_url,
             "contentVersion": "1.0.0.0",
             "resources": [
                 {
@@ -130,8 +138,12 @@ class AzureIntegration:
         Returns:
             ARM template configuration
         """
+        schema_url = (
+            "https://schema.management.azure.com/schemas/"
+            "2019-04-01/deploymentTemplate.json#"
+        )
         config = {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "$schema": schema_url,
             "contentVersion": "1.0.0.0",
             "resources": [
                 {

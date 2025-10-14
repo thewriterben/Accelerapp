@@ -2,7 +2,7 @@
 AWS integration for Accelerapp.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 
 class AWSIntegration:

@@ -2,7 +2,7 @@
 Jenkins integration for Accelerapp.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, List, Optional
 
 
 class JenkinsIntegration:
