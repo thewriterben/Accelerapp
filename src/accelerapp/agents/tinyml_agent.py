@@ -101,9 +101,7 @@ class TinyMLAgent(BaseAgent):
                 "message": f"Unknown task type: {task_type}",
             }
 
-    def _generate_inference_code(
-        self, spec: Dict[str, Any], platform: str
-    ) -> Dict[str, Any]:
+    def _generate_inference_code(self, spec: Dict[str, Any], platform: str) -> Dict[str, Any]:
         """
         Generate inference code for on-device neural network execution.
 
@@ -369,9 +367,7 @@ class TinyMLAgent(BaseAgent):
 
         return "\n".join(code_parts)
 
-    def _generate_federated_impl(
-        self, aggregation_method: str, privacy_level: str
-    ) -> str:
+    def _generate_federated_impl(self, aggregation_method: str, privacy_level: str) -> str:
         """Generate federated learning implementation."""
         code_parts = [
             '#include "federated_learning.h"',
@@ -424,9 +420,7 @@ class TinyMLAgent(BaseAgent):
 
         return "\n".join(code_parts)
 
-    def _generate_adaptive_behavior(
-        self, spec: Dict[str, Any], platform: str
-    ) -> Dict[str, Any]:
+    def _generate_adaptive_behavior(self, spec: Dict[str, Any], platform: str) -> Dict[str, Any]:
         """
         Generate adaptive hardware behavior based on local data.
 
@@ -547,9 +541,7 @@ class TinyMLAgent(BaseAgent):
             "total_estimated": f"{quantized_size + 0.032:.2f} MB",
         }
 
-    def _estimate_performance(
-        self, spec: Dict[str, Any], platform: str
-    ) -> Dict[str, str]:
+    def _estimate_performance(self, spec: Dict[str, Any], platform: str) -> Dict[str, str]:
         """Estimate inference performance."""
         # Rough estimates based on platform
         performance_map = {
@@ -559,9 +551,7 @@ class TinyMLAgent(BaseAgent):
             "raspberry_pi_pico": {"inference_time": "30-150ms", "power": "Low"},
         }
 
-        return performance_map.get(
-            platform, {"inference_time": "varies", "power": "varies"}
-        )
+        return performance_map.get(platform, {"inference_time": "varies", "power": "varies"})
 
     def get_capabilities(self) -> List[str]:
         """
