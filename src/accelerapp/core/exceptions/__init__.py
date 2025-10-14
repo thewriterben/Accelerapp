@@ -4,6 +4,7 @@ Provides enhanced error handling with retry, circuit breaker, and recovery mecha
 """
 
 from .hierarchy import (
+    ErrorCode,
     AccelerappException,
     ConfigurationError,
     ServiceError,
@@ -16,12 +17,14 @@ from .hierarchy import (
     MonitoringError,
     EventError,
 )
-from .handlers import ExceptionHandler, GlobalExceptionHandler
+from .handlers import ExceptionHandler, GlobalExceptionHandler, get_global_handler
 from .retry import RetryPolicy, retry_with_backoff
-from .circuit_breaker import CircuitBreaker, CircuitState
-from .recovery import RecoveryStrategy, RecoveryManager
+from .circuit_breaker import CircuitBreaker, CircuitState, circuit_breaker
+from .recovery import RecoveryStrategy, RecoveryManager, RestartStrategy, FallbackStrategy, RetryStrategy
 
 __all__ = [
+    # Error codes
+    "ErrorCode",
     # Exceptions
     "AccelerappException",
     "ConfigurationError",
@@ -37,13 +40,18 @@ __all__ = [
     # Handlers
     "ExceptionHandler",
     "GlobalExceptionHandler",
+    "get_global_handler",
     # Retry
     "RetryPolicy",
     "retry_with_backoff",
     # Circuit Breaker
     "CircuitBreaker",
     "CircuitState",
+    "circuit_breaker",
     # Recovery
     "RecoveryStrategy",
     "RecoveryManager",
+    "RestartStrategy",
+    "FallbackStrategy",
+    "RetryStrategy",
 ]

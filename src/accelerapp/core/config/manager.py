@@ -130,39 +130,65 @@ class ConfigurationManager:
     
     def _load_from_env(self) -> None:
         """Load and override configuration from environment variables."""
-        env_overrides = {
-            "debug": os.getenv("ACCELERAPP_DEBUG", "").lower() == "true",
-            "service": {
-                "enabled": os.getenv("SERVICE_ENABLED", "true").lower() == "true",
-                "timeout": int(os.getenv("SERVICE_TIMEOUT", "30")),
-                "max_concurrent_requests": int(
-                    os.getenv("SERVICE_MAX_CONCURRENT", "10")
-                ),
-            },
-            "performance": {
-                "enable_caching": os.getenv("ENABLE_CACHING", "true").lower() == "true",
-                "cache_ttl": int(os.getenv("CACHE_TTL", "3600")),
-                "enable_async": os.getenv("ENABLE_ASYNC", "true").lower() == "true",
-                "max_workers": int(os.getenv("MAX_WORKERS", "4")),
-            },
-            "monitoring": {
-                "enable_metrics": os.getenv("ENABLE_METRICS", "true").lower() == "true",
-                "log_level": os.getenv("LOG_LEVEL", "INFO"),
-                "metrics_port": int(os.getenv("METRICS_PORT", "8080")),
-                "structured_logging": os.getenv("STRUCTURED_LOGGING", "true").lower() == "true",
-            },
-            "plugins": {
-                "enabled": os.getenv("PLUGINS_ENABLED", "true").lower() == "true",
-                "hot_reload": os.getenv("PLUGINS_HOT_RELOAD", "false").lower() == "true",
-            },
-            "security": {
-                "enable_encryption": os.getenv("ENABLE_ENCRYPTION", "true").lower() == "true",
-                "secret_key": os.getenv("SECRET_KEY"),
-            },
-        }
+        env_overrides = {}
+        
+        # Only add overrides if environment variables are actually set
+        if os.getenv("ACCELERAPP_DEBUG"):
+            env_overrides["debug"] = os.getenv("ACCELERAPP_DEBUG", "").lower() == "true"
+        
+        service_overrides = {}
+        if os.getenv("SERVICE_ENABLED"):
+            service_overrides["enabled"] = os.getenv("SERVICE_ENABLED").lower() == "true"
+        if os.getenv("SERVICE_TIMEOUT"):
+            service_overrides["timeout"] = int(os.getenv("SERVICE_TIMEOUT"))
+        if os.getenv("SERVICE_MAX_CONCURRENT"):
+            service_overrides["max_concurrent_requests"] = int(os.getenv("SERVICE_MAX_CONCURRENT"))
+        if service_overrides:
+            env_overrides["service"] = service_overrides
+        
+        performance_overrides = {}
+        if os.getenv("ENABLE_CACHING"):
+            performance_overrides["enable_caching"] = os.getenv("ENABLE_CACHING").lower() == "true"
+        if os.getenv("CACHE_TTL"):
+            performance_overrides["cache_ttl"] = int(os.getenv("CACHE_TTL"))
+        if os.getenv("ENABLE_ASYNC"):
+            performance_overrides["enable_async"] = os.getenv("ENABLE_ASYNC").lower() == "true"
+        if os.getenv("MAX_WORKERS"):
+            performance_overrides["max_workers"] = int(os.getenv("MAX_WORKERS"))
+        if performance_overrides:
+            env_overrides["performance"] = performance_overrides
+        
+        monitoring_overrides = {}
+        if os.getenv("ENABLE_METRICS"):
+            monitoring_overrides["enable_metrics"] = os.getenv("ENABLE_METRICS").lower() == "true"
+        if os.getenv("LOG_LEVEL"):
+            monitoring_overrides["log_level"] = os.getenv("LOG_LEVEL")
+        if os.getenv("METRICS_PORT"):
+            monitoring_overrides["metrics_port"] = int(os.getenv("METRICS_PORT"))
+        if os.getenv("STRUCTURED_LOGGING"):
+            monitoring_overrides["structured_logging"] = os.getenv("STRUCTURED_LOGGING").lower() == "true"
+        if monitoring_overrides:
+            env_overrides["monitoring"] = monitoring_overrides
+        
+        plugins_overrides = {}
+        if os.getenv("PLUGINS_ENABLED"):
+            plugins_overrides["enabled"] = os.getenv("PLUGINS_ENABLED").lower() == "true"
+        if os.getenv("PLUGINS_HOT_RELOAD"):
+            plugins_overrides["hot_reload"] = os.getenv("PLUGINS_HOT_RELOAD").lower() == "true"
+        if plugins_overrides:
+            env_overrides["plugins"] = plugins_overrides
+        
+        security_overrides = {}
+        if os.getenv("ENABLE_ENCRYPTION"):
+            security_overrides["enable_encryption"] = os.getenv("ENABLE_ENCRYPTION").lower() == "true"
+        if os.getenv("SECRET_KEY"):
+            security_overrides["secret_key"] = os.getenv("SECRET_KEY")
+        if security_overrides:
+            env_overrides["security"] = security_overrides
         
         # Deep merge environment overrides
-        self._deep_merge(self._raw_config, env_overrides)
+        if env_overrides:
+            self._deep_merge(self._raw_config, env_overrides)
     
     def _deep_merge(self, base: Dict, updates: Dict) -> None:
         """Deep merge updates into base dictionary."""

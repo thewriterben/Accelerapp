@@ -121,7 +121,15 @@ def retry_with_backoff(
                     last_exception = e
                     attempt += 1
                     
+                    # Check if we should retry (check after incrementing attempt)
                     if not policy.should_retry(e, attempt):
+                        # If we've reached max attempts, raise RetryExhaustedError
+                        if attempt >= policy.max_attempts:
+                            raise RetryExhaustedError(
+                                f"Failed after {policy.max_attempts} attempts",
+                                {"last_exception": str(last_exception)}
+                            )
+                        # Otherwise, re-raise the original exception
                         raise
                     
                     if attempt < policy.max_attempts:
@@ -150,7 +158,15 @@ def retry_with_backoff(
                     last_exception = e
                     attempt += 1
                     
+                    # Check if we should retry (check after incrementing attempt)
                     if not policy.should_retry(e, attempt):
+                        # If we've reached max attempts, raise RetryExhaustedError
+                        if attempt >= policy.max_attempts:
+                            raise RetryExhaustedError(
+                                f"Failed after {policy.max_attempts} attempts",
+                                {"last_exception": str(last_exception)}
+                            )
+                        # Otherwise, re-raise the original exception
                         raise
                     
                     if attempt < policy.max_attempts:
