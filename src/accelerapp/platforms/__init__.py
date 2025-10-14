@@ -12,41 +12,41 @@ from .raspberry_pi_pico import RaspberryPiPicoPlatform
 from .raspberry_pi import RaspberryPiPlatform
 
 __all__ = [
-    'BasePlatform',
-    'ArduinoPlatform',
-    'ESP32Platform',
-    'STM32Platform',
-    'MicroPythonPlatform',
-    'RaspberryPiPicoPlatform',
-    'RaspberryPiPlatform',
-    'get_platform',
+    "BasePlatform",
+    "ArduinoPlatform",
+    "ESP32Platform",
+    "STM32Platform",
+    "MicroPythonPlatform",
+    "RaspberryPiPicoPlatform",
+    "RaspberryPiPlatform",
+    "get_platform",
 ]
 
 
 def get_platform(platform_name: str) -> BasePlatform:
     """
     Factory function to get platform instance by name.
-    
+
     Args:
         platform_name: Name of the platform (arduino, esp32, stm32, micropython, raspberry_pi_pico, raspberry_pi)
-        
+
     Returns:
         Platform instance
-        
+
     Raises:
         ValueError: If platform is not supported
     """
     platforms = {
-        'arduino': ArduinoPlatform,
-        'esp32': ESP32Platform,
-        'stm32': STM32Platform,
-        'micropython': MicroPythonPlatform,
-        'raspberry_pi_pico': RaspberryPiPicoPlatform,
-        'raspberry_pi': RaspberryPiPlatform,
+        "arduino": ArduinoPlatform,
+        "esp32": ESP32Platform,
+        "stm32": STM32Platform,
+        "micropython": MicroPythonPlatform,
+        "raspberry_pi_pico": RaspberryPiPicoPlatform,
+        "raspberry_pi": RaspberryPiPlatform,
     }
-    
+
     platform_class = platforms.get(platform_name.lower())
     if not platform_class:
         raise ValueError(f"Unsupported platform: {platform_name}")
-    
+
     return platform_class()

@@ -10,6 +10,7 @@ from enum import Enum
 
 class ProtocolType(Enum):
     """Hardware communication protocol types."""
+
     I2C = "i2c"
     SPI = "spi"
     CAN = "can"
@@ -20,12 +21,13 @@ class ProtocolType(Enum):
 @dataclass
 class I2CConfig:
     """I2C (Inter-Integrated Circuit) protocol configuration."""
+
     address: int  # 7-bit or 10-bit address
     speed: int = 100000  # Speed in Hz (100kHz standard, 400kHz fast, 1MHz fast-plus)
     sda_pin: Optional[int] = None
     scl_pin: Optional[int] = None
     pullup_enabled: bool = True
-    
+
     def validate(self) -> List[str]:
         """Validate I2C configuration."""
         errors = []
@@ -39,6 +41,7 @@ class I2CConfig:
 @dataclass
 class SPIConfig:
     """SPI (Serial Peripheral Interface) protocol configuration."""
+
     mode: int = 0  # SPI mode (0-3)
     speed: int = 1000000  # Speed in Hz
     mosi_pin: Optional[int] = None
@@ -46,7 +49,7 @@ class SPIConfig:
     sclk_pin: Optional[int] = None
     cs_pin: Optional[int] = None
     bit_order: str = "MSB"  # MSB or LSB first
-    
+
     def validate(self) -> List[str]:
         """Validate SPI configuration."""
         errors = []
@@ -60,11 +63,12 @@ class SPIConfig:
 @dataclass
 class CANConfig:
     """CAN (Controller Area Network) bus configuration."""
+
     baudrate: int = 500000  # Common: 125k, 250k, 500k, 1M
     tx_pin: Optional[int] = None
     rx_pin: Optional[int] = None
     mode: str = "normal"  # normal, loopback, silent, silent-loopback
-    
+
     def validate(self) -> List[str]:
         """Validate CAN configuration."""
         errors = []
@@ -77,16 +81,16 @@ class CANConfig:
 
 class ProtocolGenerator:
     """Generate code for hardware communication protocols."""
-    
+
     @staticmethod
     def generate_i2c_code(config: I2CConfig, platform: str) -> str:
         """
         Generate I2C initialization and communication code.
-        
+
         Args:
             config: I2C configuration
             platform: Target platform (arduino, esp32, stm32, etc.)
-            
+
         Returns:
             Generated code string
         """
@@ -98,7 +102,7 @@ class ProtocolGenerator:
             return ProtocolGenerator._generate_stm32_i2c(config)
         else:
             return f"// I2C not yet supported for {platform}"
-    
+
     @staticmethod
     def _generate_arduino_i2c(config: I2CConfig) -> str:
         """Generate Arduino I2C code."""
@@ -138,13 +142,13 @@ bool i2cRead(uint8_t reg, uint8_t* data, size_t len) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_esp32_i2c(config: I2CConfig) -> str:
         """Generate ESP32 I2C code."""
         sda = config.sda_pin if config.sda_pin else 21
         scl = config.scl_pin if config.scl_pin else 22
-        
+
         code = f"""
 // I2C Configuration for ESP32
 #include <Wire.h>
@@ -181,7 +185,7 @@ bool i2cRead(uint8_t reg, uint8_t* data, size_t len) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_stm32_i2c(config: I2CConfig) -> str:
         """Generate STM32 I2C code."""
@@ -221,16 +225,16 @@ HAL_StatusTypeDef i2cRead(uint8_t reg, uint8_t* data, uint16_t len) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def generate_spi_code(config: SPIConfig, platform: str) -> str:
         """
         Generate SPI initialization and communication code.
-        
+
         Args:
             config: SPI configuration
             platform: Target platform
-            
+
         Returns:
             Generated code string
         """
@@ -242,12 +246,12 @@ HAL_StatusTypeDef i2cRead(uint8_t reg, uint8_t* data, uint16_t len) {{
             return ProtocolGenerator._generate_stm32_spi(config)
         else:
             return f"// SPI not yet supported for {platform}"
-    
+
     @staticmethod
     def _generate_arduino_spi(config: SPIConfig) -> str:
         """Generate Arduino SPI code."""
         cs_pin = config.cs_pin if config.cs_pin else 10
-        
+
         code = f"""
 // SPI Configuration
 #include <SPI.h>
@@ -290,7 +294,7 @@ void spiWrite(uint8_t* data, size_t len) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_esp32_spi(config: SPIConfig) -> str:
         """Generate ESP32 SPI code."""
@@ -329,7 +333,7 @@ void spiWrite(uint8_t* data, size_t len) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_stm32_spi(config: SPIConfig) -> str:
         """Generate STM32 SPI code."""
@@ -363,16 +367,16 @@ HAL_StatusTypeDef spiWrite(uint8_t* data, uint16_t len) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def generate_can_code(config: CANConfig, platform: str) -> str:
         """
         Generate CAN bus initialization and communication code.
-        
+
         Args:
             config: CAN configuration
             platform: Target platform
-            
+
         Returns:
             Generated code string
         """
@@ -382,13 +386,13 @@ HAL_StatusTypeDef spiWrite(uint8_t* data, uint16_t len) {{
             return ProtocolGenerator._generate_stm32_can(config)
         else:
             return f"// CAN not yet supported for {platform}"
-    
+
     @staticmethod
     def _generate_esp32_can(config: CANConfig) -> str:
         """Generate ESP32 CAN code."""
         tx_pin = config.tx_pin if config.tx_pin else 5
         rx_pin = config.rx_pin if config.rx_pin else 4
-        
+
         code = f"""
 // CAN Configuration for ESP32
 #include <driver/can.h>
@@ -434,7 +438,7 @@ esp_err_t canReceive(can_message_t* message, uint32_t timeout_ms) {{
 }}
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_stm32_can(config: CANConfig) -> str:
         """Generate STM32 CAN code."""
@@ -510,17 +514,17 @@ HAL_StatusTypeDef canReceive(uint32_t* id, uint8_t* data, uint8_t* len, bool* ex
 
 class DeviceDriverGenerator:
     """Generate device drivers for common hardware components."""
-    
+
     @staticmethod
     def generate_sensor_driver(sensor_type: str, protocol: str, platform: str) -> str:
         """
         Generate device driver for common sensors.
-        
+
         Args:
             sensor_type: Type of sensor (e.g., 'bme280', 'mpu6050', 'ina219')
             protocol: Communication protocol (i2c, spi)
             platform: Target platform
-            
+
         Returns:
             Generated driver code
         """
@@ -532,13 +536,13 @@ class DeviceDriverGenerator:
             return DeviceDriverGenerator._generate_ina219_driver(protocol, platform)
         else:
             return f"// Driver for {sensor_type} not yet implemented"
-    
+
     @staticmethod
     def _generate_bme280_driver(protocol: str, platform: str) -> str:
         """Generate BME280 temperature/humidity/pressure sensor driver."""
         if protocol.lower() != "i2c":
             return "// BME280 driver requires I2C protocol"
-        
+
         code = """
 // BME280 Temperature/Humidity/Pressure Sensor Driver
 #define BME280_I2C_ADDR 0x76
@@ -599,13 +603,13 @@ public:
 };
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_mpu6050_driver(protocol: str, platform: str) -> str:
         """Generate MPU6050 accelerometer/gyroscope driver."""
         if protocol.lower() != "i2c":
             return "// MPU6050 driver requires I2C protocol"
-        
+
         code = """
 // MPU6050 Accelerometer/Gyroscope Driver
 #define MPU6050_I2C_ADDR 0x68
@@ -653,13 +657,13 @@ public:
 };
 """
         return code.strip()
-    
+
     @staticmethod
     def _generate_ina219_driver(protocol: str, platform: str) -> str:
         """Generate INA219 current/voltage sensor driver."""
         if protocol.lower() != "i2c":
             return "// INA219 driver requires I2C protocol"
-        
+
         code = """
 // INA219 Current/Voltage Sensor Driver
 #define INA219_I2C_ADDR 0x40

@@ -10,10 +10,8 @@ from .collaboration_protocols import CollaborationProtocol, ProtocolType
 
 # WebSocket support is optional
 try:
-    from .websocket_server import (
-        WebSocketCollaborationServer, 
-        EventType as WebSocketEventType
-    )
+    from .websocket_server import WebSocketCollaborationServer, EventType as WebSocketEventType
+
     __all__ = [
         "MessageBus",
         "Message",
@@ -25,7 +23,7 @@ try:
         "CollaborationProtocol",
         "ProtocolType",
         "WebSocketCollaborationServer",
-        "WebSocketEventType"
+        "WebSocketEventType",
     ]
 except ImportError:
     __all__ = [
@@ -37,5 +35,5 @@ except ImportError:
         "SharedContext",
         "ContextScope",
         "CollaborationProtocol",
-        "ProtocolType"
+        "ProtocolType",
     ]

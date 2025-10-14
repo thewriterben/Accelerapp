@@ -10,14 +10,14 @@ from pathlib import Path
 
 class AuditLogger:
     """Logs security-critical operations for compliance."""
-    
+
     def __init__(self, log_dir: Path):
         """Initialize audit logger."""
         self.log_dir = log_dir
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.log_file = self.log_dir / "audit.log"
         self.events: List[Dict[str, Any]] = []
-    
+
     def log_event(
         self,
         event_type: str,
@@ -25,7 +25,7 @@ class AuditLogger:
         action: str,
         resource: str,
         success: bool,
-        metadata: Dict[str, Any] = None
+        metadata: Dict[str, Any] = None,
     ) -> None:
         """Log security event."""
         event = {
@@ -35,15 +35,15 @@ class AuditLogger:
             "action": action,
             "resource": resource,
             "success": success,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
-        
+
         self.events.append(event)
-        
+
         # Write to log file
-        with open(self.log_file, 'a') as f:
-            f.write(json.dumps(event) + '\n')
-    
+        with open(self.log_file, "a") as f:
+            f.write(json.dumps(event) + "\n")
+
     def get_events(self, limit: int = 100) -> List[Dict[str, Any]]:
         """Get recent events."""
         return self.events[-limit:]

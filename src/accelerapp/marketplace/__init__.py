@@ -7,8 +7,8 @@ from .template import TemplateMetadata, TemplatePackage
 from .search import TemplateSearch
 
 __all__ = [
-    'TemplateRegistry',
-    'TemplateMetadata',
-    'TemplatePackage',
-    'TemplateSearch',
+    "TemplateRegistry",
+    "TemplateMetadata",
+    "TemplatePackage",
+    "TemplateSearch",
 ]

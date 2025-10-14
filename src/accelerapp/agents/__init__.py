@@ -12,7 +12,7 @@ from .optimization_agents import (
     MemoryOptimizationAgent,
     CodeQualityAgent,
     SecurityAnalysisAgent,
-    RefactoringAgent
+    RefactoringAgent,
 )
 
 __all__ = [
@@ -24,5 +24,5 @@ __all__ = [
     "MemoryOptimizationAgent",
     "CodeQualityAgent",
     "SecurityAnalysisAgent",
-    "RefactoringAgent"
+    "RefactoringAgent",
 ]

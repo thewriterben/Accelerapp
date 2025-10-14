@@ -11,7 +11,7 @@ class PromptTemplates:
     Collection of specialized prompt templates for different code generation tasks.
     Each template is optimized for specific agent capabilities.
     """
-    
+
     # Firmware generation prompts
     FIRMWARE_BASE = """You are an expert embedded systems programmer specializing in {platform} firmware development.
 
@@ -169,114 +169,84 @@ Target Platform: {platform}
 
 Provide optimized version with explanations:
 """
-    
+
     @classmethod
     def format_firmware_prompt(
-        cls,
-        platform: str,
-        mcu: str,
-        clock_speed: str,
-        peripherals: str,
-        **kwargs
+        cls, platform: str, mcu: str, clock_speed: str, peripherals: str, **kwargs
     ) -> str:
         """
         Format firmware generation prompt.
-        
+
         Args:
             platform: Target platform (arduino, stm32, esp32, etc.)
             mcu: Microcontroller model
             clock_speed: Operating frequency
             peripherals: Peripheral configuration text
             **kwargs: Additional context
-            
+
         Returns:
             Formatted prompt string
         """
         return cls.FIRMWARE_BASE.format(
-            platform=platform,
-            mcu=mcu,
-            clock_speed=clock_speed,
-            peripherals=peripherals
+            platform=platform, mcu=mcu, clock_speed=clock_speed, peripherals=peripherals
         )
-    
+
     @classmethod
     def format_peripheral_prompt(
-        cls,
-        peripheral_type: str,
-        platform: str,
-        peripheral_config: str,
-        **kwargs
+        cls, peripheral_type: str, platform: str, peripheral_config: str, **kwargs
     ) -> str:
         """
         Format peripheral driver prompt.
-        
+
         Args:
             peripheral_type: Type of peripheral (LED, sensor, motor, etc.)
             platform: Target platform
             peripheral_config: Peripheral configuration details
             **kwargs: Additional context
-            
+
         Returns:
             Formatted prompt string
         """
         return cls.FIRMWARE_PERIPHERAL.format(
-            peripheral_type=peripheral_type,
-            platform=platform,
-            peripheral_config=peripheral_config
+            peripheral_type=peripheral_type, platform=platform, peripheral_config=peripheral_config
         )
-    
+
     @classmethod
-    def format_sdk_prompt(
-        cls,
-        language: str,
-        device_spec: str,
-        protocol: str,
-        **kwargs
-    ) -> str:
+    def format_sdk_prompt(cls, language: str, device_spec: str, protocol: str, **kwargs) -> str:
         """
         Format SDK generation prompt.
-        
+
         Args:
             language: Programming language (python, cpp, javascript)
             device_spec: Device specification text
             protocol: Communication protocol
             **kwargs: Additional context
-            
+
         Returns:
             Formatted prompt string
         """
         return cls.SOFTWARE_SDK.format(
-            language=language,
-            device_spec=device_spec,
-            protocol=protocol
+            language=language, device_spec=device_spec, protocol=protocol
         )
-    
+
     @classmethod
-    def format_ui_prompt(
-        cls,
-        framework: str,
-        device_name: str,
-        features: str,
-        **kwargs
-    ) -> str:
+    def format_ui_prompt(cls, framework: str, device_name: str, features: str, **kwargs) -> str:
         """
         Format UI generation prompt.
-        
+
         Args:
             framework: UI framework (react, vue, html)
             device_name: Name of the device
             features: Feature list text
             **kwargs: Additional context
-            
+
         Returns:
             Formatted prompt string
         """
         return cls.UI_FRAMEWORK.format(
-            framework=framework,
-            device_name=device_name,
-            features=features
+            framework=framework, device_name=device_name, features=features
         )
-    
+
     @classmethod
     def format_agent_coordination_prompt(
         cls,
@@ -284,18 +254,18 @@ Provide optimized version with explanations:
         agent_context: str,
         agent_role: str,
         integration_points: str,
-        **kwargs
+        **kwargs,
     ) -> str:
         """
         Format agent coordination prompt.
-        
+
         Args:
             task_description: Description of current task
             agent_context: Context from other agents
             agent_role: Role of current agent
             integration_points: Points of integration
             **kwargs: Additional context
-            
+
         Returns:
             Formatted prompt string
         """
@@ -303,74 +273,69 @@ Provide optimized version with explanations:
             task_description=task_description,
             agent_context=agent_context,
             agent_role=agent_role,
-            integration_points=integration_points
+            integration_points=integration_points,
         )
-    
+
     @classmethod
     def get_system_prompt(cls, agent_type: str) -> str:
         """
         Get system-level prompt for an agent type.
-        
+
         Args:
             agent_type: Type of agent (firmware, software, ui, coordinator)
-            
+
         Returns:
             System prompt for the agent
         """
         system_prompts = {
-            'firmware': (
+            "firmware": (
                 "You are an expert embedded systems programmer with deep knowledge of "
                 "microcontroller architectures, real-time systems, and hardware interfaces. "
                 "You write efficient, production-ready firmware code following best practices."
             ),
-            'software': (
+            "software": (
                 "You are an expert software engineer specializing in SDK and driver development. "
                 "You create clean, well-documented APIs that are easy to use and maintain. "
                 "You follow language-specific best practices and design patterns."
             ),
-            'ui': (
+            "ui": (
                 "You are an expert frontend developer with expertise in modern UI frameworks. "
                 "You create responsive, accessible, and user-friendly interfaces. "
                 "You follow component-based architecture and state management best practices."
             ),
-            'coordinator': (
+            "coordinator": (
                 "You are an expert system architect coordinating multiple specialized agents. "
                 "You ensure consistency, compatibility, and quality across all generated components. "
                 "You understand the big picture and maintain integration standards."
             ),
-            'reviewer': (
+            "reviewer": (
                 "You are an expert code reviewer with deep knowledge across multiple domains. "
                 "You identify bugs, security issues, performance problems, and style inconsistencies. "
                 "You provide constructive, actionable feedback."
-            )
+            ),
         }
-        
+
         return system_prompts.get(
-            agent_type,
-            "You are an expert programmer helping with code generation tasks."
+            agent_type, "You are an expert programmer helping with code generation tasks."
         )
-    
+
     @classmethod
-    def add_context(
-        cls,
-        base_prompt: str,
-        context: Dict[str, Any]
-    ) -> str:
+    def add_context(cls, base_prompt: str, context: Dict[str, Any]) -> str:
         """
         Add additional context to a base prompt.
-        
+
         Args:
             base_prompt: Base prompt template
             context: Dictionary of additional context
-            
+
         Returns:
             Enhanced prompt with context
         """
         if not context:
             return base_prompt
-        
+
         context_str = "\n\nAdditional Context:\n"
         for key, value in context.items():
             context_str += f"- {key}: {value}\n"
-        
+
         return base_prompt + context_str

@@ -15,5 +15,5 @@ __all__ = [
     "OllamaProvider",
     "ModelManager",
     "ModelInfo",
-    "PromptTemplates"
+    "PromptTemplates",
 ]

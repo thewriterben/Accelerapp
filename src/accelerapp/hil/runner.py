@@ -13,29 +13,27 @@ class TestRunner:
     """
     Manages test execution and reporting.
     """
-    
+
     def __init__(self, framework: HILTestFramework):
         """
         Initialize test runner.
-        
+
         Args:
             framework: HIL test framework
         """
         self.framework = framework
         self.reports: List[Dict[str, Any]] = []
-    
+
     def run_tests(
-        self,
-        test_ids: Optional[List[str]] = None,
-        verbose: bool = False
+        self, test_ids: Optional[List[str]] = None, verbose: bool = False
     ) -> Dict[str, Any]:
         """
         Run tests and generate report.
-        
+
         Args:
             test_ids: Specific test IDs to run (None for all)
             verbose: Enable verbose output
-            
+
         Returns:
             Test report dictionary
         """
@@ -51,60 +49,60 @@ class TestRunner:
             if verbose:
                 for result in results:
                     self._print_result(result)
-        
+
         summary = self.framework.get_test_summary()
-        
+
         report = {
-            'timestamp': datetime.utcnow().isoformat(),
-            'summary': summary,
-            'results': [r.to_dict() for r in results],
+            "timestamp": datetime.utcnow().isoformat(),
+            "summary": summary,
+            "results": [r.to_dict() for r in results],
         }
-        
+
         self.reports.append(report)
-        
+
         return report
-    
+
     def _print_result(self, result: TestResult):
         """Print test result to console."""
         status_symbols = {
-            TestStatus.PASSED: '✓',
-            TestStatus.FAILED: '✗',
-            TestStatus.ERROR: '⚠',
-            TestStatus.SKIPPED: '○',
+            TestStatus.PASSED: "✓",
+            TestStatus.FAILED: "✗",
+            TestStatus.ERROR: "⚠",
+            TestStatus.SKIPPED: "○",
         }
-        
-        symbol = status_symbols.get(result.status, '?')
+
+        symbol = status_symbols.get(result.status, "?")
         print(f"{symbol} {result.test_name} ({result.duration:.3f}s)")
-        
+
         if result.message and result.status != TestStatus.PASSED:
             print(f"  {result.message}")
-    
-    def save_report(self, filepath: Path, report_format: str = 'json'):
+
+    def save_report(self, filepath: Path, report_format: str = "json"):
         """
         Save test report to file.
-        
+
         Args:
             filepath: Output file path
             report_format: Report format (json, html)
         """
         if not self.reports:
             return
-        
+
         latest_report = self.reports[-1]
-        
-        if report_format == 'json':
-            with open(filepath, 'w') as f:
+
+        if report_format == "json":
+            with open(filepath, "w") as f:
                 json.dump(latest_report, f, indent=2)
-        
-        elif report_format == 'html':
+
+        elif report_format == "html":
             html = self._generate_html_report(latest_report)
             filepath.write_text(html)
-    
+
     def _generate_html_report(self, report: Dict[str, Any]) -> str:
         """Generate HTML report."""
-        summary = report['summary']
-        results = report['results']
-        
+        summary = report["summary"]
+        results = report["results"]
+
         html = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -142,9 +140,9 @@ class TestRunner:
             <th>Message</th>
         </tr>
 """
-        
+
         for result in results:
-            status_class = result['status']
+            status_class = result["status"]
             html += f"""        <tr>
             <td>{result['test_name']}</td>
             <td class="{status_class}">{result['status']}</td>
@@ -152,22 +150,22 @@ class TestRunner:
             <td>{result['message']}</td>
         </tr>
 """
-        
+
         html += """    </table>
 </body>
 </html>"""
-        
+
         return html
-    
+
     def get_latest_report(self) -> Optional[Dict[str, Any]]:
         """
         Get the latest test report.
-        
+
         Returns:
             Latest report or None
         """
         return self.reports[-1] if self.reports else None
-    
+
     def clear_reports(self):
         """Clear all stored reports."""
         self.reports.clear()

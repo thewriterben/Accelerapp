@@ -7,9 +7,9 @@ from .components import ComponentLibrary
 from .exporter import SpecificationExporter
 
 __all__ = [
-    'VisualSpecification',
-    'Component',
-    'Connection',
-    'ComponentLibrary',
-    'SpecificationExporter',
+    "VisualSpecification",
+    "Component",
+    "Connection",
+    "ComponentLibrary",
+    "SpecificationExporter",
 ]
