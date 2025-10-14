@@ -14,6 +14,9 @@ from .optimization_agents import (
     SecurityAnalysisAgent,
     RefactoringAgent,
 )
+from .predictive_maintenance_agent import PredictiveMaintenanceAgent
+from .self_healing_agent import SelfHealingAgent
+from .firmware_patch_agent import FirmwarePatchAgent
 
 __all__ = [
     "AgentOrchestrator",
@@ -25,4 +28,7 @@ __all__ = [
     "CodeQualityAgent",
     "SecurityAnalysisAgent",
     "RefactoringAgent",
+    "PredictiveMaintenanceAgent",
+    "SelfHealingAgent",
+    "FirmwarePatchAgent",
 ]
