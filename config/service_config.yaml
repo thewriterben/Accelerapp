@@ -1,0 +1,73 @@
+# Service Layer Configuration for Accelerapp
+
+services:
+  # Global service settings
+  global:
+    enabled: true
+    timeout: 30
+    retry_attempts: 3
+    retry_backoff: 1.0
+    
+  # Hardware Service
+  hardware_service:
+    enabled: true
+    auto_discover: true
+    device_timeout: 10
+    
+  # AI Service
+  ai_service:
+    enabled: true
+    auto_load_agents: true
+    agent_timeout: 60
+    max_concurrent_agents: 5
+    
+  # Workflow Service
+  workflow_service:
+    enabled: true
+    max_workflow_duration: 600
+    enable_workflow_logging: true
+    
+  # Monitoring Service
+  monitoring_service:
+    enabled: true
+    metrics_collection: true
+    health_checks: true
+
+# Plugin System
+plugins:
+  enabled: true
+  
+  # Plugin discovery
+  auto_discover: true
+  plugin_dirs:
+    - plugins
+    - ~/.accelerapp/plugins
+  
+  # Plugin security
+  verify_signatures: false
+  allowed_plugins: []  # Empty = allow all
+  
+  # Plugin lifecycle
+  lazy_loading: false
+  auto_initialize: true
+
+# Error Handling & Resilience
+resilience:
+  # Circuit breaker configuration
+  circuit_breaker:
+    enabled: false
+    failure_threshold: 5
+    timeout: 60
+    half_open_timeout: 30
+  
+  # Retry configuration
+  retry:
+    enabled: true
+    max_attempts: 3
+    backoff_multiplier: 2
+    max_backoff: 30
+  
+  # Graceful degradation
+  degradation:
+    enabled: true
+    fallback_timeout: 5

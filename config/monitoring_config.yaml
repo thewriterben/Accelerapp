@@ -1,0 +1,47 @@
+# Monitoring and Observability Configuration for Accelerapp
+
+monitoring:
+  # Enable metrics collection
+  metrics:
+    enabled: true
+    port: 8080
+    endpoint: /metrics
+    
+    # Metric collection intervals (seconds)
+    intervals:
+      system: 30
+      service: 60
+      custom: 120
+  
+  # Health check configuration
+  health_checks:
+    enabled: true
+    endpoint: /health
+    
+    # Health check intervals (seconds)
+    interval: 30
+    timeout: 10
+    
+    # Critical checks that affect overall health
+    critical_checks:
+      - monitoring_service
+      - ai_service
+      - hardware_service
+  
+  # Resource monitoring
+  resources:
+    enabled: true
+    track_cpu: true
+    track_memory: true
+    track_disk: true
+    
+    # Thresholds for alerts
+    thresholds:
+      cpu_percent: 80
+      memory_percent: 85
+      disk_percent: 90
+  
+  # Performance profiling
+  profiling:
+    enabled: false
+    detailed: false
