@@ -33,3 +33,12 @@ sphinx-rtd-theme>=1.0.0
 # Agent framework (optional, for advanced features)
 # langchain>=0.1.0
 # openai>=1.0.0
+
+# Performance & Async (Phase 2)
+aiohttp>=3.8.0
+
+# Monitoring & Logging (Phase 2)
+psutil>=5.9.0
+
+# Resilience & Error Handling (Phase 2)
+# tenacity>=8.2.0  # For advanced retry patterns

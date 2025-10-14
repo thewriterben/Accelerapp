@@ -1,0 +1,33 @@
+# Structured Logging Configuration for Accelerapp
+
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+  
+  # Enable structured JSON logging
+  structured: true
+  
+  # Log file configuration
+  file:
+    enabled: false
+    path: logs/accelerapp.log
+    max_size: 10485760  # 10 MB
+    backup_count: 5
+  
+  # Console output
+  console:
+    enabled: true
+    colored: true
+  
+  # Correlation tracking
+  correlation:
+    enabled: true
+    header_name: X-Correlation-ID
+  
+  # Module-specific log levels
+  modules:
+    accelerapp.core: INFO
+    accelerapp.services: INFO
+    accelerapp.monitoring: WARNING
+    accelerapp.plugins: INFO
+    accelerapp.utils: WARNING
