@@ -1,5 +1,7 @@
 # Complete Workflow Example
 
+**Last Updated**: 2025-10-14 | **Version**: 1.0.0
+
 This document demonstrates a complete end-to-end workflow using Accelerapp.
 
 ## Scenario: Building a Smart Temperature Monitor
