@@ -2,7 +2,7 @@
 Hardware abstraction layer module for Accelerapp.
 Provides unified hardware component interfaces and conflict detection.
 Integrates WildCAM_ESP32 hardware generation capabilities.
-Includes ESP32 Marauder, Flipper Zero, and ESP32-CAM support.
+
 """
 
 from .abstraction import HardwareAbstractionLayer, HardwareComponent, ComponentFactory
@@ -48,6 +48,28 @@ from .camera import (
     CameraSecurityManager,
 )
 
+# CYD (Cheap Yellow Display) ecosystem support
+from .cyd import (
+    # HAL Components
+    DisplayDriver,
+    TouchController,
+    GPIOManager,
+    PowerManager,
+    SensorMonitor,
+    # Community Integration
+    CommunityIntegration,
+    TemplateManager,
+    ExampleLoader,
+    # AI Agents
+    CYDCodeGenerator,
+    HardwareOptimizer,
+    ProjectBuilder,
+    # Digital Twin
+    CYDSimulator,
+    CYDTwinModel,
+    CYDMonitor,
+)
+
 __all__ = [
     "HardwareAbstractionLayer",
     "HardwareComponent",
@@ -79,15 +101,5 @@ __all__ = [
     "NFCTag",
     "SubGHzSignal",
     "IRSignal",
-    "ESP32Camera",
-    "CameraConfig",
-    "CameraResolution",
-    "StreamingServer",
-    "StreamProtocol",
-    "MotionDetector",
-    "MotionEvent",
-    "CameraDigitalTwin",
-    "CameraWebInterface",
-    "StorageManager",
-    "CameraSecurityManager",
+
 ]
