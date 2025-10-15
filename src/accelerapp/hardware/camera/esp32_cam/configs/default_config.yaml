@@ -1,0 +1,174 @@
+# Default ESP32-CAM Configuration
+# This file provides a template for configuring ESP32-CAM devices
+
+camera:
+  # Board variant
+  variant: "ai_thinker"  # Options: ai_thinker, wrover_kit, esp_eye, m5stack_camera, ttgo_t_camera
+  
+  # Camera sensor
+  sensor: "ov2640"  # Options: ov2640, ov5640, ov3660, ov7670
+  
+  # Image settings
+  frame_size: "vga"  # Options: qqvga, qvga, vga, svga, xga, sxga, uxga
+  pixel_format: "jpeg"  # Options: jpeg, rgb565, yuv422, grayscale, rgb888
+  jpeg_quality: 12  # 0-63, lower is better quality
+  fb_count: 2  # Frame buffer count (1-2)
+  
+  # Camera adjustments
+  brightness: 0  # -2 to 2
+  contrast: 0    # -2 to 2
+  saturation: 0  # -2 to 2
+  sharpness: 0   # -2 to 2
+  
+  # Auto settings
+  auto_exposure: true
+  auto_white_balance: true
+  auto_white_balance_gain: true
+  exposure_ctrl_sensor: true
+  gain_ctrl: true
+  
+  # Flip settings
+  horizontal_flip: false
+  vertical_flip: false
+
+streaming:
+  # Protocol selection
+  protocol: "mjpeg"  # Options: mjpeg, rtsp, webrtc, http
+  
+  # Quality preset
+  quality: "medium"  # Options: low, medium, high, ultra
+  
+  # Network settings
+  port: 8080
+  max_clients: 5
+  buffer_size: 32768
+  
+  # Performance
+  fps_target: 15
+  enable_adaptive_quality: true
+  bandwidth_limit_kbps: null  # null for unlimited
+  
+  # RTSP specific
+  rtsp_path: "/stream"
+  rtsp_auth_required: false
+  
+  # Bandwidth optimization
+  enable_compression: true
+  dynamic_bitrate: true
+
+ai_processing:
+  # Model selection
+  model_type: "person_detection"  # Options: person_detection, face_detection, object_detection, gesture_recognition
+  
+  # Backend
+  backend: "tflite_micro"  # Options: tflite_micro, esp_nn, tflite_esp
+  
+  # Model settings
+  model_path: null  # Path to custom model
+  input_width: 96
+  input_height: 96
+  input_channels: 1  # 1 for grayscale, 3 for RGB
+  confidence_threshold: 0.7
+  
+  # Performance
+  enable_quantization: true
+  use_int8: true
+  arena_size_bytes: 40000
+  
+  # Detection
+  max_detections: 10
+  nms_threshold: 0.5
+
+motion_detection:
+  # Algorithm
+  algorithm: "frame_diff"  # Options: frame_diff, background_subtraction, optical_flow
+  
+  # Sensitivity
+  threshold: 20  # Pixel difference threshold
+  min_area: 500  # Minimum area for motion detection
+  
+  # Performance
+  frame_skip: 2  # Process every Nth frame
+  history_frames: 3
+  
+  # Events
+  enable_events: true
+  cooldown_seconds: 5
+  
+  # Recording
+  record_on_motion: false
+  pre_record_seconds: 2
+  post_record_seconds: 5
+
+remote_access:
+  # Authentication
+  auth_method: "token"  # Options: none, basic, token, oauth, certificate
+  access_token: "change_me_secure_token"
+  token_expiry_hours: 24
+  
+  # Access control
+  allowed_ips: []  # Empty for all IPs
+  rate_limit_per_minute: 60
+  
+  # Tunnel configuration
+  tunnel_type: "none"  # Options: none, ngrok, cloudflare, custom
+  enable_tls: true
+  heartbeat_interval: 30
+  reconnect_attempts: 5
+
+web_interface:
+  # Server settings
+  enable_api: true
+  enable_web_ui: true
+  port: 80
+  
+  # CORS
+  enable_cors: true
+  cors_origins: ["*"]
+  
+  # API
+  api_prefix: "/api"
+  enable_swagger: true
+  
+  # Rate limiting
+  enable_rate_limit: true
+  requests_per_minute: 60
+  
+  # UI
+  ui_theme: "light"
+  enable_live_preview: true
+
+digital_twin:
+  # Digital twin integration
+  twin_id: null  # Set to enable digital twin
+  twin_sync_interval: 60  # Seconds
+  
+observability:
+  # Monitoring
+  enable_metrics: true
+  enable_health_checks: true
+  
+  # Logging
+  log_level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR
+  log_to_file: false
+  log_file_path: "/var/log/esp32cam.log"
+
+# Network configuration
+network:
+  wifi_ssid: "YOUR_WIFI_SSID"
+  wifi_password: "YOUR_WIFI_PASSWORD"
+  hostname: "esp32cam"
+  
+  # Static IP (optional)
+  use_static_ip: false
+  static_ip: "192.168.1.100"
+  gateway: "192.168.1.1"
+  subnet: "255.255.255.0"
+  dns: "8.8.8.8"
+
+# Firmware
+firmware:
+  version: "1.0.0"
+  enable_ota: true
+  ota_url: null  # URL for OTA updates
+  check_interval_hours: 24
