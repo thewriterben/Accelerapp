@@ -1,0 +1,55 @@
+# ESP32-S3-CAM specific configuration
+device:
+  id: "esp32s3cam_001"
+  board_type: "esp32_s3_cam"
+  camera_model: "ov2640"
+
+# Pin configuration for ESP32-S3-CAM
+pins:
+  PWDN: -1
+  RESET: -1
+  XCLK: 15
+  SIOD: 4
+  SIOC: 5
+  Y9: 16
+  Y8: 17
+  Y7: 18
+  Y6: 12
+  Y5: 10
+  Y4: 8
+  Y3: 9
+  Y2: 11
+  VSYNC: 6
+  HREF: 7
+  PCLK: 13
+
+camera:
+  resolution: "1600x1200"  # UXGA - S3 can handle higher resolution
+  frame_format: "jpeg"
+  jpeg_quality: 10
+  brightness: 0
+  contrast: 0
+  saturation: 0
+  vertical_flip: false
+  horizontal_mirror: false
+  frame_rate: 20  # S3 supports higher frame rates
+
+power:
+  voltage: "5V"
+  current: "1000mA"
+  enable_power_saving: false  # S3 has more power available
+
+features:
+  - wifi
+  - camera
+  - microsd
+  - usb
+  - gpio
+  - psram
+  - ai_acceleration
+
+ai_features:
+  enabled: true
+  tinyml_support: true
+  face_detection: true
+  object_detection: false

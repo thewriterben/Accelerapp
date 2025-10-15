@@ -2,7 +2,7 @@
 Hardware abstraction layer module for Accelerapp.
 Provides unified hardware component interfaces and conflict detection.
 Integrates WildCAM_ESP32 hardware generation capabilities.
-Includes ESP32 Marauder, Flipper Zero, and ESP32-CAM support.
+
 """
 
 from .abstraction import HardwareAbstractionLayer, HardwareComponent, ComponentFactory
@@ -36,9 +36,7 @@ from .flipper_zero import (
 )
 from .camera import (
     ESP32Camera,
-    CameraVariant,
-    CameraConfig,
-    StreamingProtocol,
+
 )
 
 __all__ = [
@@ -72,8 +70,5 @@ __all__ = [
     "NFCTag",
     "SubGHzSignal",
     "IRSignal",
-    "ESP32Camera",
-    "CameraVariant",
-    "CameraConfig",
-    "StreamingProtocol",
+
 ]
