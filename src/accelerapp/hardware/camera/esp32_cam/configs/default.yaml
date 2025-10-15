@@ -1,0 +1,60 @@
+# Default ESP32-CAM configuration
+device:
+  id: "esp32cam_001"
+  board_type: "ai_thinker"
+  camera_model: "ov2640"
+
+camera:
+  resolution: "640x480"
+  frame_format: "jpeg"
+  jpeg_quality: 10
+  brightness: 0
+  contrast: 0
+  saturation: 0
+  vertical_flip: false
+  horizontal_mirror: false
+  frame_rate: 10
+
+streaming:
+  protocol: "mjpeg"
+  port: 81
+  max_clients: 5
+  bitrate: 500000
+  enable_audio: false
+
+motion_detection:
+  enabled: false
+  sensitivity: "medium"
+  min_area_percentage: 5
+  cooldown_ms: 1000
+  record_on_motion: false
+
+storage:
+  type: "sd_card"
+  base_path: "/sdcard"
+  max_file_size_mb: 10
+  auto_cleanup: true
+  cleanup_threshold_percent: 80
+
+security:
+  auth_method: "token"
+  enable_encryption: true
+  require_https: true
+  session_timeout_minutes: 30
+  max_failed_attempts: 5
+
+network:
+  wifi_ssid: "YOUR_SSID"
+  wifi_password: "YOUR_PASSWORD"
+  hostname: "esp32cam"
+  enable_mdns: true
+  static_ip: null
+
+web_interface:
+  enabled: true
+  port: 80
+
+digital_twin:
+  enabled: true
+  sync_interval_seconds: 30
+  max_history: 1000
