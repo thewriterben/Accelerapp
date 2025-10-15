@@ -1,0 +1,200 @@
+# Hardware Device Configuration
+# Configuration for ESP32 Marauder, Flipper Zero, and other supported devices
+
+devices:
+  esp32_marauder:
+    enabled: true
+    auto_discover: true
+    baudrate: 115200
+    timeout: 5.0
+    capabilities:
+      - wifi_scan
+      - bluetooth_scan
+      - deauth_attack
+      - packet_capture
+    
+    # Security settings
+    security:
+      require_authorization: true
+      log_attacks: true
+      allowed_attacks:
+        - deauth
+        - beacon
+        - probe
+      # Prohibited attacks for safety
+      prohibited_attacks:
+        - rickroll  # Example: can be enabled in development
+    
+    # Default scan settings
+    scan_defaults:
+      wifi_duration: 10.0
+      bluetooth_duration: 10.0
+      packet_capture_duration: 30.0
+    
+    # Attack settings
+    attack_defaults:
+      deauth_duration: 60.0
+      beacon_count: 10
+  
+  flipper_zero:
+    enabled: true
+    auto_discover: true
+    baudrate: 230400
+    timeout: 5.0
+    capabilities:
+      - rfid_125khz
+      - rfid_hf
+      - nfc
+      - subghz
+      - infrared
+      - gpio
+      - ibutton
+      - badusb
+    
+    # Security settings
+    security:
+      require_authorization: true
+      log_operations: true
+      # GPIO restrictions
+      gpio_allowed_pins: [1, 2, 3, 4, 5, 6, 7]
+      gpio_protected_pins: []  # Pins that cannot be modified
+    
+    # Default operation settings
+    operation_defaults:
+      rfid_read_duration: 10.0
+      nfc_read_duration: 10.0
+      subghz_receive_duration: 10.0
+      infrared_receive_duration: 10.0
+    
+    # Sub-GHz frequency presets (in MHz)
+    subghz_frequencies:
+      - 300.00
+      - 315.00
+      - 318.00
+      - 390.00
+      - 433.92
+      - 868.35
+      - 915.00
+    
+    # IR protocol support
+    infrared_protocols:
+      - NEC
+      - Samsung
+      - RC5
+      - RC6
+      - Sony
+      - Philips
+
+# Unified hardware manager settings
+hardware_manager:
+  auto_discovery_enabled: true
+  auto_reconnect: true
+  reconnect_interval: 30  # seconds
+  max_reconnect_attempts: 3
+  
+  # Unified scan settings
+  unified_scan:
+    enabled: true
+    default_duration: 10.0
+    parallel_scans: true
+    max_concurrent_operations: 5
+  
+  # Event callbacks
+  callbacks:
+    device_connected: true
+    device_disconnected: true
+    scan_complete: true
+    error: true
+  
+  # Logging
+  logging:
+    level: INFO
+    log_to_file: true
+    log_file: "logs/hardware_manager.log"
+    max_log_size: 10485760  # 10 MB
+    backup_count: 5
+
+# Security policies
+security:
+  global_policies:
+    # Authorization
+    require_authorization: true
+    authorization_timeout: 300  # seconds
+    
+    # Audit trail
+    enable_audit_log: true
+    audit_log_file: "logs/hardware_audit.log"
+    
+    # Rate limiting
+    enable_rate_limiting: true
+    max_operations_per_minute: 60
+    
+    # Penetration testing ethics
+    ethics_compliance:
+      require_target_consent: true
+      legal_disclaimer_shown: true
+      only_owned_networks: true
+  
+  # Device-specific policies
+  device_policies:
+    esp32_marauder:
+      allowed_operations:
+        - scan
+        - monitor
+        - defensive_testing  # Only on authorized networks
+      
+      prohibited_operations:
+        - public_deauth
+        - malicious_beacon
+    
+    flipper_zero:
+      allowed_operations:
+        - read
+        - analyze
+        - emulate_owned  # Only owned tags/signals
+      
+      prohibited_operations:
+        - clone_unauthorized
+        - replay_attack
+
+# Auto-discovery settings
+auto_discovery:
+  enabled: true
+  scan_interval: 60  # seconds
+  retry_failed: true
+  retry_interval: 300  # seconds
+  
+  # Connection filters
+  filters:
+    vendor_ids:
+      - 0x10C4  # Silicon Labs (ESP32)
+      - 0x1A86  # QinHeng (ESP32)
+      - 0x303A  # Espressif (ESP32)
+      - 0x0483  # STMicroelectronics (Flipper)
+    
+    product_names:
+      - "ESP32"
+      - "Flipper"
+      - "Marauder"
+
+# Feature flags
+features:
+  esp32_marauder_support: true
+  flipper_zero_support: true
+  unified_scanning: true
+  coordinated_operations: true
+  real_time_monitoring: true
+  packet_analysis: true
+  signal_replay: false  # Disabled by default for security
+  
+# Performance settings
+performance:
+  buffer_size: 4096
+  read_timeout: 1.0
+  write_timeout: 1.0
+  flush_interval: 0.1
+  
+  # Async settings
+  async_enabled: true
+  max_concurrent_tasks: 10
+  task_timeout: 300
