@@ -5,6 +5,7 @@ Provides Prometheus-compatible metrics collection with thread safety.
 
 import threading
 import time
+from collections import deque
 from typing import Any, Dict, Optional
 
 
@@ -92,7 +93,8 @@ class Histogram:
         self.name = name
         self.description = description
         self._max_observations = max_observations
-        self._observations = []
+        # Use deque with maxlen for O(1) FIFO operations
+        self._observations: deque = deque(maxlen=max_observations)
         self._sum = 0.0
         self._count = 0
         self._min = float("inf")
@@ -108,13 +110,8 @@ class Histogram:
             self._min = min(self._min, value)
             self._max = max(self._max, value)
 
-            # Store observation with limit to prevent memory issues
-            if len(self._observations) < self._max_observations:
-                self._observations.append(value)
-            else:
-                # Rotate old observations out (FIFO)
-                self._observations.pop(0)
-                self._observations.append(value)
+            # Store observation (deque handles FIFO automatically)
+            self._observations.append(value)
 
     def get(self) -> Dict[str, Any]:
         """Get histogram statistics."""

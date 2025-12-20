@@ -116,11 +116,26 @@ class CacheManager:
             Dictionary of found key-value pairs
         """
         results = {}
+        current_time = time.time()
         with self._lock:
             for key in keys:
-                value = self.get(key)
-                if value is not None:
-                    results[key] = value
+                if key not in self._cache:
+                    self._misses += 1
+                    continue
+
+                entry = self._cache[key]
+                if current_time > entry["expires_at"]:
+                    # Expired, remove from cache
+                    del self._cache[key]
+                    if key in self._access_times:
+                        del self._access_times[key]
+                    self._misses += 1
+                    continue
+
+                # Update access time
+                self._access_times[key] = current_time
+                self._hits += 1
+                results[key] = entry["value"]
         return results
 
     def set_many(
@@ -135,9 +150,16 @@ class CacheManager:
             items: Dictionary of key-value pairs
             ttl: Time-to-live in seconds
         """
+        ttl_seconds = ttl if ttl is not None else self.default_ttl
+        expires_at = time.time() + ttl_seconds
         with self._lock:
             for key, value in items.items():
-                self.set(key, value, ttl)
+                # Check if we need to evict old entries
+                if len(self._cache) >= self.max_size and key not in self._cache:
+                    self._evict_lru()
+
+                self._cache[key] = {"value": value, "expires_at": expires_at}
+                self._access_times[key] = time.time()
 
     def delete(self, key: str) -> bool:
         """
