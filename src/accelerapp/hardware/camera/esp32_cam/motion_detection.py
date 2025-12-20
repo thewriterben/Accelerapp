@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class MotionSensitivity(Enum):
     """Motion detection sensitivity levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -21,6 +22,7 @@ class MotionSensitivity(Enum):
 
 class MotionAlgorithm(Enum):
     """Motion detection algorithms."""
+
     FRAME_DIFF = "frame_diff"
     BACKGROUND_SUBTRACTION = "background_subtraction"
     OPTICAL_FLOW = "optical_flow"
@@ -29,6 +31,7 @@ class MotionAlgorithm(Enum):
 @dataclass
 class MotionConfig:
     """Motion detection configuration."""
+
     threshold: int = 25
     sensitivity: MotionSensitivity = MotionSensitivity.MEDIUM
     algorithm: MotionAlgorithm = MotionAlgorithm.FRAME_DIFF

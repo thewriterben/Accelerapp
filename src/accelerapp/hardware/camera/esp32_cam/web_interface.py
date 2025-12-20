@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class APIConfig:
     """API configuration."""
+
     port: int = 80
     enable_cors: bool = True
     enable_auth: bool = False
@@ -69,9 +70,7 @@ class WebInterface:
         """Check if server is running."""
         return self._running
 
-    def handle_request(
-        self, path: str, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def handle_request(self, path: str, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
         Handle HTTP request.
 
@@ -91,9 +90,7 @@ class WebInterface:
 
         return {"code": 404, "error": "Not found"}
 
-    def _handle_status(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_status(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle status endpoint."""
         if method != "GET":
             return {"code": 405, "error": "Method not allowed"}
@@ -103,9 +100,7 @@ class WebInterface:
             "data": self.camera.get_status(),
         }
 
-    def _handle_capture(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_capture(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle capture endpoint."""
         if method != "GET":
             return {"code": 405, "error": "Method not allowed"}
@@ -119,9 +114,7 @@ class WebInterface:
 
         return {"code": 500, "error": "Capture failed"}
 
-    def _handle_config(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_config(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle config endpoint."""
         if method == "GET":
             return {
@@ -134,9 +127,7 @@ class WebInterface:
 
         return {"code": 405, "error": "Method not allowed"}
 
-    def _handle_quality(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_quality(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle quality setting endpoint."""
         if method != "PUT":
             return {"code": 405, "error": "Method not allowed"}
@@ -149,9 +140,7 @@ class WebInterface:
 
         return {"code": 400, "error": "Invalid quality"}
 
-    def _handle_brightness(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_brightness(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle brightness setting endpoint."""
         if method != "PUT":
             return {"code": 405, "error": "Method not allowed"}
@@ -164,9 +153,7 @@ class WebInterface:
 
         return {"code": 400, "error": "Invalid brightness"}
 
-    def _handle_flip(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_flip(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle flip setting endpoint."""
         if method != "PUT":
             return {"code": 405, "error": "Method not allowed"}
@@ -177,27 +164,21 @@ class WebInterface:
 
         return {"code": 200, "data": {"horizontal": h_flip, "vertical": v_flip}}
 
-    def _handle_home(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_home(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle home page."""
         return {
             "code": 200,
             "html": self._generate_home_html(),
         }
 
-    def _handle_live_page(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_live_page(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle live stream page."""
         return {
             "code": 200,
             "html": self._generate_live_html(),
         }
 
-    def _handle_settings_page(
-        self, method: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_settings_page(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Handle settings page."""
         return {
             "code": 200,

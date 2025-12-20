@@ -10,6 +10,7 @@ from typing import Dict, Any, Optional, List
 
 class CameraResolution(Enum):
     """Camera resolution options."""
+
     QQVGA = "160x120"
     QVGA = "320x240"
     VGA = "640x480"
@@ -22,6 +23,7 @@ class CameraResolution(Enum):
 
 class StreamProtocol(Enum):
     """Streaming protocol options."""
+
     MJPEG = "mjpeg"
     RTSP = "rtsp"
     WEBRTC = "webrtc"
@@ -31,6 +33,7 @@ class StreamProtocol(Enum):
 @dataclass
 class CameraConfig:
     """Camera configuration."""
+
     device_id: str = "esp32_cam"
     board_type: str = "ai_thinker"
     resolution: CameraResolution = CameraResolution.VGA
@@ -47,18 +50,40 @@ class CameraConfig:
         if not self.pin_config:
             if self.board_type == "ai_thinker":
                 self.pin_config = {
-                    "PWDN": 32, "RESET": -1, "XCLK": 0,
-                    "SIOD": 26, "SIOC": 27, "Y9": 35, "Y8": 34,
-                    "Y7": 39, "Y6": 36, "Y5": 21, "Y4": 19,
-                    "Y3": 18, "Y2": 5, "VSYNC": 25, "HREF": 23,
+                    "PWDN": 32,
+                    "RESET": -1,
+                    "XCLK": 0,
+                    "SIOD": 26,
+                    "SIOC": 27,
+                    "Y9": 35,
+                    "Y8": 34,
+                    "Y7": 39,
+                    "Y6": 36,
+                    "Y5": 21,
+                    "Y4": 19,
+                    "Y3": 18,
+                    "Y2": 5,
+                    "VSYNC": 25,
+                    "HREF": 23,
                     "PCLK": 22,
                 }
             elif self.board_type == "esp32_s3_cam":
                 self.pin_config = {
-                    "PWDN": -1, "RESET": -1, "XCLK": 15,
-                    "SIOD": 4, "SIOC": 5, "Y9": 16, "Y8": 17,
-                    "Y7": 18, "Y6": 12, "Y5": 10, "Y4": 8,
-                    "Y3": 9, "Y2": 11, "VSYNC": 6, "HREF": 7,
+                    "PWDN": -1,
+                    "RESET": -1,
+                    "XCLK": 15,
+                    "SIOD": 4,
+                    "SIOC": 5,
+                    "Y9": 16,
+                    "Y8": 17,
+                    "Y7": 18,
+                    "Y6": 12,
+                    "Y5": 10,
+                    "Y4": 8,
+                    "Y3": 9,
+                    "Y2": 11,
+                    "VSYNC": 6,
+                    "HREF": 7,
                     "PCLK": 13,
                 }
 
@@ -204,6 +229,7 @@ class StreamingServer:
 @dataclass
 class MotionEvent:
     """Motion event data."""
+
     timestamp: str
     sensitivity: str
     area: int
@@ -215,6 +241,7 @@ class MotionDetector:
     def __init__(self, camera: ESP32Camera, sensitivity=None):
         """Initialize motion detector."""
         from .esp32_cam.motion_detection import MotionSensitivity
+
         self.camera = camera
         self.sensitivity = sensitivity or MotionSensitivity.MEDIUM
         self._enabled = False
@@ -401,6 +428,7 @@ class CameraSecurityManager:
         """Authenticate user."""
         if username in self._users and self._users[username]["password"] == password:
             import secrets
+
             token = secrets.token_urlsafe(32)
             self._tokens[token] = {
                 "username": username,

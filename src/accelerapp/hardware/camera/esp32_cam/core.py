@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 
 class CameraModel(Enum):
     """Camera sensor model types."""
+
     OV2640 = "OV2640"
     OV3660 = "OV3660"
     OV5640 = "OV5640"
@@ -16,6 +17,7 @@ class CameraModel(Enum):
 
 class FrameFormat(Enum):
     """Camera frame formats."""
+
     JPEG = "jpeg"
     RGB565 = "rgb565"
     GRAYSCALE = "grayscale"
@@ -24,18 +26,20 @@ class FrameFormat(Enum):
 
 class FrameSize(Enum):
     """Camera frame sizes."""
-    QQVGA = "160x120"     # 160x120
-    QVGA = "320x240"      # 320x240
-    VGA = "640x480"       # 640x480
-    SVGA = "800x600"      # 800x600
-    XGA = "1024x768"      # 1024x768
-    HD = "1280x720"       # 1280x720
-    SXGA = "1280x1024"    # 1280x1024
-    UXGA = "1600x1200"    # 1600x1200
+
+    QQVGA = "160x120"  # 160x120
+    QVGA = "320x240"  # 320x240
+    VGA = "640x480"  # 640x480
+    SVGA = "800x600"  # 800x600
+    XGA = "1024x768"  # 1024x768
+    HD = "1280x720"  # 1280x720
+    SXGA = "1280x1024"  # 1280x1024
+    UXGA = "1600x1200"  # 1600x1200
 
 
 class CameraVariant(Enum):
     """ESP32-CAM board variants."""
+
     AI_THINKER = "ai_thinker"
     WROVER_KIT = "wrover_kit"
     ESP_EYE = "esp_eye"
@@ -45,6 +49,7 @@ class CameraVariant(Enum):
 
 class CameraSensor(Enum):
     """Camera sensor types."""
+
     OV2640 = "OV2640"
     OV3660 = "OV3660"
     OV5640 = "OV5640"
@@ -52,6 +57,7 @@ class CameraSensor(Enum):
 
 class PixelFormat(Enum):
     """Pixel format options."""
+
     JPEG = "JPEG"
     RGB565 = "RGB565"
     GRAYSCALE = "GRAYSCALE"
@@ -60,6 +66,7 @@ class PixelFormat(Enum):
 @dataclass
 class CameraConfig:
     """Camera configuration."""
+
     variant: CameraVariant = CameraVariant.AI_THINKER
     sensor: CameraSensor = CameraSensor.OV2640
     frame_size: FrameSize = FrameSize.VGA
@@ -87,18 +94,40 @@ class CameraConfig:
         if not self.pin_config:
             if self.variant == CameraVariant.AI_THINKER:
                 self.pin_config = {
-                    "PWDN": 32, "RESET": -1, "XCLK": 0,
-                    "SIOD": 26, "SIOC": 27, "Y9": 35, "Y8": 34,
-                    "Y7": 39, "Y6": 36, "Y5": 21, "Y4": 19,
-                    "Y3": 18, "Y2": 5, "VSYNC": 25, "HREF": 23,
+                    "PWDN": 32,
+                    "RESET": -1,
+                    "XCLK": 0,
+                    "SIOD": 26,
+                    "SIOC": 27,
+                    "Y9": 35,
+                    "Y8": 34,
+                    "Y7": 39,
+                    "Y6": 36,
+                    "Y5": 21,
+                    "Y4": 19,
+                    "Y3": 18,
+                    "Y2": 5,
+                    "VSYNC": 25,
+                    "HREF": 23,
                     "PCLK": 22,
                 }
             elif self.variant == CameraVariant.ESP32_S3_CAM:
                 self.pin_config = {
-                    "PWDN": -1, "RESET": -1, "XCLK": 15,
-                    "SIOD": 4, "SIOC": 5, "Y9": 16, "Y8": 17,
-                    "Y7": 18, "Y6": 12, "Y5": 10, "Y4": 8,
-                    "Y3": 9, "Y2": 11, "VSYNC": 6, "HREF": 7,
+                    "PWDN": -1,
+                    "RESET": -1,
+                    "XCLK": 15,
+                    "SIOD": 4,
+                    "SIOC": 5,
+                    "Y9": 16,
+                    "Y8": 17,
+                    "Y7": 18,
+                    "Y6": 12,
+                    "Y5": 10,
+                    "Y4": 8,
+                    "Y3": 9,
+                    "Y2": 11,
+                    "VSYNC": 6,
+                    "HREF": 7,
                     "PCLK": 13,
                 }
 
@@ -253,7 +282,7 @@ class ESP32Camera:
             C code string for camera configuration
         """
         pins = self.config.pin_config
-        code = f'''
+        code = f"""
 // Camera configuration for {self.config.variant.value}
 #include <esp_camera.h>
 
@@ -291,5 +320,5 @@ void init_camera() {{
     }}
     Serial.println("Camera initialized successfully");
 }}
-'''
+"""
         return code

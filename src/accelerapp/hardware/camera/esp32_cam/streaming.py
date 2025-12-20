@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class StreamingProtocol(Enum):
     """Supported streaming protocols."""
+
     MJPEG = "mjpeg"
     RTSP = "rtsp"
     WEBRTC = "webrtc"
@@ -23,6 +24,7 @@ class StreamingProtocol(Enum):
 @dataclass
 class StreamConfig:
     """Streaming configuration."""
+
     protocol: StreamingProtocol = StreamingProtocol.MJPEG
     port: int = 81
     max_clients: int = 4
