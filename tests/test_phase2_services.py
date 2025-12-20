@@ -266,7 +266,11 @@ class TestMonitoringService:
     @pytest.mark.asyncio
     async def test_record_metric(self):
         """Test recording metrics."""
-        service = MonitoringService()
+        from accelerapp.monitoring import MetricsCollector
+
+        # Use isolated metrics collector to avoid test interference
+        isolated_metrics = MetricsCollector()
+        service = MonitoringService(metrics_collector=isolated_metrics)
         await service.initialize()
 
         service.record_metric("counter", "test_counter", 1)

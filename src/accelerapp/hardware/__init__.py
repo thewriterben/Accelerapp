@@ -43,6 +43,24 @@ from .camera.esp32_cam import (
     CameraVariant,
 )
 
+# CYD (Cheap Yellow Display) integration
+from .cyd import (
+    DisplayDriver,
+    TouchController,
+    GPIOManager,
+    PowerManager,
+    SensorMonitor,
+    CommunityIntegration,
+    TemplateManager,
+    ExampleLoader,
+    CYDCodeGenerator,
+    HardwareOptimizer,
+    ProjectBuilder,
+    CYDSimulator,
+    CYDTwinModel,
+    CYDMonitor,
+)
+
 __all__ = [
     "HardwareAbstractionLayer",
     "HardwareComponent",
@@ -78,4 +96,19 @@ __all__ = [
     "CameraConfig",
     "CameraResolution",
     "CameraVariant",
+    # CYD components
+    "DisplayDriver",
+    "TouchController",
+    "GPIOManager",
+    "PowerManager",
+    "SensorMonitor",
+    "CommunityIntegration",
+    "TemplateManager",
+    "ExampleLoader",
+    "CYDCodeGenerator",
+    "HardwareOptimizer",
+    "ProjectBuilder",
+    "CYDSimulator",
+    "CYDTwinModel",
+    "CYDMonitor",
 ]
