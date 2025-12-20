@@ -12,24 +12,27 @@ class CameraDigitalTwin:
     Digital twin interface for ESP32-CAM devices.
     Integrates with the existing digital twin platform.
     """
-    
+
     def __init__(self, camera, twin_id: Optional[str] = None):
         """
         Initialize camera digital twin.
-        
+
         Args:
             camera: ESP32Camera instance
-            twin_id: Optional twin identifier (defaults to device_id)
+            twin_id: Optional twin identifier (defaults to twin_id from config)
         """
         self.camera = camera
-        self.twin_id = twin_id or camera.config.device_id
+        self.twin_id = twin_id or getattr(camera.config, "twin_id", None) or "default"
         self._state_history: list = []
         self._max_history = 1000
-    
+        self._error_count = 0
+        self._stream_count = 0
+        self._start_time = datetime.utcnow()
+
     def sync_state(self) -> Dict[str, Any]:
         """
         Synchronize camera state to digital twin.
-        
+
         Returns:
             Current state dictionary
         """
@@ -39,78 +42,80 @@ class CameraDigitalTwin:
             "camera_status": self.camera.get_status(),
             "camera_config": self.camera.get_config(),
         }
-        
+
         # Store in history
         self._state_history.append(state)
         if len(self._state_history) > self._max_history:
             self._state_history.pop(0)
-        
+
         return state
-    
+
     def get_telemetry(self) -> Dict[str, Any]:
         """
         Get real-time telemetry data.
-        
+
         Returns:
             Telemetry dictionary
         """
         status = self.camera.get_status()
-        
+        uptime = (datetime.utcnow() - self._start_time).total_seconds()
+
         return {
             "twin_id": self.twin_id,
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "metrics": {
-                "initialized": status["initialized"],
-                "streaming": status["streaming"],
-                "captures": status["stats"]["captures"],
-                "streams": status["stats"]["streams"],
-                "errors": status["stats"]["errors"],
-                "uptime": status["stats"]["uptime"],
+                "initialized": status.get("initialized", False),
+                "streaming": False,  # Default since not always available
+                "captures": status.get("frame_count", 0),
+                "streams": self._stream_count,
+                "errors": self._error_count,
+                "uptime": uptime,
             },
             "health": self._calculate_health(),
         }
-    
+
     def _calculate_health(self) -> str:
         """Calculate camera health status."""
         status = self.camera.get_status()
-        
-        if not status["initialized"]:
+
+        if not status.get("initialized", False):
             return "offline"
-        
-        error_rate = status["stats"]["errors"] / max(status["stats"]["captures"], 1)
+
+        captures = status.get("frame_count", 1)
+        error_rate = self._error_count / max(captures, 1)
         if error_rate > 0.1:
             return "degraded"
-        
+
         return "healthy"
-    
+
     def get_state_history(self, limit: int = 100) -> list:
         """
         Get historical state snapshots.
-        
+
         Args:
             limit: Maximum number of snapshots to return
-            
+
         Returns:
             List of historical states
         """
         return self._state_history[-limit:]
-    
+
     def predict_maintenance(self) -> Dict[str, Any]:
         """
         Predict maintenance needs based on usage patterns.
-        
+
         Returns:
             Maintenance prediction dictionary
         """
         status = self.camera.get_status()
-        stats = status["stats"]
-        
+        captures = status.get("frame_count", 0)
+
         # Simple predictive logic
-        total_operations = stats["captures"] + stats["streams"]
+        total_operations = captures + self._stream_count
         maintenance_threshold = 10000
-        
+
         usage_percentage = (total_operations / maintenance_threshold) * 100
-        
+
         return {
             "twin_id": self.twin_id,
             "timestamp": datetime.utcnow().isoformat() + "Z",
@@ -119,37 +124,39 @@ class CameraDigitalTwin:
             "maintenance_recommended": usage_percentage >= 80,
             "health_status": self._calculate_health(),
         }
-    
+
     def get_analytics(self) -> Dict[str, Any]:
         """
         Get performance analytics.
-        
+
         Returns:
             Analytics dictionary
         """
         status = self.camera.get_status()
-        
+        config = self.camera.get_config()
+        uptime = (datetime.utcnow() - self._start_time).total_seconds()
+
         return {
             "twin_id": self.twin_id,
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "performance": {
-                "total_captures": status["stats"]["captures"],
-                "total_streams": status["stats"]["streams"],
-                "error_count": status["stats"]["errors"],
-                "uptime_seconds": status["stats"]["uptime"],
+                "total_captures": status.get("frame_count", 0),
+                "total_streams": self._stream_count,
+                "error_count": self._error_count,
+                "uptime_seconds": uptime,
             },
             "configuration": {
-                "resolution": status["resolution"],
-                "format": status["format"],
-                "board_type": status["board_type"],
-                "camera_model": status["camera_model"],
+                "resolution": status.get("frame_size", "VGA"),
+                "format": config.get("pixel_format", "JPEG"),
+                "board_type": status.get("variant", "ai_thinker"),
+                "camera_model": status.get("sensor", "OV2640"),
             },
         }
-    
+
     def export_twin_data(self) -> Dict[str, Any]:
         """
         Export complete twin data for backup or migration.
-        
+
         Returns:
             Complete twin data dictionary
         """

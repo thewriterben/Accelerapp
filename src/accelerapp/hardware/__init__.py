@@ -36,7 +36,11 @@ from .flipper_zero import (
 )
 from .camera import (
     ESP32Camera,
-
+    CameraConfig,
+    CameraResolution,
+)
+from .camera.esp32_cam import (
+    CameraVariant,
 )
 
 __all__ = [
@@ -70,5 +74,8 @@ __all__ = [
     "NFCTag",
     "SubGHzSignal",
     "IRSignal",
-
+    "ESP32Camera",
+    "CameraConfig",
+    "CameraResolution",
+    "CameraVariant",
 ]
