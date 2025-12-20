@@ -114,7 +114,8 @@ class AnomalyDetector:
         self.metric_windows[key].append(value)
         
         # Update baseline if we have enough samples
-        min_samples = min(20, self.window_size // 2)
+        # Use minimum of 5 samples for quick startup, but prefer more for accuracy
+        min_samples = min(5, self.window_size // 2)
         if len(self.metric_windows[key]) >= min_samples:
             stats = self._calculate_statistics(list(self.metric_windows[key]))
             # Ensure minimum standard deviation to avoid false positives

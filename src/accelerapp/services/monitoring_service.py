@@ -3,20 +3,26 @@ Monitoring and observability service for Accelerapp.
 Provides centralized monitoring capabilities.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, Optional
 
 from ..core.interfaces import BaseService
-from ..monitoring import get_logger, get_metrics, get_health_checker
+from ..monitoring import get_logger, get_metrics, get_health_checker, MetricsCollector
 
 
 class MonitoringService(BaseService):
     """Service for monitoring and observability."""
 
-    def __init__(self):
-        """Initialize monitoring service."""
+    def __init__(self, metrics_collector: Optional[MetricsCollector] = None):
+        """
+        Initialize monitoring service.
+
+        Args:
+            metrics_collector: Optional custom metrics collector.
+                              Uses global metrics collector if not provided.
+        """
         super().__init__("MonitoringService")
         self.logger = get_logger(__name__)
-        self.metrics = get_metrics()
+        self.metrics = metrics_collector if metrics_collector is not None else get_metrics()
         self.health_checker = get_health_checker()
 
     async def initialize(self) -> None:
