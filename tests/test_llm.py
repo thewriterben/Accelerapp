@@ -270,3 +270,237 @@ def test_prompt_templates_add_context():
     assert "Generate code for device." in enhanced
     assert "version" in enhanced
     assert "author" in enhanced
+
+
+# ============================================================
+# Tests for Online LLM Providers (OpenAI, Anthropic)
+# ============================================================
+
+
+def test_openai_provider_import():
+    """Test OpenAI provider import."""
+    from accelerapp.llm import OpenAIProvider
+    assert OpenAIProvider is not None
+
+
+def test_anthropic_provider_import():
+    """Test Anthropic provider import."""
+    from accelerapp.llm import AnthropicProvider
+    assert AnthropicProvider is not None
+
+
+def test_llm_backend_online_values():
+    """Test LLMBackend includes online providers."""
+    from accelerapp.llm import LLMBackend
+    
+    assert LLMBackend.OPENAI is not None
+    assert LLMBackend.ANTHROPIC is not None
+    assert LLMBackend.OPENAI.value == "openai"
+    assert LLMBackend.ANTHROPIC.value == "anthropic"
+
+
+def test_openai_provider_initialization():
+    """Test OpenAI provider initialization."""
+    from accelerapp.llm import OpenAIProvider
+    
+    provider = OpenAIProvider()
+    assert provider.base_url == "https://api.openai.com/v1"
+    assert provider.timeout == 120
+
+
+def test_openai_provider_custom_config():
+    """Test OpenAI provider with custom configuration."""
+    from accelerapp.llm import OpenAIProvider
+    
+    provider = OpenAIProvider(
+        api_key="test-key",
+        base_url="https://custom.api.com",
+        timeout=60,
+        organization="test-org"
+    )
+    assert provider.api_key == "test-key"
+    assert provider.base_url == "https://custom.api.com"
+    assert provider.timeout == 60
+    assert provider.organization == "test-org"
+
+
+def test_openai_provider_health_check_no_key():
+    """Test OpenAI health check without API key."""
+    from accelerapp.llm import OpenAIProvider
+    
+    provider = OpenAIProvider(api_key=None)
+    health = provider.health_check()
+    
+    assert health["provider"] == "openai"
+    assert health["has_api_key"] is False
+    assert health["available"] is False
+
+
+def test_openai_provider_list_models_no_key():
+    """Test listing models without API key returns empty list."""
+    from accelerapp.llm import OpenAIProvider
+    
+    provider = OpenAIProvider(api_key=None)
+    models = provider.list_models()
+    
+    assert isinstance(models, list)
+    assert len(models) == 0
+
+
+def test_openai_provider_generate_without_key_raises():
+    """Test that generate raises error without API key."""
+    from accelerapp.llm import OpenAIProvider
+    import pytest
+    
+    provider = OpenAIProvider(api_key=None)
+    
+    with pytest.raises(RuntimeError) as exc_info:
+        provider.generate("test prompt", "gpt-4o")
+    
+    assert "API key not configured" in str(exc_info.value)
+
+
+def test_openai_provider_default_model():
+    """Test OpenAI default model is set."""
+    from accelerapp.llm import OpenAIProvider
+    
+    assert OpenAIProvider.DEFAULT_MODEL == "gpt-4o"
+    assert "gpt-4o" in OpenAIProvider.SUPPORTED_MODELS
+
+
+def test_anthropic_provider_initialization():
+    """Test Anthropic provider initialization."""
+    from accelerapp.llm import AnthropicProvider
+    
+    provider = AnthropicProvider()
+    assert provider.base_url == "https://api.anthropic.com"
+    assert provider.timeout == 120
+
+
+def test_anthropic_provider_custom_config():
+    """Test Anthropic provider with custom configuration."""
+    from accelerapp.llm import AnthropicProvider
+    
+    provider = AnthropicProvider(
+        api_key="test-key",
+        base_url="https://custom.api.com",
+        timeout=60
+    )
+    assert provider.api_key == "test-key"
+    assert provider.base_url == "https://custom.api.com"
+    assert provider.timeout == 60
+
+
+def test_anthropic_provider_health_check_no_key():
+    """Test Anthropic health check without API key."""
+    from accelerapp.llm import AnthropicProvider
+    
+    provider = AnthropicProvider(api_key=None)
+    health = provider.health_check()
+    
+    assert health["provider"] == "anthropic"
+    assert health["has_api_key"] is False
+    assert health["available"] is False
+
+
+def test_anthropic_provider_list_models():
+    """Test listing Anthropic models returns supported models."""
+    from accelerapp.llm import AnthropicProvider
+    
+    provider = AnthropicProvider()
+    models = provider.list_models()
+    
+    assert isinstance(models, list)
+    assert len(models) > 0
+    assert "claude-sonnet-4-20250514" in models
+
+
+def test_anthropic_provider_generate_without_key_raises():
+    """Test that generate raises error without API key."""
+    from accelerapp.llm import AnthropicProvider
+    import pytest
+    
+    provider = AnthropicProvider(api_key=None)
+    
+    with pytest.raises(RuntimeError) as exc_info:
+        provider.generate("test prompt", "claude-sonnet-4-20250514")
+    
+    assert "API key not configured" in str(exc_info.value)
+
+
+def test_anthropic_provider_default_model():
+    """Test Anthropic default model is set."""
+    from accelerapp.llm import AnthropicProvider
+    
+    assert AnthropicProvider.DEFAULT_MODEL == "claude-sonnet-4-20250514"
+    assert "claude-sonnet-4-20250514" in AnthropicProvider.SUPPORTED_MODELS
+
+
+def test_anthropic_token_counter():
+    """Test Anthropic token counter approximation."""
+    from accelerapp.llm import AnthropicProvider
+    
+    provider = AnthropicProvider()
+    count = provider.count_tokens("This is a test sentence.")
+    
+    assert isinstance(count, int)
+    assert count > 0
+
+
+def test_llm_service_register_online_providers():
+    """Test registering online providers with LLM service."""
+    from accelerapp.llm import (
+        LocalLLMService,
+        OpenAIProvider,
+        AnthropicProvider,
+        LLMBackend,
+    )
+    
+    service = LocalLLMService()
+    
+    openai_provider = OpenAIProvider(api_key="test")
+    anthropic_provider = AnthropicProvider(api_key="test")
+    
+    service.register_provider(LLMBackend.OPENAI, openai_provider)
+    service.register_provider(LLMBackend.ANTHROPIC, anthropic_provider)
+    
+    assert LLMBackend.OPENAI.value in service.providers
+    assert LLMBackend.ANTHROPIC.value in service.providers
+
+
+def test_llm_service_set_online_backend():
+    """Test setting online backend as active."""
+    from accelerapp.llm import (
+        LocalLLMService,
+        OpenAIProvider,
+        AnthropicProvider,
+        LLMBackend,
+    )
+    
+    service = LocalLLMService()
+    service.register_provider(LLMBackend.OPENAI, OpenAIProvider(api_key="test"))
+    service.register_provider(LLMBackend.ANTHROPIC, AnthropicProvider(api_key="test"))
+    
+    # First registered becomes active by default
+    assert service.active_backend == LLMBackend.OPENAI.value
+    
+    # Switch to Anthropic
+    service.set_active_backend(LLMBackend.ANTHROPIC)
+    assert service.active_backend == LLMBackend.ANTHROPIC.value
+
+
+def test_llm_service_health_check_with_online_providers():
+    """Test health check includes online provider status."""
+    from accelerapp.llm import (
+        LocalLLMService,
+        OpenAIProvider,
+        LLMBackend,
+    )
+    
+    service = LocalLLMService()
+    service.register_provider(LLMBackend.OPENAI, OpenAIProvider(api_key=None))
+    
+    health = service.health_check()
+    
+    assert "providers" in health
+    assert LLMBackend.OPENAI.value in health["providers"]

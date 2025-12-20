@@ -92,25 +92,35 @@ Enterprise-grade security built into every generated system:
 
 📖 [Zero-Trust Architecture Documentation](docs/ZERO_TRUST_ARCHITECTURE.md)
 
-### 🌐 Air-Gapped Deployment
+### 🌐 Air-Gapped & Cloud LLM Support
 
-Complete offline operation for secure, isolated environments:
+Flexible deployment options for any environment:
 
+**Air-Gapped (Offline) Mode:**
 - **Local LLM Integration**: Ollama, LocalAI, llama.cpp support
 - **Multi-Agent Communication**: Internal messaging without external dependencies
 - **Knowledge Base Management**: Offline code templates and patterns
 - **Autonomous Generation**: Self-hosted code generation pipeline
 - **Zero External Dependencies**: No internet connection required
 
-```bash
-# Install for air-gapped deployment
-sudo bash deployment/install/install-airgap.sh
+**Online (Cloud) Mode:**
+- **OpenAI Integration**: GPT-4o, GPT-4-turbo, GPT-3.5-turbo
+- **Anthropic Integration**: Claude Sonnet 4, Claude Opus 4, Claude 3.5
+- **Cloud Storage**: Artifact management with S3, Azure Blob, GCS
+- **Sync Services**: Bidirectional sync for configurations and deployments
+- **Hybrid Mode**: Automatic fallback between cloud and local LLMs
 
-# Generate code offline
+```bash
+# Air-gapped deployment
+sudo bash deployment/install/install-airgap.sh
 accelerapp generate device.yaml --offline
+
+# Cloud-enabled generation
+export OPENAI_API_KEY="sk-..."
+accelerapp generate device.yaml --provider openai
 ```
 
-📖 [Air-Gapped Deployment Guide](config/airgap/README.md) • [Implementation Summary](AIRGAP_FEATURES.md)
+📖 [Air-Gapped Deployment Guide](config/airgap/README.md) • [Online LLM & Cloud Features](ONLINE_LLM_CLOUD_FEATURES.md)
 
 ### 🧠 TinyML & Edge AI Integration
 
@@ -753,6 +763,7 @@ pytest --cov=accelerapp --cov-report=html
 
 ### Feature Documentation
 
+- **[Online LLM & Cloud](ONLINE_LLM_CLOUD_FEATURES.md)**: Cloud LLM and storage features
 - **[Air-Gapped Deployment](AIRGAP_FEATURES.md)**: Offline code generation
 - **[TinyML Integration](TINYML_IMPLEMENTATION_SUMMARY.md)**: Edge AI features
 - **[Digital Twin Platform](DIGITAL_TWIN_FEATURES.md)**: Virtual hardware replicas

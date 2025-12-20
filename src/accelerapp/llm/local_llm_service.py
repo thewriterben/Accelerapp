@@ -1,5 +1,5 @@
 """
-Main LLM service interface for local model integration.
+Main LLM service interface for local and online model integration.
 Provides unified interface for multiple LLM backends.
 """
 
@@ -9,11 +9,16 @@ from enum import Enum
 
 
 class LLMBackend(Enum):
-    """Supported local LLM backends."""
+    """Supported LLM backends - both local and online."""
 
+    # Local backends (air-gapped)
     OLLAMA = "ollama"
     LOCALAI = "localai"
     LLAMACPP = "llamacpp"
+
+    # Online backends (cloud)
+    OPENAI = "openai"
+    ANTHROPIC = "anthropic"
 
 
 class LLMProvider(ABC):
