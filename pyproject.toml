@@ -64,6 +64,10 @@ Documentation = "https://github.com/thewriterben/Accelerapp/blob/main/README.md"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"accelerapp.hardware" = ["registry.json"]
+"accelerapp.firmware" = ["templates.json"]
+
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]

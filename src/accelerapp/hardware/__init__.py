@@ -43,6 +43,18 @@ from .camera.esp32_cam import (
     CameraVariant,
 )
 
+# OBC hardware registry (single source of truth, Ecosystem Integration I1)
+from .registry import (
+    Accessory,
+    Board,
+    Registry,
+    RegistrySchemaError,
+    boards_for_platform,
+    default_registry,
+    load_registry,
+    platform_for_board,
+)
+
 # CYD (Cheap Yellow Display) integration
 from .cyd import (
     DisplayDriver,
@@ -111,4 +123,13 @@ __all__ = [
     "CYDSimulator",
     "CYDTwinModel",
     "CYDMonitor",
+    # OBC registry consumer
+    "Accessory",
+    "Board",
+    "Registry",
+    "RegistrySchemaError",
+    "boards_for_platform",
+    "default_registry",
+    "load_registry",
+    "platform_for_board",
 ]
