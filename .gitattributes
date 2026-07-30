@@ -1,0 +1,28 @@
+# Line endings, so a Windows clone and a Linux CI runner see the same bytes.
+#
+# Added 2026-07-29. Without it, `core.autocrlf` (on by default in the Windows Git
+# installer) rewrote every text file to CRLF on checkout, and `git status` in
+# this repo reported 559 modified files whose only difference was line endings —
+# `git diff --ignore-cr-at-eol` was empty. A working tree that is never clean is
+# a working tree nobody reads, and this repo carries two mirrors of OBC artifacts
+# (src/accelerapp/hardware/registry.json, src/accelerapp/firmware/templates.json)
+# whose whole value is being byte-identical to the core agent's copies.
+
+* text=auto eol=lf
+
+# Windows batch files must stay CRLF to run at all.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Never normalise or diff these as text.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.whl  binary
+*.bin  binary
