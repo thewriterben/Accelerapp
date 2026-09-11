@@ -68,11 +68,28 @@ jobs:
         cache-to: type=gha,mode=max
         platforms: linux/amd64,linux/arm64
     
+    # Three things were wrong with this step, and it has never run to completion:
+    #
+    #   1. `${{ github.repository }}` is `thewriterben/Accelerapp`. Docker
+    #      requires a lowercase repository name, so every invocation died with
+    #      "invalid reference format" before pulling anything.
+    #   2. The tag it built by hand, `<full 40-char sha>-production`, is not one
+    #      the metadata action produces — that is `sha-<short>-production`. So
+    #      the reference named an image that does not exist even on main.
+    #   3. On a pull request `push:` above is false and this is a two-platform
+    #      build, so `load: true` is not available either: there is no image on
+    #      the runner and none in the registry. Nothing to test.
+    #
+    # So: use the tag the metadata action actually emitted (first line), and run
+    # only when the image was pushed. On a PR the step is skipped, which is the
+    # honest report — the build is still exercised by the step above.
     - name: Test Docker image
-      if: matrix.target == 'production'
+      if: matrix.target == 'production' && github.event_name != 'pull_request'
       run: |
-        docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-production accelerapp --version || true
-        docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-production accelerapp info
+        image="$(printf '%s\n' "$DOCKER_METADATA_OUTPUT_TAGS" | head -n1)"
+        echo "testing $image"
+        docker run --rm "$image" accelerapp --version || true
+        docker run --rm "$image" accelerapp info
 
   build-compose:
     name: Test Docker Compose
@@ -116,6 +133,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    # NOTE (2026-09-11): both `image-ref`s in this job carry the same two faults
+    # the "Test Docker image" step above was repaired for — `github.repository`
+    # is mixed case, which Docker rejects, and `<full sha>-production` is not a
+    # tag the metadata action emits (it emits `sha-<short>-production`). This
+    # job is `if: github.event_name != 'pull_request'`, so it cannot be
+    # exercised from a pull request and a fix here could not be verified before
+    # merging. Left as found, deliberately, rather than changed blind. The fix
+    # is to publish the production tag as a job output from `build-and-push` and
+    # consume it here; a matrix job's outputs need care, since every leg writes
+    # the same key.
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
