@@ -68,11 +68,28 @@ jobs:
         cache-to: type=gha,mode=max
         platforms: linux/amd64,linux/arm64
     
+    # Three things were wrong with this step, and it has never run to completion:
+    #
+    #   1. `${{ github.repository }}` is `thewriterben/Accelerapp`. Docker
+    #      requires a lowercase repository name, so every invocation died with
+    #      "invalid reference format" before pulling anything.
+    #   2. The tag it built by hand, `<full 40-char sha>-production`, is not one
+    #      the metadata action produces — that is `sha-<short>-production`. So
+    #      the reference named an image that does not exist even on main.
+    #   3. On a pull request `push:` above is false and this is a two-platform
+    #      build, so `load: true` is not available either: there is no image on
+    #      the runner and none in the registry. Nothing to test.
+    #
+    # So: use the tag the metadata action actually emitted (first line), and run
+    # only when the image was pushed. On a PR the step is skipped, which is the
+    # honest report — the build is still exercised by the step above.
     - name: Test Docker image
-      if: matrix.target == 'production'
+      if: matrix.target == 'production' && github.event_name != 'pull_request'
       run: |
-        docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-production accelerapp --version || true
-        docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-production accelerapp info
+        image="$(printf '%s\n' "$DOCKER_METADATA_OUTPUT_TAGS" | head -n1)"
+        echo "testing $image"
+        docker run --rm "$image" accelerapp --version || true
+        docker run --rm "$image" accelerapp info
 
   build-compose:
     name: Test Docker Compose
@@ -86,25 +103,39 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
+    # `docker-compose` (the standalone v1 binary) is no longer on the GitHub
+    # runners; Compose is a CLI plugin invoked as `docker compose`. Every step
+    # in this job died with "docker-compose: command not found" (exit 127) the
+    # first time the job ran at all — it had been skipped until now, because
+    # `needs: build-and-push` and that job could not build the development
+    # image while .dockerignore excluded tests/.
     - name: Build Docker Compose services
       run: |
         cd deployment/docker
-        docker-compose build --no-cache
-    
+        docker compose build --no-cache
+
+    # `--no-deps`, because `accelerapp` depends_on `ollama`, and the ollama
+    # service reserves an NVIDIA GPU (`deploy.resources.reservations.devices`).
+    # GitHub's runners have no GPU, so bringing the dependency up fails with
+    #   Error response from daemon: could not select device driver "nvidia"
+    #                               with capabilities: [[gpu]]
+    # and the failure is about the runner, not about anything in this repo.
+    # Starting only the service under test is what the job was after: the
+    # compose file parses, the image builds, and the container comes up.
     - name: Test Docker Compose services
       run: |
         cd deployment/docker
-        docker-compose up -d accelerapp
+        docker compose up -d --no-deps accelerapp
         sleep 10
-        docker-compose ps
-        docker-compose logs accelerapp
-        docker-compose down
-    
+        docker compose ps
+        docker compose logs accelerapp
+        docker compose down
+
     - name: Clean up
       if: always()
       run: |
         cd deployment/docker
-        docker-compose down -v
+        docker compose down -v
 
   scan-security:
     name: Security Scan Docker Images
@@ -116,6 +147,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    # NOTE (2026-09-11): both `image-ref`s in this job carry the same two faults
+    # the "Test Docker image" step above was repaired for — `github.repository`
+    # is mixed case, which Docker rejects, and `<full sha>-production` is not a
+    # tag the metadata action emits (it emits `sha-<short>-production`). This
+    # job is `if: github.event_name != 'pull_request'`, so it cannot be
+    # exercised from a pull request and a fix here could not be verified before
+    # merging. Left as found, deliberately, rather than changed blind. The fix
+    # is to publish the production tag as a job output from `build-and-push` and
+    # consume it here; a matrix job's outputs need care, since every leg writes
+    # the same key.
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:

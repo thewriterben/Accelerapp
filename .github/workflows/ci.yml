@@ -36,14 +36,18 @@ jobs:
         pip install -r requirements.txt
         pip install -e .
     
-    - name: Run unit tests
+    # `tests/` is flat: 55 `test_*.py` files, no subdirectories, and there is no
+    # commit in which there were any. This step read `pytest tests/unit` and the
+    # next read `pytest tests/integration`, so pytest exited 4 ("file or
+    # directory not found") before collecting a single test — on every matrix
+    # version, since the file was written. The suite it was skipping is 1134
+    # tests. TESTING.md documents `pytest tests/`, which is what this now runs;
+    # the unit/integration split lives in pytest markers (pyproject.toml), not
+    # in paths.
+    - name: Run tests
       run: |
-        pytest tests/unit -v --cov=accelerapp --cov-report=xml --cov-report=term
-    
-    - name: Run integration tests
-      run: |
-        pytest tests/integration -v
-    
+        pytest tests/ -v --cov=accelerapp --cov-report=xml --cov-report=term
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -111,35 +115,25 @@ jobs:
       run: |
         safety check --json || true
     
+    # v3 was retired by GitHub: every job using it is failed automatically
+    # before its step runs, whatever the step would have done.
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-reports
         path: |
           bandit-report.json
 
-  performance:
-    name: Performance Tests
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -e .
-    
-    - name: Run performance tests
-      run: |
-        pytest tests/performance -v --tb=short
+  # A "Performance Tests" job stood here and ran `pytest tests/performance`, a
+  # directory that has never existed. `pyproject.toml` does define a
+  # `performance` marker, but **no test carries it** — `-m performance` collects
+  # nothing and pytest exits 5. So the job had two possible outcomes, red or a
+  # green that asserted nothing, and it has only ever been red.
+  #
+  # Removed rather than pointed at the marker: a gate over an empty set is a
+  # claim the code does not support. When performance tests are written, mark
+  # them and bring the job back — `pytest tests/ -m performance`.
 
   build:
     name: Build Package
@@ -168,7 +162,7 @@ jobs:
         twine check dist/*
     
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dist
         path: dist/

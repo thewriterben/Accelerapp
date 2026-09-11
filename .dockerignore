@@ -62,6 +62,11 @@ docs/_build/
 *.zip
 Planning*.zip
 examples/
-tests/
+# NOT tests/ — `deployment/docker/Dockerfile`'s `development` stage does
+# `COPY tests/ ./tests/`, so excluding them here made that stage impossible to
+# build: "failed to compute cache key: /tests: not found". The CI matrix builds
+# production and development together, so the failure took the production image
+# down with it (cancelled). The production stage never copies tests, so nothing
+# reaches the shipped image by un-ignoring them here.
 *.tar
 *.tar.gz

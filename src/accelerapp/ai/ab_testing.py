@@ -4,7 +4,7 @@ Enables testing different agent configurations and measuring performance.
 """
 
 from typing import Dict, Any, Optional, List, Callable
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, replace
 from datetime import datetime
 import json
 import random
@@ -40,12 +40,21 @@ class ABTest:
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
-        result = asdict(self)
-        # Convert defaultdict to regular dict
-        for variant in result["variants"]:
-            if "metrics" in variant:
-                variant["metrics"] = dict(variant["metrics"])
-        return result
+        # The defaultdicts are flattened BEFORE asdict runs, not after.
+        #
+        # asdict rebuilds every nested container as its own type, so it reaches
+        # `defaultdict(<generator>)` -- a TypeError ("first argument must be
+        # callable or None") on every Python before 3.12, where CPython
+        # gh-95151 changed it. Converting the result afterwards, which is what
+        # this did, never executed: asdict raised first. The package declares
+        # requires-python >= 3.8, so this path was dead on four of the five
+        # versions CI tests, and the five TestABTestingFramework cases failed
+        # there the moment the test job started running at all.
+        plain = replace(
+            self,
+            variants=[replace(v, metrics=dict(v.metrics)) for v in self.variants],
+        )
+        return asdict(plain)
 
 
 class ABTestingFramework:
