@@ -114,10 +114,18 @@ jobs:
         cd deployment/docker
         docker compose build --no-cache
 
+    # `--no-deps`, because `accelerapp` depends_on `ollama`, and the ollama
+    # service reserves an NVIDIA GPU (`deploy.resources.reservations.devices`).
+    # GitHub's runners have no GPU, so bringing the dependency up fails with
+    #   Error response from daemon: could not select device driver "nvidia"
+    #                               with capabilities: [[gpu]]
+    # and the failure is about the runner, not about anything in this repo.
+    # Starting only the service under test is what the job was after: the
+    # compose file parses, the image builds, and the container comes up.
     - name: Test Docker Compose services
       run: |
         cd deployment/docker
-        docker compose up -d accelerapp
+        docker compose up -d --no-deps accelerapp
         sleep 10
         docker compose ps
         docker compose logs accelerapp
