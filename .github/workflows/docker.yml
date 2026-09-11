@@ -103,25 +103,31 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
+    # `docker-compose` (the standalone v1 binary) is no longer on the GitHub
+    # runners; Compose is a CLI plugin invoked as `docker compose`. Every step
+    # in this job died with "docker-compose: command not found" (exit 127) the
+    # first time the job ran at all — it had been skipped until now, because
+    # `needs: build-and-push` and that job could not build the development
+    # image while .dockerignore excluded tests/.
     - name: Build Docker Compose services
       run: |
         cd deployment/docker
-        docker-compose build --no-cache
-    
+        docker compose build --no-cache
+
     - name: Test Docker Compose services
       run: |
         cd deployment/docker
-        docker-compose up -d accelerapp
+        docker compose up -d accelerapp
         sleep 10
-        docker-compose ps
-        docker-compose logs accelerapp
-        docker-compose down
-    
+        docker compose ps
+        docker compose logs accelerapp
+        docker compose down
+
     - name: Clean up
       if: always()
       run: |
         cd deployment/docker
-        docker-compose down -v
+        docker compose down -v
 
   scan-security:
     name: Security Scan Docker Images
