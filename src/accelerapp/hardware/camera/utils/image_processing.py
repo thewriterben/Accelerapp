@@ -2,7 +2,7 @@
 Image processing utilities for ESP32-CAM.
 """
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict
 
 
 class ImageProcessor:

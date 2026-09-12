@@ -9,12 +9,11 @@ from typing import Any, Dict, List, Optional
 
 from ..base import BasePlatform
 from .device_interface import (
-    ConnectionType,
     DeviceDiscovery,
     MeshtasticDevice,
     MeshtasticDeviceInterface,
 )
-from .firmware_manager import FirmwareManager, FirmwareVersion, HardwareModel
+from .firmware_manager import FirmwareManager, HardwareModel
 from .ota_controller import OTAController, OTAMethod
 
 logger = logging.getLogger(__name__)

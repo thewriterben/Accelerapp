@@ -5,7 +5,7 @@ Template manager for code generation using Jinja2.
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from jinja2 import Environment, FileSystemLoader, Template, TemplateNotFound, select_autoescape
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound, select_autoescape
 
 
 class TemplateManager:

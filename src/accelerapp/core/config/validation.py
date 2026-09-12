@@ -2,9 +2,7 @@
 Configuration validation utilities.
 """
 
-from typing import Any, Dict, List, Optional
-
-from pydantic import ValidationError
+from typing import Any, Dict, List
 
 
 class ConfigValidator:

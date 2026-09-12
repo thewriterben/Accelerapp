@@ -6,8 +6,7 @@ Provides end-to-end project generation and setup automation.
 
 from dataclasses import dataclass
 from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict, List
 
 
 class BuildSystem(Enum):

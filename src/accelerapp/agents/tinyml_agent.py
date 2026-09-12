@@ -3,7 +3,7 @@ TinyML Agent specialized in Edge AI and on-device machine learning.
 Supports TinyML integration for microcontrollers and embedded systems.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .base_agent import BaseAgent
 

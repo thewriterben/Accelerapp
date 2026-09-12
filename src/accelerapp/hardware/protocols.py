@@ -3,9 +3,9 @@ Hardware communication protocols support.
 Provides I2C, SPI, and CAN protocol specifications and code generation.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 
 class ProtocolType(Enum):

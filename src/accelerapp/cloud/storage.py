@@ -5,12 +5,11 @@ Supports multiple cloud storage providers (S3, Azure Blob, GCS).
 
 import hashlib
 import json
-import os
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, BinaryIO, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class CloudStorageProvider(Enum):

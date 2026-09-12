@@ -3,7 +3,6 @@ STM32CubeMX integration for project generation.
 Generates CubeMX-compatible project files and configurations.
 """
 
-import json
 from pathlib import Path
 from typing import Any, Dict, List
 

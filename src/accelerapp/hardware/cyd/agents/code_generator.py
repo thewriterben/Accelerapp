@@ -6,7 +6,7 @@ Provides AI-powered code generation capabilities for CYD applications.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Dict, List
 
 
 class CodeStyle(Enum):

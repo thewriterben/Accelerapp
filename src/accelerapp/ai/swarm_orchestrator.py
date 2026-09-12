@@ -3,7 +3,6 @@ Agent Swarm Orchestration System.
 Coordinates multiple AI agents for complex tasks.
 """
 
-import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional

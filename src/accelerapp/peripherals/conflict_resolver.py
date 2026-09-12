@@ -4,7 +4,7 @@ Detects pin conflicts and suggests alternative configurations.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 
 @dataclass

@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from .device_authentication import DeviceAuthenticationService, TrustLevel
-from .device_identity import DeviceIdentity, DeviceIdentityManager
+from .device_identity import DeviceIdentityManager
 from .network_segmentation import NetworkSegmentationService, NetworkZone, Protocol
 from .post_quantum_crypto import HybridCryptoManager, PostQuantumCrypto
 

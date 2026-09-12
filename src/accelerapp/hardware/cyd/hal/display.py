@@ -7,7 +7,7 @@ commonly used in ESP32 Cheap Yellow Display boards.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
 
 class DisplayRotation(Enum):

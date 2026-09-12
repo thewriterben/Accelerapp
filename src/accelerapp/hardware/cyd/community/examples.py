@@ -6,7 +6,7 @@ Provides access to community examples and tutorials.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 
 class ExampleCategory(Enum):
