@@ -142,38 +142,78 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     if: github.event_name != 'pull_request'
-    
+
+    # Four faults, and the job had never reached Trivy. Two were the same ones
+    # the "Test Docker image" step above was repaired for; the other two are
+    # this job's own, and are why *both* of its steps failed rather than one:
+    #
+    #   1. `${{ github.repository }}` is `thewriterben/Accelerapp`. Docker
+    #      requires a lowercase repository name, so the reference was invalid
+    #      before anything was pulled.
+    #   2. `<full 40-char sha>-production` is not a tag the metadata action
+    #      emits. With `type=sha` and `suffix=-production` it emits
+    #      `sha-<short>-production`, so the reference named nothing that exists.
+    #   3. No registry login. `build-and-push` logs in, but that is a different
+    #      job on a different runner, so Trivy had no credentials for ghcr.
+    #   4. No `security-events: write`. `upload-sarif` needs it, and the job
+    #      declared no permissions at all — which is why that step failed
+    #      independently of Trivy, and would have kept failing even once the
+    #      image reference was right.
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
-    # NOTE (2026-09-11): both `image-ref`s in this job carry the same two faults
-    # the "Test Docker image" step above was repaired for — `github.repository`
-    # is mixed case, which Docker rejects, and `<full sha>-production` is not a
-    # tag the metadata action emits (it emits `sha-<short>-production`). This
-    # job is `if: github.event_name != 'pull_request'`, so it cannot be
-    # exercised from a pull request and a fix here could not be verified before
-    # merging. Left as found, deliberately, rather than changed blind. The fix
-    # is to publish the production tag as a job output from `build-and-push` and
-    # consume it here; a matrix job's outputs need care, since every leg writes
-    # the same key.
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # Built here rather than passed from `build-and-push`, because that job is a
+    # matrix and its outputs are not safe to rely on: every leg writes the same
+    # key, and the leg that does not set it writes an empty string over the one
+    # that did. This mirrors `type=sha` + `suffix=-${{ matrix.target }}` from the
+    # metadata step above — if that tag scheme changes, this changes with it.
+    - name: Work out the production image reference
+      id: ref
+      run: |
+        repo="$(printf '%s' "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
+        image="${{ env.REGISTRY }}/${repo}:sha-${GITHUB_SHA::7}-production"
+        echo "image=$image" >> "$GITHUB_OUTPUT"
+        echo "scanning $image"
+
+    # Fail here, naming the tag, rather than letting Trivy report a confusing
+    # manifest error four steps later.
+    - name: Check the image is actually there
+      run: |
+        if ! docker manifest inspect "${{ steps.ref.outputs.image }}" > /dev/null 2>&1; then
+          echo "::error::no image at ${{ steps.ref.outputs.image }} — the tag scheme in build-and-push and the one built above have drifted apart"
+          exit 1
+        fi
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-production
+        image-ref: ${{ steps.ref.outputs.image }}
         format: 'sarif'
         output: 'trivy-results.sarif'
-    
+
     - name: Upload Trivy results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
         sarif_file: 'trivy-results.sarif'
-    
+
     - name: Run Trivy vulnerability scanner (table format)
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}-production
+        image-ref: ${{ steps.ref.outputs.image }}
         format: 'table'
         exit-code: '0'
         ignore-unfixed: true
