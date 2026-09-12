@@ -9,7 +9,7 @@ import logging
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, Dict, Optional, Set
+from typing import Any, Callable, Dict, Optional
 
 # WebSocket support is optional (requires websockets package)
 try:
@@ -349,9 +349,16 @@ class WebSocketCollaborationServer:
         )
 
 
-class WebSocketClient:
+class WebSocketCollaborationClient:
     """
     WebSocket client for connecting to collaboration server.
+
+    Renamed from ``WebSocketClient``. It shared that name with the dataclass at
+    the top of this module, which is a different thing entirely -- the server's
+    record of a *connected* client. Python resolves module globals at call time,
+    so this class won, and ``WebSocketClient(client_id=..., websocket=...)`` in
+    ``_register_client`` was calling *this* ``__init__`` and raising TypeError on
+    an unexpected keyword. Named for its partner, ``WebSocketCollaborationServer``.
     """
 
     def __init__(self, server_url: str, agent_id: str, role: str = "developer"):

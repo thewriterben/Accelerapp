@@ -3,7 +3,6 @@ Code pattern analyzer for learning from generated code.
 Identifies common patterns and suggests optimizations.
 """
 
-import re
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional

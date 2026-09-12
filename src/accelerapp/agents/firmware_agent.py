@@ -3,7 +3,7 @@ Firmware Agent specialized in embedded systems development.
 """
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .base_agent import BaseAgent
 
@@ -70,7 +70,6 @@ class FirmwareAgent(BaseAgent):
         Returns:
             Generated firmware
         """
-        platform = spec.get("platform", "arduino")
         task_type = spec.get("task_type", "generate")
 
         if task_type == "generate":
@@ -93,7 +92,6 @@ class FirmwareAgent(BaseAgent):
             Generated firmware code
         """
         platform = spec.get("platform", "arduino")
-        peripherals = spec.get("peripherals", [])
 
         # Use platform-specific generation
         from ..platforms import get_platform

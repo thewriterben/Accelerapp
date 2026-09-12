@@ -4,7 +4,6 @@ Provides WiFi/Bluetooth scanning, packet capture, and penetration testing capabi
 """
 
 import asyncio
-import json
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime

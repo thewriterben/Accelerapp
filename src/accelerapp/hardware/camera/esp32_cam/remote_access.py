@@ -164,9 +164,9 @@ class RemoteAccess:
     def _generate_public_url(self) -> str:
         """Generate public URL based on tunnel type."""
         if self.tunnel_config.tunnel_type == TunnelType.NGROK:
-            return f"https://random-id.ngrok.io"
+            return "https://random-id.ngrok.io"
         elif self.tunnel_config.tunnel_type == TunnelType.CLOUDFLARE:
-            return f"https://random-id.trycloudflare.com"
+            return "https://random-id.trycloudflare.com"
         elif self.tunnel_config.tunnel_type == TunnelType.CUSTOM:
             return self.tunnel_config.custom_endpoint or "https://custom-tunnel.example.com"
 
@@ -320,7 +320,7 @@ public:
     bool startTunnel();
     bool authenticate(const char* credentials);
     void handleClient(WiFiClient& client);
-    
+
 private:
     AuthMethod authMethod;
     bool tunnelActive;
@@ -330,42 +330,42 @@ private:
 #endif
 """
 
-        implementation = f"""
+        implementation = """
 // Remote Access Implementation
 #include "remote_access.h"
 
-bool RemoteAccess::init(AuthMethod method) {{
+bool RemoteAccess::init(AuthMethod method) {
     authMethod = method;
     tunnelActive = false;
     return true;
-}}
+}
 
-bool RemoteAccess::startTunnel() {{
+bool RemoteAccess::startTunnel() {
     // Initialize tunnel service
     // This would integrate with ngrok, cloudflare, or custom tunnel
-    
+
     tunnelActive = true;
     strcpy(publicUrl, "https://tunnel.example.com");
-    
-    return true;
-}}
 
-bool RemoteAccess::authenticate(const char* credentials) {{
-    if (authMethod == AUTH_NONE) {{
+    return true;
+}
+
+bool RemoteAccess::authenticate(const char* credentials) {
+    if (authMethod == AUTH_NONE) {
         return true;
-    }}
-    
+    }
+
     // Validate credentials based on auth method
     // For TOKEN: check against stored token
     // For BASIC: parse and validate username/password
-    
-    return false;
-}}
 
-void RemoteAccess::handleClient(WiFiClient& client) {{
+    return false;
+}
+
+void RemoteAccess::handleClient(WiFiClient& client) {
     // Handle authenticated client requests
     // Forward to camera stream or control endpoints
-}}
+}
 """
 
         return {

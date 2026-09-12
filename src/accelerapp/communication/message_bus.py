@@ -7,8 +7,8 @@ import threading
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum, IntEnum
-from queue import Empty, PriorityQueue, Queue
+from enum import IntEnum
+from queue import Empty, PriorityQueue
 from typing import Any, Callable, Dict, List, Optional
 
 
