@@ -107,8 +107,10 @@ class AIService(BaseService):
     def get_health(self) -> Dict[str, Any]:
         """Get service health status."""
         health = super().get_health()
-        health.update({
-            "registered_agents": len(self._agents),
-            "agents": list(self._agents.keys()),
-        })
+        health.update(
+            {
+                "registered_agents": len(self._agents),
+                "agents": list(self._agents.keys()),
+            }
+        )
         return health

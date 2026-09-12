@@ -98,7 +98,9 @@ def _bundled() -> List[FirmwareTemplate]:
     return load_templates()
 
 
-def template_for_board(board_name: str, node_id: Optional[str] = None) -> Optional[FirmwareTemplate]:
+def template_for_board(
+    board_name: str, node_id: Optional[str] = None
+) -> Optional[FirmwareTemplate]:
     """The shared OBC starter sketch for a board, optionally node-id'd."""
     t = next((t for t in _bundled() if t.board == board_name), None)
     if t is None:

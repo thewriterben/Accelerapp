@@ -5,13 +5,14 @@ Provides abstraction for the 320x240 ILI9341 display controller
 commonly used in ESP32 Cheap Yellow Display boards.
 """
 
-from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class DisplayRotation(Enum):
     """Display rotation modes."""
+
     PORTRAIT = 0
     LANDSCAPE = 1
     PORTRAIT_INVERTED = 2
@@ -20,6 +21,7 @@ class DisplayRotation(Enum):
 
 class ColorDepth(Enum):
     """Color depth modes."""
+
     RGB565 = 16
     RGB888 = 24
 
@@ -27,6 +29,7 @@ class ColorDepth(Enum):
 @dataclass
 class DisplayConfig:
     """ILI9341 display configuration."""
+
     width: int = 320
     height: int = 240
     rotation: DisplayRotation = DisplayRotation.LANDSCAPE
@@ -44,7 +47,7 @@ class DisplayConfig:
 class DisplayDriver:
     """
     ILI9341 TFT display driver for CYD.
-    
+
     Provides high-level interface for display operations including:
     - Initialization and configuration
     - Drawing primitives (pixels, lines, rectangles, circles)
@@ -57,7 +60,7 @@ class DisplayDriver:
     def __init__(self, config: Optional[DisplayConfig] = None):
         """
         Initialize display driver.
-        
+
         Args:
             config: Display configuration (uses defaults if None)
         """
@@ -68,7 +71,7 @@ class DisplayDriver:
     def initialize(self) -> bool:
         """
         Initialize the display hardware.
-        
+
         Returns:
             True if initialization successful
         """
@@ -78,7 +81,7 @@ class DisplayDriver:
     def set_rotation(self, rotation: DisplayRotation) -> None:
         """
         Set display rotation.
-        
+
         Args:
             rotation: Target rotation mode
         """
@@ -87,7 +90,7 @@ class DisplayDriver:
     def set_backlight(self, level: int) -> None:
         """
         Set backlight brightness level.
-        
+
         Args:
             level: Brightness level (0-255)
         """
@@ -97,7 +100,7 @@ class DisplayDriver:
     def clear(self, color: int = 0x0000) -> None:
         """
         Clear display with specified color.
-        
+
         Args:
             color: RGB565 color value
         """
@@ -106,7 +109,7 @@ class DisplayDriver:
     def draw_pixel(self, x: int, y: int, color: int) -> None:
         """
         Draw a single pixel.
-        
+
         Args:
             x: X coordinate
             y: Y coordinate
@@ -117,7 +120,7 @@ class DisplayDriver:
     def draw_line(self, x0: int, y0: int, x1: int, y1: int, color: int) -> None:
         """
         Draw a line.
-        
+
         Args:
             x0, y0: Start coordinates
             x1, y1: End coordinates
@@ -130,7 +133,7 @@ class DisplayDriver:
     ) -> None:
         """
         Draw a rectangle.
-        
+
         Args:
             x, y: Top-left corner coordinates
             w, h: Width and height
@@ -142,7 +145,7 @@ class DisplayDriver:
     def draw_circle(self, x: int, y: int, r: int, color: int, fill: bool = False) -> None:
         """
         Draw a circle.
-        
+
         Args:
             x, y: Center coordinates
             r: Radius
@@ -151,12 +154,10 @@ class DisplayDriver:
         """
         pass
 
-    def draw_text(
-        self, x: int, y: int, text: str, color: int, size: int = 1
-    ) -> None:
+    def draw_text(self, x: int, y: int, text: str, color: int, size: int = 1) -> None:
         """
         Draw text on display.
-        
+
         Args:
             x, y: Text position
             text: Text string to draw
@@ -165,12 +166,10 @@ class DisplayDriver:
         """
         pass
 
-    def draw_image(
-        self, x: int, y: int, width: int, height: int, image_data: bytes
-    ) -> None:
+    def draw_image(self, x: int, y: int, width: int, height: int, image_data: bytes) -> None:
         """
         Draw an image on display.
-        
+
         Args:
             x, y: Image position
             width, height: Image dimensions
@@ -181,7 +180,7 @@ class DisplayDriver:
     def get_capabilities(self) -> Dict[str, Any]:
         """
         Get display capabilities.
-        
+
         Returns:
             Dictionary of display capabilities
         """
@@ -208,10 +207,10 @@ class DisplayDriver:
     def generate_code(self, platform: str = "arduino") -> str:
         """
         Generate platform-specific initialization code.
-        
+
         Args:
             platform: Target platform (arduino, esp-idf, micropython)
-            
+
         Returns:
             Generated code string
         """

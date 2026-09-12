@@ -92,7 +92,9 @@ class GeneratorPlugin(BasePlugin):
     """Base class for code generator plugins."""
 
     @abstractmethod
-    def generate(self, spec: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def generate(
+        self, spec: Dict[str, Any], context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """
         Generate code or output.
 

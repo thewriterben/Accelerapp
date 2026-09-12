@@ -2,8 +2,9 @@
 Agent orchestrator for coordinating multiple agents in the swarm.
 """
 
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 from .base_agent import BaseAgent
 
 

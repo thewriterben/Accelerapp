@@ -2,10 +2,10 @@
 Visual specification data structures.
 """
 
-from typing import Dict, Any, List, Optional
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
-import uuid
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

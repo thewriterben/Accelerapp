@@ -3,10 +3,10 @@ Offline documentation system for air-gapped environments.
 Provides searchable local documentation and help.
 """
 
-from typing import Dict, Any, List, Optional
+import json
 from dataclasses import dataclass, field
 from pathlib import Path
-import json
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

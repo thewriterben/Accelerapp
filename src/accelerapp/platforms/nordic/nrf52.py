@@ -3,8 +3,9 @@ Nordic nRF52 series platform implementation.
 Supports nRF52832, nRF52840 with BLE stack and Zephyr RTOS.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from ..base import BasePlatform
 
 
@@ -19,7 +20,7 @@ class NRF52Platform(BasePlatform):
         super().__init__()
         self.name = "nrf52"
         self.supported_languages = ["c", "cpp"]
-        
+
         # nRF52 capabilities
         self.capabilities = [
             "gpio",
@@ -38,7 +39,7 @@ class NRF52Platform(BasePlatform):
             "crypto",  # ARM CryptoCell
             "ppi",  # Programmable Peripheral Interconnect
         ]
-        
+
         self.peripherals = [
             "led",
             "button",
@@ -49,11 +50,11 @@ class NRF52Platform(BasePlatform):
             "temperature_sensor",
             "battery_monitor",
         ]
-        
+
         # RTOS and SDK support
         self.rtos_support = ["zephyr", "freertos", "nordic_sdk", "bare_metal"]
         self.sdk_versions = ["nRF5_SDK_17.1.0", "nRF_Connect_SDK_2.0"]
-        
+
     def get_platform_info(self) -> Dict[str, Any]:
         """Get nRF52 platform information."""
         return {
@@ -87,7 +88,7 @@ class NRF52Platform(BasePlatform):
                 "USB 2.0 device (nRF52840)",
             ],
         }
-    
+
     def generate_code(self, spec: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
         """
         Generate nRF52-specific code.
@@ -102,7 +103,7 @@ class NRF52Platform(BasePlatform):
         output_dir.mkdir(parents=True, exist_ok=True)
 
         files_generated = []
-        
+
         # Generate main file
         main_file = output_dir / "main.c"
         main_content = self._generate_main_file(spec)
@@ -114,7 +115,7 @@ class NRF52Platform(BasePlatform):
         sdk_config_content = self._generate_sdk_config(spec)
         sdk_config_file.write_text(sdk_config_content)
         files_generated.append(str(sdk_config_file))
-        
+
         # Generate BLE services if BLE is enabled
         if self._has_ble_peripherals(spec):
             ble_service_file = output_dir / "ble_service.c"
@@ -181,46 +182,54 @@ class NRF52Platform(BasePlatform):
             '#include "boards.h"',
             "",
         ]
-        
+
         # Add BLE includes if needed
         if self._has_ble_peripherals(spec):
-            lines.extend([
-                '#include "ble.h"',
-                '#include "ble_advertising.h"',
-                '#include "ble_conn_params.h"',
+            lines.extend(
+                [
+                    '#include "ble.h"',
+                    '#include "ble_advertising.h"',
+                    '#include "ble_conn_params.h"',
+                    "",
+                ]
+            )
+
+        lines.extend(
+            [
+                "/* Application main function */",
+                "int main(void) {",
+                "    /* Initialize */",
+                "    nrf_gpio_cfg_output(LED_1);",
                 "",
-            ])
-        
-        lines.extend([
-            "/* Application main function */",
-            "int main(void) {",
-            "    /* Initialize */",
-            "    nrf_gpio_cfg_output(LED_1);",
-            "",
-        ])
+            ]
+        )
 
         # Initialize peripherals
         for peripheral in spec.get("peripherals", []):
             ptype = peripheral.get("type")
             lines.append(f"    /* Initialize {ptype} */")
 
-        lines.extend([
-            "",
-            "    /* Enter main loop */",
-            "    while (1) {",
-        ])
+        lines.extend(
+            [
+                "",
+                "    /* Enter main loop */",
+                "    while (1) {",
+            ]
+        )
 
         # Main loop logic
         for peripheral in spec.get("peripherals", []):
             ptype = peripheral.get("type")
             lines.append(f"        /* Process {ptype} */")
 
-        lines.extend([
-            "        nrf_delay_ms(100);",
-            "    }",
-            "}",
-            "",
-        ])
+        lines.extend(
+            [
+                "        nrf_delay_ms(100);",
+                "    }",
+                "}",
+                "",
+            ]
+        )
 
         return "\n".join(lines)
 
@@ -238,24 +247,28 @@ class NRF52Platform(BasePlatform):
             "#define NRF_SDH_CLOCK_LF_ACCURACY 7",
             "",
         ]
-        
+
         # BLE configuration
         if self._has_ble_peripherals(spec):
-            lines.extend([
-                "/* BLE Stack Configuration */",
-                "#define NRF_SDH_BLE_ENABLED 1",
-                "#define NRF_SDH_BLE_GAP_DATA_LENGTH 251",
-                "#define NRF_SDH_BLE_PERIPHERAL_LINK_COUNT 1",
-                "#define NRF_SDH_BLE_CENTRAL_LINK_COUNT 0",
-                "#define NRF_SDH_BLE_TOTAL_LINK_COUNT 1",
+            lines.extend(
+                [
+                    "/* BLE Stack Configuration */",
+                    "#define NRF_SDH_BLE_ENABLED 1",
+                    "#define NRF_SDH_BLE_GAP_DATA_LENGTH 251",
+                    "#define NRF_SDH_BLE_PERIPHERAL_LINK_COUNT 1",
+                    "#define NRF_SDH_BLE_CENTRAL_LINK_COUNT 0",
+                    "#define NRF_SDH_BLE_TOTAL_LINK_COUNT 1",
+                    "",
+                ]
+            )
+
+        lines.extend(
+            [
+                "#endif /* SDK_CONFIG_H */",
                 "",
-            ])
-        
-        lines.extend([
-            "#endif /* SDK_CONFIG_H */",
-            "",
-        ])
-        
+            ]
+        )
+
         return "\n".join(lines)
 
     def _generate_ble_service(self, spec: Dict[str, Any]) -> str:

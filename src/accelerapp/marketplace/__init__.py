@@ -3,8 +3,8 @@ Template marketplace for sharing and discovering code templates.
 """
 
 from .registry import TemplateRegistry
-from .template import TemplateMetadata, TemplatePackage
 from .search import TemplateSearch
+from .template import TemplateMetadata, TemplatePackage
 
 __all__ = [
     "TemplateRegistry",

@@ -79,12 +79,7 @@ class CacheManager:
             self._cache[key] = {"value": value, "expires_at": expires_at}
             self._access_times[key] = time.time()
 
-    def get_or_set(
-        self,
-        key: str,
-        factory: Callable[[], Any],
-        ttl: Optional[int] = None
-    ) -> Any:
+    def get_or_set(self, key: str, factory: Callable[[], Any], ttl: Optional[int] = None) -> Any:
         """
         Get value from cache or compute and store it.
 
@@ -138,11 +133,7 @@ class CacheManager:
                 results[key] = entry["value"]
         return results
 
-    def set_many(
-        self,
-        items: Dict[str, Any],
-        ttl: Optional[int] = None
-    ) -> None:
+    def set_many(self, items: Dict[str, Any], ttl: Optional[int] = None) -> None:
         """
         Set multiple values in cache.
 
@@ -213,8 +204,7 @@ class CacheManager:
         current_time = time.time()
         with self._lock:
             expired_keys = [
-                key for key, entry in self._cache.items()
-                if current_time > entry["expires_at"]
+                key for key, entry in self._cache.items() if current_time > entry["expires_at"]
             ]
             for key in expired_keys:
                 del self._cache[key]
@@ -283,8 +273,7 @@ class CacheManager:
         current_time = time.time()
         with self._lock:
             return [
-                key for key, entry in self._cache.items()
-                if current_time <= entry["expires_at"]
+                key for key, entry in self._cache.items() if current_time <= entry["expires_at"]
             ]
 
 

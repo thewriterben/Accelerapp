@@ -3,9 +3,10 @@ Base platform implementation for STM32 series.
 Provides common functionality for all STM32 variants.
 """
 
-from typing import Dict, Any, List, Optional
-from pathlib import Path
 from abc import abstractmethod
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 from ..base import BasePlatform
 
 
@@ -22,7 +23,7 @@ class STM32BasePlatform(BasePlatform):
         self.supported_languages = ["c", "cpp"]
         self.mcu_family = "ARM Cortex-M"
         self.voltage = "3.3V"
-        
+
         # Common STM32 capabilities
         self.capabilities = [
             "gpio",
@@ -42,7 +43,7 @@ class STM32BasePlatform(BasePlatform):
             "timer",
             "watchdog",
         ]
-        
+
         # Common peripheral support
         self.peripherals = [
             "led",
@@ -58,20 +59,20 @@ class STM32BasePlatform(BasePlatform):
             "adc_sensor",
             "dac_output",
         ]
-        
+
         # RTOS support
         self.rtos_support = ["freertos", "threadx", "bare_metal"]
-        
+
     @abstractmethod
     def get_series_info(self) -> Dict[str, Any]:
         """
         Get series-specific information.
-        
+
         Returns:
             Dictionary with series-specific details
         """
         pass
-    
+
     def get_platform_info(self) -> Dict[str, Any]:
         """Get STM32 platform information."""
         base_info = {
@@ -85,13 +86,13 @@ class STM32BasePlatform(BasePlatform):
             "build_system": "STM32CubeIDE / PlatformIO",
             "rtos_support": self.rtos_support,
         }
-        
+
         # Merge with series-specific info
         series_info = self.get_series_info()
         base_info.update(series_info)
-        
+
         return base_info
-    
+
     def generate_code(self, spec: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
         """
         Generate STM32-specific code with HAL integration.
@@ -106,7 +107,7 @@ class STM32BasePlatform(BasePlatform):
         output_dir.mkdir(parents=True, exist_ok=True)
 
         files_generated = []
-        
+
         # Generate main file
         main_file = output_dir / "main.c"
         main_content = self._generate_main_file(spec)
@@ -118,13 +119,13 @@ class STM32BasePlatform(BasePlatform):
         config_content = self._generate_config_header(spec)
         config_file.write_text(config_content)
         files_generated.append(str(config_file))
-        
+
         # Generate HAL initialization
         hal_init_file = output_dir / "hal_init.c"
         hal_init_content = self._generate_hal_init(spec)
         hal_init_file.write_text(hal_init_content)
         files_generated.append(str(hal_init_file))
-        
+
         # Generate peripheral drivers
         if spec.get("peripherals"):
             drivers_dir = output_dir / "drivers"
@@ -187,63 +188,69 @@ class STM32BasePlatform(BasePlatform):
             '#include "hal_init.h"',
             "",
         ]
-        
+
         # Add peripheral driver includes
         for peripheral in spec.get("peripherals", []):
             ptype = peripheral.get("type")
             lines.append(f'#include "drivers/{ptype}_driver.h"')
-        
-        lines.extend([
-            "",
-            "/* Private function prototypes */",
-            "void SystemClock_Config(void);",
-            "void Error_Handler(void);",
-            "",
-            "int main(void) {",
-            "    /* Reset of all peripherals, Initializes the Flash interface and the Systick */",
-            "    HAL_Init();",
-            "",
-            "    /* Configure the system clock */",
-            "    SystemClock_Config();",
-            "",
-            "    /* Initialize all configured peripherals */",
-            "    HAL_GPIO_Init();",
-        ])
+
+        lines.extend(
+            [
+                "",
+                "/* Private function prototypes */",
+                "void SystemClock_Config(void);",
+                "void Error_Handler(void);",
+                "",
+                "int main(void) {",
+                "    /* Reset of all peripherals, Initializes the Flash interface and the Systick */",
+                "    HAL_Init();",
+                "",
+                "    /* Configure the system clock */",
+                "    SystemClock_Config();",
+                "",
+                "    /* Initialize all configured peripherals */",
+                "    HAL_GPIO_Init();",
+            ]
+        )
 
         # Initialize peripherals
         for peripheral in spec.get("peripherals", []):
             ptype = peripheral.get("type")
             lines.append(f"    {ptype}_init();")
 
-        lines.extend([
-            "",
-            "    /* Infinite loop */",
-            "    while (1) {",
-        ])
+        lines.extend(
+            [
+                "",
+                "    /* Infinite loop */",
+                "    while (1) {",
+            ]
+        )
 
         # Main loop logic
         for peripheral in spec.get("peripherals", []):
             ptype = peripheral.get("type")
             lines.append(f"        {ptype}_process();")
 
-        lines.extend([
-            "    }",
-            "}",
-            "",
-            "void SystemClock_Config(void) {",
-            "    /* System Clock Configuration */",
-            "    /* This should be generated based on CubeMX settings */",
-            "}",
-            "",
-            "void Error_Handler(void) {",
-            "    /* User can add his own implementation to report the HAL error return state */",
-            "    __disable_irq();",
-            "    while (1) {",
-            "        /* Error loop */",
-            "    }",
-            "}",
-            "",
-        ])
+        lines.extend(
+            [
+                "    }",
+                "}",
+                "",
+                "void SystemClock_Config(void) {",
+                "    /* System Clock Configuration */",
+                "    /* This should be generated based on CubeMX settings */",
+                "}",
+                "",
+                "void Error_Handler(void) {",
+                "    /* User can add his own implementation to report the HAL error return state */",
+                "    __disable_irq();",
+                "    while (1) {",
+                "        /* Error loop */",
+                "    }",
+                "}",
+                "",
+            ]
+        )
 
         return "\n".join(lines)
 
@@ -256,7 +263,7 @@ class STM32BasePlatform(BasePlatform):
             "",
             "/* Device configuration */",
             f"#define DEVICE_NAME \"{spec.get('device_name', 'Unknown')}\"",
-            f"#define PLATFORM \"{self.name}\"",
+            f'#define PLATFORM "{self.name}"',
             "",
         ]
 
@@ -270,11 +277,13 @@ class STM32BasePlatform(BasePlatform):
 
         # Add peripheral count
         peripheral_count = len(spec.get("peripherals", []))
-        lines.extend([
-            "/* Peripheral configuration */",
-            f"#define PERIPHERAL_COUNT {peripheral_count}",
-            "",
-        ])
+        lines.extend(
+            [
+                "/* Peripheral configuration */",
+                f"#define PERIPHERAL_COUNT {peripheral_count}",
+                "",
+            ]
+        )
 
         # Add pin definitions
         if "pins" in spec:
@@ -292,17 +301,21 @@ class STM32BasePlatform(BasePlatform):
 
         # RTOS configuration
         if spec.get("rtos"):
-            lines.extend([
-                "/* RTOS configuration */",
-                f"#define USE_RTOS 1",
-                f"#define RTOS_TYPE \"{spec['rtos']}\"",
-                "",
-            ])
+            lines.extend(
+                [
+                    "/* RTOS configuration */",
+                    f"#define USE_RTOS 1",
+                    f"#define RTOS_TYPE \"{spec['rtos']}\"",
+                    "",
+                ]
+            )
 
-        lines.extend([
-            "#endif /* CONFIG_H */",
-            "",
-        ])
+        lines.extend(
+            [
+                "#endif /* CONFIG_H */",
+                "",
+            ]
+        )
 
         return "\n".join(lines)
 
@@ -329,22 +342,22 @@ class STM32BasePlatform(BasePlatform):
     def _generate_peripheral_drivers(self, spec: Dict[str, Any], drivers_dir: Path) -> List[str]:
         """Generate peripheral driver files."""
         files = []
-        
+
         for peripheral in spec.get("peripherals", []):
             ptype = peripheral.get("type", "unknown")
-            
+
             # Generate driver header
             header_file = drivers_dir / f"{ptype}_driver.h"
             header_content = self._generate_driver_header(ptype, peripheral)
             header_file.write_text(header_content)
             files.append(str(header_file))
-            
+
             # Generate driver implementation
             source_file = drivers_dir / f"{ptype}_driver.c"
             source_content = self._generate_driver_source(ptype, peripheral)
             source_file.write_text(source_content)
             files.append(str(source_file))
-        
+
         return files
 
     def _generate_driver_header(self, ptype: str, config: Dict[str, Any]) -> str:
@@ -355,8 +368,8 @@ class STM32BasePlatform(BasePlatform):
             f"#ifndef {header_guard}",
             f"#define {header_guard}",
             "",
-            '#include <stdint.h>',
-            '#include <stdbool.h>',
+            "#include <stdint.h>",
+            "#include <stdbool.h>",
             "",
             f"/* {ptype.title()} initialization */",
             f"void {ptype}_init(void);",

@@ -2,8 +2,9 @@
 MicroPython platform implementation for rapid prototyping.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 

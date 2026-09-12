@@ -3,7 +3,8 @@ STM32H7 series platform implementation.
 Supports high-performance STM32H7xx microcontrollers.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
+
 from .base import STM32BasePlatform
 
 
@@ -18,20 +19,22 @@ class STM32H7Platform(STM32BasePlatform):
         super().__init__()
         self.name = "stm32h7"
         self.series = "H7"
-        
+
         # H7-specific capabilities
-        self.capabilities.extend([
-            "fpu_dp",  # Double-precision FPU
-            "dsp",
-            "cache",  # I-Cache and D-Cache
-            "mpu",  # Memory Protection Unit
-            "art_accelerator",
-            "dual_core",  # Some variants have dual-core
-            "high_speed_external_memory",
-            "jpeg_codec",
-            "chrom_art",  # Graphics accelerator
-        ])
-        
+        self.capabilities.extend(
+            [
+                "fpu_dp",  # Double-precision FPU
+                "dsp",
+                "cache",  # I-Cache and D-Cache
+                "mpu",  # Memory Protection Unit
+                "art_accelerator",
+                "dual_core",  # Some variants have dual-core
+                "high_speed_external_memory",
+                "jpeg_codec",
+                "chrom_art",  # Graphics accelerator
+            ]
+        )
+
     def get_series_info(self) -> Dict[str, Any]:
         """Get STM32H7 series-specific information."""
         return {
@@ -63,25 +66,27 @@ class STM32H7Platform(STM32BasePlatform):
                 "Up to 3 ADCs with 3.6 MSPS",
             ],
         }
-    
+
     def get_build_config(self) -> Dict[str, Any]:
         """Get STM32H7-specific build configuration."""
         base_config = super().get_build_config()
-        base_config.update({
-            "board": "nucleo_h743zi",
-            "mcu": "STM32H743ZITx",
-            "cpu_flags": [
-                "-mcpu=cortex-m7",
-                "-mthumb",
-                "-mfpu=fpv5-d16",
-                "-mfloat-abi=hard",
-            ],
-            "linker_script": "STM32H743ZITx_FLASH.ld",
-            "hal_driver": "STM32H7xx_HAL_Driver",
-            "optimization": "-O3",  # Higher optimization for H7
-            "cache_config": {
-                "icache": "enabled",
-                "dcache": "enabled",
-            },
-        })
+        base_config.update(
+            {
+                "board": "nucleo_h743zi",
+                "mcu": "STM32H743ZITx",
+                "cpu_flags": [
+                    "-mcpu=cortex-m7",
+                    "-mthumb",
+                    "-mfpu=fpv5-d16",
+                    "-mfloat-abi=hard",
+                ],
+                "linker_script": "STM32H743ZITx_FLASH.ld",
+                "hal_driver": "STM32H7xx_HAL_Driver",
+                "optimization": "-O3",  # Higher optimization for H7
+                "cache_config": {
+                    "icache": "enabled",
+                    "dcache": "enabled",
+                },
+            }
+        )
         return base_config

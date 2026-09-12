@@ -3,8 +3,8 @@ STM32 HAL code generator.
 Generates HAL-compatible initialization and driver code.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
 
 
 class STM32HALGenerator:
@@ -16,19 +16,19 @@ class STM32HALGenerator:
     def __init__(self, series: str = "F4"):
         """
         Initialize HAL generator.
-        
+
         Args:
             series: STM32 series (F4, H7, L4, etc.)
         """
         self.series = series
-        
+
     def generate_gpio_init(self, gpio_config: Dict[str, Any]) -> str:
         """
         Generate GPIO initialization code.
-        
+
         Args:
             gpio_config: GPIO configuration dictionary
-            
+
         Returns:
             Generated C code
         """
@@ -39,14 +39,14 @@ class STM32HALGenerator:
             "",
             "    /* GPIO Ports Clock Enable */",
         ]
-        
+
         # Enable required GPIO ports
         ports = gpio_config.get("ports", ["A", "B", "C"])
         for port in ports:
             lines.append(f"    __HAL_RCC_GPIO{port}_CLK_ENABLE();")
-        
+
         lines.append("")
-        
+
         # Configure each pin
         for pin_config in gpio_config.get("pins", []):
             port = pin_config.get("port", "A")
@@ -54,27 +54,29 @@ class STM32HALGenerator:
             mode = pin_config.get("mode", "OUTPUT_PP")
             pull = pin_config.get("pull", "NOPULL")
             speed = pin_config.get("speed", "FREQ_LOW")
-            
-            lines.extend([
-                f"    /* Configure GPIO pin: P{port}{pin} */",
-                f"    GPIO_InitStruct.Pin = GPIO_PIN_{pin};",
-                f"    GPIO_InitStruct.Mode = GPIO_MODE_{mode};",
-                f"    GPIO_InitStruct.Pull = GPIO_{pull};",
-                f"    GPIO_InitStruct.Speed = GPIO_SPEED_{speed};",
-                f"    HAL_GPIO_Init(GPIO{port}, &GPIO_InitStruct);",
-                "",
-            ])
-        
+
+            lines.extend(
+                [
+                    f"    /* Configure GPIO pin: P{port}{pin} */",
+                    f"    GPIO_InitStruct.Pin = GPIO_PIN_{pin};",
+                    f"    GPIO_InitStruct.Mode = GPIO_MODE_{mode};",
+                    f"    GPIO_InitStruct.Pull = GPIO_{pull};",
+                    f"    GPIO_InitStruct.Speed = GPIO_SPEED_{speed};",
+                    f"    HAL_GPIO_Init(GPIO{port}, &GPIO_InitStruct);",
+                    "",
+                ]
+            )
+
         lines.append("}")
         return "\n".join(lines)
-    
+
     def generate_uart_init(self, uart_config: Dict[str, Any]) -> str:
         """
         Generate UART initialization code.
-        
+
         Args:
             uart_config: UART configuration dictionary
-            
+
         Returns:
             Generated C code
         """
@@ -83,7 +85,7 @@ class STM32HALGenerator:
         wordlength = uart_config.get("wordlength", "8B")
         stopbits = uart_config.get("stopbits", "1")
         parity = uart_config.get("parity", "NONE")
-        
+
         lines = [
             f"/* {instance} Initialization */",
             f"static UART_HandleTypeDef huart{instance[-1]};",
@@ -104,20 +106,20 @@ class STM32HALGenerator:
             "}",
         ]
         return "\n".join(lines)
-    
+
     def generate_i2c_init(self, i2c_config: Dict[str, Any]) -> str:
         """
         Generate I2C initialization code.
-        
+
         Args:
             i2c_config: I2C configuration dictionary
-            
+
         Returns:
             Generated C code
         """
         instance = i2c_config.get("instance", "I2C1")
         clock_speed = i2c_config.get("clock_speed", 100000)
-        
+
         lines = [
             f"/* {instance} Initialization */",
             f"static I2C_HandleTypeDef hi2c{instance[-1]};",
@@ -139,14 +141,14 @@ class STM32HALGenerator:
             "}",
         ]
         return "\n".join(lines)
-    
+
     def generate_spi_init(self, spi_config: Dict[str, Any]) -> str:
         """
         Generate SPI initialization code.
-        
+
         Args:
             spi_config: SPI configuration dictionary
-            
+
         Returns:
             Generated C code
         """
@@ -155,7 +157,7 @@ class STM32HALGenerator:
         direction = spi_config.get("direction", "2LINES")
         datasize = spi_config.get("datasize", "8BIT")
         prescaler = spi_config.get("prescaler", "256")
-        
+
         lines = [
             f"/* {instance} Initialization */",
             f"static SPI_HandleTypeDef hspi{instance[-1]};",
@@ -179,21 +181,21 @@ class STM32HALGenerator:
             "}",
         ]
         return "\n".join(lines)
-    
+
     def generate_timer_init(self, timer_config: Dict[str, Any]) -> str:
         """
         Generate Timer initialization code.
-        
+
         Args:
             timer_config: Timer configuration dictionary
-            
+
         Returns:
             Generated C code
         """
         instance = timer_config.get("instance", "TIM2")
         prescaler = timer_config.get("prescaler", 84)
         period = timer_config.get("period", 1000)
-        
+
         lines = [
             f"/* {instance} Initialization */",
             f"static TIM_HandleTypeDef htim{instance[-1]};",
@@ -219,63 +221,67 @@ class STM32HALGenerator:
             "}",
         ]
         return "\n".join(lines)
-    
+
     def generate_adc_init(self, adc_config: Dict[str, Any]) -> str:
         """
         Generate ADC initialization code with DMA support.
-        
+
         Args:
             adc_config: ADC configuration dictionary
-            
+
         Returns:
             Generated C code
         """
         instance = adc_config.get("instance", "ADC1")
         resolution = adc_config.get("resolution", "12BIT")
         use_dma = adc_config.get("use_dma", False)
-        
+
         lines = [
             f"/* {instance} Initialization */",
             f"static ADC_HandleTypeDef hadc{instance[-1]};",
         ]
-        
+
         if use_dma:
             lines.append(f"static DMA_HandleTypeDef hdma_adc{instance[-1]};")
-        
-        lines.extend([
-            "",
-            f"static void MX_{instance}_Init(void) {{",
-            f"    ADC_ChannelConfTypeDef sConfig = {{0}};",
-            "",
-            f"    hadc{instance[-1]}.Instance = {instance};",
-            f"    hadc{instance[-1]}.Init.Resolution = ADC_RESOLUTION_{resolution};",
-            f"    hadc{instance[-1]}.Init.ScanConvMode = DISABLE;",
-            f"    hadc{instance[-1]}.Init.ContinuousConvMode = ENABLE;",
-            f"    hadc{instance[-1]}.Init.DiscontinuousConvMode = DISABLE;",
-            f"    hadc{instance[-1]}.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;",
-            f"    hadc{instance[-1]}.Init.DataAlign = ADC_DATAALIGN_RIGHT;",
-            f"    hadc{instance[-1]}.Init.NbrOfConversion = 1;",
-        ])
-        
+
+        lines.extend(
+            [
+                "",
+                f"static void MX_{instance}_Init(void) {{",
+                f"    ADC_ChannelConfTypeDef sConfig = {{0}};",
+                "",
+                f"    hadc{instance[-1]}.Instance = {instance};",
+                f"    hadc{instance[-1]}.Init.Resolution = ADC_RESOLUTION_{resolution};",
+                f"    hadc{instance[-1]}.Init.ScanConvMode = DISABLE;",
+                f"    hadc{instance[-1]}.Init.ContinuousConvMode = ENABLE;",
+                f"    hadc{instance[-1]}.Init.DiscontinuousConvMode = DISABLE;",
+                f"    hadc{instance[-1]}.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;",
+                f"    hadc{instance[-1]}.Init.DataAlign = ADC_DATAALIGN_RIGHT;",
+                f"    hadc{instance[-1]}.Init.NbrOfConversion = 1;",
+            ]
+        )
+
         if use_dma:
             lines.append(f"    hadc{instance[-1]}.Init.DMAContinuousRequests = ENABLE;")
-        
-        lines.extend([
-            "",
-            f"    if (HAL_ADC_Init(&hadc{instance[-1]}) != HAL_OK) {{",
-            "        Error_Handler();",
-            "    }",
-            "}",
-        ])
+
+        lines.extend(
+            [
+                "",
+                f"    if (HAL_ADC_Init(&hadc{instance[-1]}) != HAL_OK) {{",
+                "        Error_Handler();",
+                "    }",
+                "}",
+            ]
+        )
         return "\n".join(lines)
-    
+
     def generate_system_init(self, config: Dict[str, Any]) -> str:
         """
         Generate complete system initialization code.
-        
+
         Args:
             config: Complete system configuration
-            
+
         Returns:
             Generated C code
         """
@@ -295,7 +301,7 @@ class STM32HALGenerator:
             "",
             "    /* Configure peripherals */",
         ]
-        
+
         if config.get("gpio"):
             lines.append("    MX_GPIO_Init();")
         if config.get("uart"):
@@ -308,6 +314,6 @@ class STM32HALGenerator:
             lines.append("    MX_TIM2_Init();")
         if config.get("adc"):
             lines.append("    MX_ADC1_Init();")
-        
+
         lines.append("}")
         return "\n".join(lines)

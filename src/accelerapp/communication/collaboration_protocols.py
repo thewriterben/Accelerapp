@@ -3,9 +3,9 @@ Collaboration protocols for agent interaction.
 Defines rules and patterns for agent collaboration.
 """
 
-from typing import Dict, Any, List, Optional, Callable
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 
 class ProtocolType(Enum):

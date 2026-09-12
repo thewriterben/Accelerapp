@@ -5,14 +5,15 @@ Provides HTTP interface to Accelerapp functionality.
 
 import json
 import logging
-from typing import Dict, Any, Optional
 from dataclasses import dataclass
-from .rate_limiter import RateLimiter, APIKeyManager, RateLimitRule
+from typing import Any, Dict, Optional
+
+from .rate_limiter import APIKeyManager, RateLimiter, RateLimitRule
 
 # HTTP server support is optional
 try:
-    from http.server import HTTPServer, BaseHTTPRequestHandler
-    from urllib.parse import urlparse, parse_qs
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    from urllib.parse import parse_qs, urlparse
 
     HTTP_AVAILABLE = True
 except ImportError:

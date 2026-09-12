@@ -2,7 +2,8 @@
 AI Agent for intelligent code optimization and architecture analysis.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from .base_agent import BaseAgent
 
 

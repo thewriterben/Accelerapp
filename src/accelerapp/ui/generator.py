@@ -2,8 +2,8 @@
 UI generator for hardware control interfaces.
 """
 
-from typing import Dict, Any
 from pathlib import Path
+from typing import Any, Dict
 
 
 class UIGenerator:

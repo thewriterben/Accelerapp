@@ -2,9 +2,9 @@
 Hardware abstraction for HIL testing.
 """
 
-from typing import Dict, Any, Optional, List
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class PinMode(Enum):

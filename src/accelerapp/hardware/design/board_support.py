@@ -3,13 +3,14 @@ Board support matrix for ESP32 and Meshtastic devices.
 Defines compatible boards and their specifications.
 """
 
-from enum import Enum
-from typing import Dict, Any, List
 from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Dict, List
 
 
 class ESP32BoardType(Enum):
     """Supported ESP32 board types."""
+
     ESP32_GENERIC = "esp32_generic"
     ESP32_CAM = "esp32_cam"
     ESP32_S3_CAM = "esp32_s3_cam"
@@ -21,6 +22,7 @@ class ESP32BoardType(Enum):
 @dataclass
 class BoardSpecification:
     """Hardware specification for a board."""
+
     board_type: ESP32BoardType
     display_name: str
     dimensions: Dict[str, float]  # width, height, depth in mm
@@ -37,11 +39,11 @@ class BoardSupportMatrix:
     Matrix of supported boards with their specifications.
     Based on WildCAM_ESP32 compatibility framework.
     """
-    
+
     def __init__(self):
         """Initialize board support matrix."""
         self._boards = self._initialize_boards()
-    
+
     def _initialize_boards(self) -> Dict[ESP32BoardType, BoardSpecification]:
         """Initialize supported board specifications."""
         return {
@@ -129,39 +131,35 @@ class BoardSupportMatrix:
                 features=["wifi", "lora", "bluetooth", "gpio"],
             ),
         }
-    
+
     def get_board_spec(self, board_type: ESP32BoardType) -> BoardSpecification:
         """
         Get board specification.
-        
+
         Args:
             board_type: Board type to get
-            
+
         Returns:
             Board specification
         """
         return self._boards.get(board_type)
-    
+
     def list_boards(self) -> List[ESP32BoardType]:
         """Get list of supported boards."""
         return list(self._boards.keys())
-    
+
     def get_boards_by_feature(self, feature: str) -> List[ESP32BoardType]:
         """
         Get boards that support a specific feature.
-        
+
         Args:
             feature: Feature to filter by
-            
+
         Returns:
             List of board types with the feature
         """
-        return [
-            board_type
-            for board_type, spec in self._boards.items()
-            if feature in spec.features
-        ]
-    
+        return [board_type for board_type, spec in self._boards.items() if feature in spec.features]
+
     def get_meshtastic_compatible_boards(self) -> List[ESP32BoardType]:
         """Get boards compatible with Meshtastic."""
         return [

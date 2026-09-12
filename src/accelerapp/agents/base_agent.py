@@ -3,8 +3,8 @@ Base agent class for the agentic coding swarm.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
 
 
 class BaseAgent(ABC):

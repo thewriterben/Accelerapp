@@ -5,11 +5,11 @@ Provides support for multiple LLM backends:
 - Online/Cloud: OpenAI, Anthropic
 """
 
-from .local_llm_service import LocalLLMService, LLMBackend, LLMProvider
+from .anthropic_provider import AnthropicProvider
+from .local_llm_service import LLMBackend, LLMProvider, LocalLLMService
+from .model_manager import ModelInfo, ModelManager
 from .ollama_provider import OllamaProvider
 from .openai_provider import OpenAIProvider
-from .anthropic_provider import AnthropicProvider
-from .model_manager import ModelManager, ModelInfo
 from .prompt_templates import PromptTemplates
 
 __all__ = [

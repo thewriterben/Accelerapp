@@ -3,10 +3,11 @@ Ollama provider implementation for local LLM integration.
 Supports offline code generation using Ollama models.
 """
 
-from typing import Dict, Any, List, Optional
 import json
-import urllib.request
 import urllib.error
+import urllib.request
+from typing import Any, Dict, List, Optional
+
 from .local_llm_service import LLMProvider
 
 

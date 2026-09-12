@@ -3,12 +3,12 @@ Local knowledge base system for offline operation.
 Provides vector storage and similarity search without external dependencies.
 """
 
-from typing import Dict, Any, List, Optional, Tuple
-from dataclasses import dataclass, field
-from datetime import datetime
 import json
 import math
+from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 
 @dataclass

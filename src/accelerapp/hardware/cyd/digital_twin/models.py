@@ -4,14 +4,15 @@ Digital twin models for CYD hardware.
 Provides data models and state management for CYD digital twins.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class TwinStatus(Enum):
     """Digital twin status."""
+
     CREATED = "created"
     SYNCING = "syncing"
     SYNCHRONIZED = "synchronized"
@@ -22,6 +23,7 @@ class TwinStatus(Enum):
 @dataclass
 class DisplayState:
     """Display hardware state."""
+
     enabled: bool = True
     brightness: int = 255
     rotation: int = 1
@@ -34,6 +36,7 @@ class DisplayState:
 @dataclass
 class TouchState:
     """Touch controller state."""
+
     enabled: bool = True
     calibrated: bool = False
     last_touch_x: Optional[int] = None
@@ -45,6 +48,7 @@ class TouchState:
 @dataclass
 class PowerState:
     """Power management state."""
+
     mode: str = "active"
     battery_voltage: Optional[float] = None
     current_draw_ma: float = 0.0
@@ -56,6 +60,7 @@ class PowerState:
 @dataclass
 class SystemState:
     """System state."""
+
     cpu_frequency_mhz: int = 240
     free_heap_bytes: int = 0
     temperature_c: float = 25.0
@@ -68,7 +73,7 @@ class SystemState:
 class CYDTwinModel:
     """
     Digital twin model for CYD hardware.
-    
+
     Represents the complete state of a CYD device including:
     - Display state
     - Touch controller state
@@ -77,25 +82,25 @@ class CYDTwinModel:
     - System state
     - Telemetry data
     """
-    
+
     device_id: str
     device_name: str
     status: TwinStatus = TwinStatus.CREATED
     created_at: datetime = field(default_factory=datetime.now)
     last_sync: Optional[datetime] = None
-    
+
     # Hardware state
     display: DisplayState = field(default_factory=DisplayState)
     touch: TouchState = field(default_factory=TouchState)
     power: PowerState = field(default_factory=PowerState)
     system: SystemState = field(default_factory=SystemState)
     gpio_states: Dict[int, bool] = field(default_factory=dict)
-    
+
     # Metadata
     location: Optional[str] = None
     tags: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+
     # Telemetry
     telemetry_history: List[Dict[str, Any]] = field(default_factory=list)
     max_telemetry_records: int = 1000
@@ -103,7 +108,7 @@ class CYDTwinModel:
     def update_display_state(self, **kwargs) -> None:
         """
         Update display state.
-        
+
         Args:
             **kwargs: Display state fields to update
         """
@@ -116,7 +121,7 @@ class CYDTwinModel:
     def update_touch_state(self, **kwargs) -> None:
         """
         Update touch state.
-        
+
         Args:
             **kwargs: Touch state fields to update
         """
@@ -128,7 +133,7 @@ class CYDTwinModel:
     def update_power_state(self, **kwargs) -> None:
         """
         Update power state.
-        
+
         Args:
             **kwargs: Power state fields to update
         """
@@ -140,7 +145,7 @@ class CYDTwinModel:
     def update_system_state(self, **kwargs) -> None:
         """
         Update system state.
-        
+
         Args:
             **kwargs: System state fields to update
         """
@@ -152,7 +157,7 @@ class CYDTwinModel:
     def set_gpio(self, pin: int, state: bool) -> None:
         """
         Set GPIO pin state.
-        
+
         Args:
             pin: Pin number
             state: Pin state
@@ -163,10 +168,10 @@ class CYDTwinModel:
     def get_gpio(self, pin: int) -> Optional[bool]:
         """
         Get GPIO pin state.
-        
+
         Args:
             pin: Pin number
-            
+
         Returns:
             Pin state or None
         """
@@ -175,28 +180,25 @@ class CYDTwinModel:
     def record_telemetry(self, data: Dict[str, Any]) -> None:
         """
         Record telemetry data point.
-        
+
         Args:
             data: Telemetry data
         """
-        record = {
-            "timestamp": datetime.now().isoformat(),
-            **data
-        }
-        
+        record = {"timestamp": datetime.now().isoformat(), **data}
+
         self.telemetry_history.append(record)
-        
+
         # Limit history size
         if len(self.telemetry_history) > self.max_telemetry_records:
-            self.telemetry_history = self.telemetry_history[-self.max_telemetry_records:]
+            self.telemetry_history = self.telemetry_history[-self.max_telemetry_records :]
 
     def get_telemetry(self, limit: int = 100) -> List[Dict[str, Any]]:
         """
         Get recent telemetry records.
-        
+
         Args:
             limit: Maximum number of records
-            
+
         Returns:
             List of telemetry records
         """
@@ -205,7 +207,7 @@ class CYDTwinModel:
     def get_state_summary(self) -> Dict[str, Any]:
         """
         Get summary of current state.
-        
+
         Returns:
             State summary dictionary
         """
@@ -242,7 +244,7 @@ class CYDTwinModel:
     def to_dict(self) -> Dict[str, Any]:
         """
         Convert model to dictionary.
-        
+
         Returns:
             Dictionary representation
         """
@@ -266,7 +268,9 @@ class CYDTwinModel:
                 "calibrated": self.touch.calibrated,
                 "last_touch_x": self.touch.last_touch_x,
                 "last_touch_y": self.touch.last_touch_y,
-                "last_touch_time": self.touch.last_touch_time.isoformat() if self.touch.last_touch_time else None,
+                "last_touch_time": (
+                    self.touch.last_touch_time.isoformat() if self.touch.last_touch_time else None
+                ),
                 "touch_count": self.touch.touch_count,
             },
             "power": {
@@ -295,10 +299,10 @@ class CYDTwinModel:
     def from_dict(cls, data: Dict[str, Any]) -> "CYDTwinModel":
         """
         Create model from dictionary.
-        
+
         Args:
             data: Dictionary data
-            
+
         Returns:
             CYDTwinModel instance
         """
@@ -307,28 +311,28 @@ class CYDTwinModel:
             device_name=data["device_name"],
             status=TwinStatus(data.get("status", "created")),
         )
-        
+
         if "display" in data:
             d = data["display"]
             model.display = DisplayState(**d)
-        
+
         if "touch" in data:
             t = data["touch"]
             model.touch = TouchState(**{k: v for k, v in t.items() if k != "last_touch_time"})
-        
+
         if "power" in data:
             p = data["power"]
             model.power = PowerState(**p)
-        
+
         if "system" in data:
             s = data["system"]
             model.system = SystemState(**s)
-        
+
         model.gpio_states = data.get("gpio_states", {})
         model.location = data.get("location")
         model.tags = data.get("tags", [])
         model.metadata = data.get("metadata", {})
-        
+
         return model
 
     def _mark_synced(self) -> None:
@@ -348,47 +352,47 @@ class CYDTwinModel:
     def is_healthy(self) -> bool:
         """
         Check if device is healthy.
-        
+
         Returns:
             True if device is healthy
         """
         if self.status in [TwinStatus.DISCONNECTED, TwinStatus.ERROR]:
             return False
-        
+
         # Check temperature
         if self.system.temperature_c > 80:
             return False
-        
+
         # Check power
         if self.power.power_consumption_mw > 500:
             return False
-        
+
         return True
 
     def get_health_report(self) -> Dict[str, Any]:
         """
         Get device health report.
-        
+
         Returns:
             Health report dictionary
         """
         health = self.is_healthy()
         issues = []
-        
+
         if self.status in [TwinStatus.DISCONNECTED, TwinStatus.ERROR]:
             issues.append(f"Device status: {self.status.value}")
-        
+
         if self.system.temperature_c > 80:
             issues.append(f"High temperature: {self.system.temperature_c}°C")
         elif self.system.temperature_c > 60:
             issues.append(f"Elevated temperature: {self.system.temperature_c}°C")
-        
+
         if self.power.power_consumption_mw > 500:
             issues.append(f"High power consumption: {self.power.power_consumption_mw}mW")
-        
+
         if self.system.free_heap_bytes < 10000:
             issues.append(f"Low memory: {self.system.free_heap_bytes} bytes free")
-        
+
         return {
             "healthy": health,
             "status": self.status.value,

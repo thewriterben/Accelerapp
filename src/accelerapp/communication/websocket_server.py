@@ -6,10 +6,10 @@ Enables real-time synchronization of code changes and agent activities.
 import asyncio
 import json
 import logging
-from typing import Dict, Set, Any, Optional, Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import Any, Callable, Dict, Optional, Set
 
 # WebSocket support is optional (requires websockets package)
 try:

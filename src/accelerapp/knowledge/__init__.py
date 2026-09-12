@@ -4,9 +4,9 @@ Provides local knowledge base, template management, and pattern learning.
 """
 
 from .knowledge_base import KnowledgeBase, KnowledgeEntry
-from .template_manager import TemplateManager, Template, TemplateCategory
-from .pattern_analyzer import PatternAnalyzer, CodePattern
-from .offline_docs import OfflineDocumentation, DocEntry
+from .offline_docs import DocEntry, OfflineDocumentation
+from .pattern_analyzer import CodePattern, PatternAnalyzer
+from .template_manager import Template, TemplateCategory, TemplateManager
 
 __all__ = [
     "KnowledgeBase",

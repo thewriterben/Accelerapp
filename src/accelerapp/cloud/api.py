@@ -2,8 +2,8 @@
 Cloud API handler for REST endpoints.
 """
 
-from typing import Dict, Any, Optional, Callable
 from enum import Enum
+from typing import Any, Callable, Dict, Optional
 
 
 class HTTPMethod(Enum):

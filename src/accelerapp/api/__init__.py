@@ -3,7 +3,7 @@ API module for Accelerapp.
 Provides REST API endpoints for code generation and agent interaction.
 """
 
-from .rate_limiter import RateLimiter, APIKeyManager
+from .rate_limiter import APIKeyManager, RateLimiter
 
 # HTTP endpoints are optional
 try:

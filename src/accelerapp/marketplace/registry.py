@@ -2,9 +2,10 @@
 Template registry for managing marketplace templates.
 """
 
-from typing import Dict, Any, List, Optional
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 from .template import TemplateMetadata, TemplatePackage
 
 

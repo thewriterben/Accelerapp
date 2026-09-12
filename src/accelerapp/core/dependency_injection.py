@@ -20,7 +20,10 @@ class ServiceContainer:
         self._singletons: Dict[str, Any] = {}
 
     def register(
-        self, service_type: Type[T], implementation: Optional[Type[T]] = None, name: Optional[str] = None
+        self,
+        service_type: Type[T],
+        implementation: Optional[Type[T]] = None,
+        name: Optional[str] = None,
     ) -> None:
         """
         Register a service type with its implementation.

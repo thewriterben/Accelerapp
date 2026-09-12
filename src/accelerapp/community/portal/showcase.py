@@ -2,9 +2,9 @@
 Community project showcase system.
 """
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

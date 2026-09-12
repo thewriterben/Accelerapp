@@ -3,7 +3,8 @@ STM32F4 series platform implementation.
 Supports STM32F401, F407, F411, F429 and other F4 variants.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict
+
 from .base import STM32BasePlatform
 
 
@@ -18,16 +19,18 @@ class STM32F4Platform(STM32BasePlatform):
         super().__init__()
         self.name = "stm32f4"
         self.series = "F4"
-        
+
         # F4-specific capabilities
-        self.capabilities.extend([
-            "fpu",  # Hardware floating-point unit
-            "dsp",  # DSP instructions
-            "camera_interface",
-            "sdio",
-            "rng",  # Random number generator
-        ])
-        
+        self.capabilities.extend(
+            [
+                "fpu",  # Hardware floating-point unit
+                "dsp",  # DSP instructions
+                "camera_interface",
+                "sdio",
+                "rng",  # Random number generator
+            ]
+        )
+
     def get_series_info(self) -> Dict[str, Any]:
         """Get STM32F4 series-specific information."""
         return {
@@ -57,20 +60,22 @@ class STM32F4Platform(STM32BasePlatform):
                 "Hardware crypto (select variants)",
             ],
         }
-    
+
     def get_build_config(self) -> Dict[str, Any]:
         """Get STM32F4-specific build configuration."""
         base_config = super().get_build_config()
-        base_config.update({
-            "board": "nucleo_f401re",
-            "mcu": "STM32F401RETx",
-            "cpu_flags": [
-                "-mcpu=cortex-m4",
-                "-mthumb",
-                "-mfpu=fpv4-sp-d16",
-                "-mfloat-abi=hard",
-            ],
-            "linker_script": "STM32F401RETx_FLASH.ld",
-            "hal_driver": "STM32F4xx_HAL_Driver",
-        })
+        base_config.update(
+            {
+                "board": "nucleo_f401re",
+                "mcu": "STM32F401RETx",
+                "cpu_flags": [
+                    "-mcpu=cortex-m4",
+                    "-mthumb",
+                    "-mfpu=fpv4-sp-d16",
+                    "-mfloat-abi=hard",
+                ],
+                "linker_script": "STM32F401RETx_FLASH.ld",
+                "hal_driver": "STM32F4xx_HAL_Driver",
+            }
+        )
         return base_config

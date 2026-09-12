@@ -2,9 +2,10 @@
 Template manager for code generation using Jinja2.
 """
 
-from typing import Dict, Any, Optional
 from pathlib import Path
-from jinja2 import Environment, FileSystemLoader, select_autoescape, Template, TemplateNotFound
+from typing import Any, Dict, Optional
+
+from jinja2 import Environment, FileSystemLoader, Template, TemplateNotFound, select_autoescape
 
 
 class TemplateManager:

@@ -50,7 +50,9 @@ class HealthCheck:
             is_healthy = self.check_func()
             return {
                 "name": self.name,
-                "status": HealthStatus.HEALTHY.value if is_healthy else HealthStatus.UNHEALTHY.value,
+                "status": (
+                    HealthStatus.HEALTHY.value if is_healthy else HealthStatus.UNHEALTHY.value
+                ),
                 "critical": self.critical,
                 "description": self.description,
             }

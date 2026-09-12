@@ -2,9 +2,9 @@
 Encryption utilities for sensitive data in air-gapped environments.
 """
 
-from typing import Optional
 import hashlib
 import os
+from typing import Optional
 
 
 class Encryption:

@@ -6,7 +6,7 @@ Provides centralized monitoring capabilities.
 from typing import Any, Dict, Optional
 
 from ..core.interfaces import BaseService
-from ..monitoring import get_logger, get_metrics, get_health_checker, MetricsCollector
+from ..monitoring import MetricsCollector, get_health_checker, get_logger, get_metrics
 
 
 class MonitoringService(BaseService):
@@ -28,7 +28,7 @@ class MonitoringService(BaseService):
     async def initialize(self) -> None:
         """Initialize the monitoring service."""
         await super().initialize()
-        
+
         # Register default health checks
         self.health_checker.register(
             "monitoring_service",
@@ -36,7 +36,7 @@ class MonitoringService(BaseService):
             critical=True,
             description="Monitoring service availability",
         )
-        
+
         self.logger.info("Monitoring service initialized")
 
     async def shutdown(self) -> None:
@@ -100,7 +100,9 @@ class MonitoringService(BaseService):
     def get_health(self) -> Dict[str, Any]:
         """Get service health status."""
         health = super().get_health()
-        health.update({
-            "registered_checks": len(self.health_checker.get_registered_checks()),
-        })
+        health.update(
+            {
+                "registered_checks": len(self.health_checker.get_registered_checks()),
+            }
+        )
         return health

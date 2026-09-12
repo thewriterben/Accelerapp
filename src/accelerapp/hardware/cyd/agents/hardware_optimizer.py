@@ -4,13 +4,14 @@ Hardware optimization agent for CYD projects.
 Provides performance optimization and resource management recommendations.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class OptimizationGoal(Enum):
     """Optimization goals."""
+
     PERFORMANCE = "performance"
     POWER_EFFICIENCY = "power_efficiency"
     MEMORY = "memory"
@@ -21,6 +22,7 @@ class OptimizationGoal(Enum):
 @dataclass
 class OptimizationResult:
     """Optimization result."""
+
     recommendations: List[str]
     estimated_improvement: float  # percentage
     changes_required: Dict[str, Any]
@@ -30,7 +32,7 @@ class OptimizationResult:
 class HardwareOptimizer:
     """
     Hardware optimization agent for CYD.
-    
+
     Provides:
     - Performance analysis and optimization
     - Memory usage optimization
@@ -46,10 +48,10 @@ class HardwareOptimizer:
     def analyze_configuration(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Analyze hardware configuration.
-        
+
         Args:
             config: Hardware configuration
-            
+
         Returns:
             Analysis results
         """
@@ -60,7 +62,7 @@ class HardwareOptimizer:
             "issues": [],
             "strengths": [],
         }
-        
+
         # Analyze display settings
         if "display" in config:
             display = config["display"]
@@ -68,7 +70,7 @@ class HardwareOptimizer:
                 analysis["issues"].append("High refresh rate may impact performance")
             if display.get("color_depth") == 24:
                 analysis["issues"].append("24-bit color uses more memory than 16-bit")
-        
+
         # Analyze pin usage
         if "pins" in config:
             used_pins = len(config["pins"])
@@ -76,24 +78,22 @@ class HardwareOptimizer:
                 analysis["issues"].append("High pin usage may limit expansion")
             else:
                 analysis["strengths"].append(f"Efficient pin usage ({used_pins} pins)")
-        
+
         # Calculate scores
         analysis["performance_score"] = max(0.0, 100.0 - len(analysis["issues"]) * 10)
-        
+
         return analysis
 
     def optimize_for_goal(
-        self,
-        config: Dict[str, Any],
-        goal: OptimizationGoal
+        self, config: Dict[str, Any], goal: OptimizationGoal
     ) -> OptimizationResult:
         """
         Optimize configuration for specific goal.
-        
+
         Args:
             config: Current configuration
             goal: Optimization goal
-            
+
         Returns:
             Optimization recommendations
         """
@@ -117,18 +117,18 @@ class HardwareOptimizer:
             "Use double buffering for smooth graphics",
             "Minimize floating-point operations in display updates",
         ]
-        
+
         changes = {
             "cpu_frequency": 240,
             "spi_dma": True,
             "display_buffering": "double",
         }
-        
+
         trade_offs = [
             "Increased power consumption",
             "Higher heat generation",
         ]
-        
+
         return OptimizationResult(
             recommendations=recommendations,
             estimated_improvement=30.0,
@@ -146,19 +146,19 @@ class HardwareOptimizer:
             "Disable unused peripherals",
             "Use efficient color encoding (RGB565)",
         ]
-        
+
         changes = {
             "cpu_frequency_idle": 80,
             "display_timeout": 30,
             "sleep_enabled": True,
             "spi_frequency": 20000000,
         }
-        
+
         trade_offs = [
             "Slightly reduced performance",
             "Slower display updates",
         ]
-        
+
         return OptimizationResult(
             recommendations=recommendations,
             estimated_improvement=40.0,
@@ -176,18 +176,18 @@ class HardwareOptimizer:
             "Minimize string usage in display updates",
             "Free unused memory pools",
         ]
-        
+
         changes = {
             "color_depth": 16,
             "display_buffering": "single",
             "image_loading": "on-demand",
         }
-        
+
         trade_offs = [
             "Slight reduction in visual quality",
             "Potential display tearing with single buffer",
         ]
-        
+
         return OptimizationResult(
             recommendations=recommendations,
             estimated_improvement=35.0,
@@ -205,18 +205,18 @@ class HardwareOptimizer:
             "Use hardware timers for periodic tasks",
             "Prioritize user input handling",
         ]
-        
+
         changes = {
             "touch_interrupt": True,
             "blocking_delays": False,
             "partial_updates": True,
         }
-        
+
         trade_offs = [
             "Slightly more complex code",
             "May need RTOS for task management",
         ]
-        
+
         return OptimizationResult(
             recommendations=recommendations,
             estimated_improvement=50.0,
@@ -233,7 +233,7 @@ class HardwareOptimizer:
             "Use interrupt-driven touch",
             "Enable light sleep when idle",
         ]
-        
+
         changes = {
             "cpu_frequency": 160,
             "color_depth": 16,
@@ -241,12 +241,12 @@ class HardwareOptimizer:
             "touch_interrupt": True,
             "sleep_enabled": True,
         }
-        
+
         trade_offs = [
             "Moderate power consumption",
             "Good performance for most applications",
         ]
-        
+
         return OptimizationResult(
             recommendations=recommendations,
             estimated_improvement=25.0,
@@ -257,40 +257,40 @@ class HardwareOptimizer:
     def optimize_display_updates(self, config: Dict[str, Any]) -> List[str]:
         """
         Optimize display update strategy.
-        
+
         Args:
             config: Display configuration
-            
+
         Returns:
             List of optimization suggestions
         """
         suggestions = []
-        
+
         suggestions.append("Update only changed screen regions")
         suggestions.append("Batch small updates together")
         suggestions.append("Use sprite system for moving objects")
         suggestions.append("Pre-render static UI elements")
         suggestions.append("Implement dirty rectangle tracking")
-        
+
         if config.get("refresh_rate", 60) > 30:
             suggestions.append("Consider reducing refresh rate to 30 Hz for power savings")
-        
+
         return suggestions
 
     def optimize_pin_allocation(self, pins: Dict[int, str]) -> Dict[str, Any]:
         """
         Optimize pin allocation.
-        
+
         Args:
             pins: Current pin allocation
-            
+
         Returns:
             Optimization recommendations
         """
         reserved_pins = {2, 12, 13, 14, 15, 21, 25, 32, 33, 36, 39}
         used_pins = set(pins.keys())
         conflicts = used_pins & reserved_pins
-        
+
         return {
             "conflicts": list(conflicts),
             "available_pins": [0, 4, 16, 22, 23, 26, 27, 35],
@@ -304,31 +304,31 @@ class HardwareOptimizer:
     def estimate_performance(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Estimate performance metrics.
-        
+
         Args:
             config: Hardware configuration
-            
+
         Returns:
             Performance estimates
         """
         cpu_freq = config.get("cpu_frequency", 240)
         color_depth = config.get("color_depth", 16)
         buffering = config.get("display_buffering", "single")
-        
+
         # Simple performance model
         base_fps = 60
-        
+
         if cpu_freq < 160:
             base_fps *= 0.7
         elif cpu_freq > 240:
             base_fps *= 1.2
-        
+
         if color_depth == 24:
             base_fps *= 0.8
-        
+
         if buffering == "double":
             base_fps *= 0.9
-        
+
         return {
             "estimated_fps": int(base_fps),
             "cpu_frequency_mhz": cpu_freq,
@@ -336,25 +336,21 @@ class HardwareOptimizer:
             "spi_bandwidth_mbps": config.get("spi_frequency", 40000000) / 1000000,
         }
 
-    def generate_optimization_report(
-        self,
-        config: Dict[str, Any],
-        goal: OptimizationGoal
-    ) -> str:
+    def generate_optimization_report(self, config: Dict[str, Any], goal: OptimizationGoal) -> str:
         """
         Generate comprehensive optimization report.
-        
+
         Args:
             config: Hardware configuration
             goal: Optimization goal
-            
+
         Returns:
             Markdown formatted report
         """
         analysis = self.analyze_configuration(config)
         optimization = self.optimize_for_goal(config, goal)
         performance = self.estimate_performance(config)
-        
+
         report = f"""# CYD Hardware Optimization Report
 
 ## Configuration Analysis
@@ -387,5 +383,5 @@ class HardwareOptimizer:
 - **Memory Bandwidth:** {performance['memory_bandwidth_mbps']} MB/s
 - **SPI Bandwidth:** {performance['spi_bandwidth_mbps']} Mbps
 """
-        
+
         return report

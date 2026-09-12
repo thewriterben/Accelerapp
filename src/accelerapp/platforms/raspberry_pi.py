@@ -2,8 +2,9 @@
 Raspberry Pi platform implementation with Python and C++ support.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 

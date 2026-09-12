@@ -3,10 +3,10 @@ Model management system for local LLM models.
 Handles model downloading, versioning, and lifecycle.
 """
 
-from typing import Dict, Any, List, Optional
-from pathlib import Path
 import json
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 class ModelInfo:

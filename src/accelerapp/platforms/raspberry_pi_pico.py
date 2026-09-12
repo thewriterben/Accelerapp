@@ -2,8 +2,9 @@
 Raspberry Pi Pico platform implementation with MicroPython and C SDK support.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 

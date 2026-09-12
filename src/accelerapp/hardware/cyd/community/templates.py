@@ -4,13 +4,14 @@ Code generation templates for CYD projects.
 Provides templates for common CYD application patterns.
 """
 
-from typing import Dict, Any, List, Optional
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class TemplateType(Enum):
     """Template types for CYD projects."""
+
     IOT_DASHBOARD = "iot_dashboard"
     SENSOR_DISPLAY = "sensor_display"
     WEATHER_STATION = "weather_station"
@@ -22,6 +23,7 @@ class TemplateType(Enum):
 @dataclass
 class Template:
     """Code generation template."""
+
     name: str
     template_type: TemplateType
     description: str
@@ -32,7 +34,7 @@ class Template:
 class TemplateManager:
     """
     Manager for CYD code generation templates.
-    
+
     Provides pre-built templates for common CYD applications.
     """
 
@@ -69,10 +71,10 @@ class TemplateManager:
     def get_template(self, template_type: TemplateType) -> Optional[Template]:
         """
         Get a template by type.
-        
+
         Args:
             template_type: Type of template
-            
+
         Returns:
             Template or None if not found
         """
@@ -81,38 +83,36 @@ class TemplateManager:
     def list_templates(self) -> List[Template]:
         """
         List all available templates.
-        
+
         Returns:
             List of templates
         """
         return list(self._templates.values())
 
     def generate_project(
-        self,
-        template_type: TemplateType,
-        config: Optional[Dict[str, Any]] = None
+        self, template_type: TemplateType, config: Optional[Dict[str, Any]] = None
     ) -> str:
         """
         Generate project code from template.
-        
+
         Args:
             template_type: Type of template
             config: Project configuration
-            
+
         Returns:
             Generated code
         """
         template = self.get_template(template_type)
         if not template:
             return ""
-        
+
         code = template.code
-        
+
         # Apply configuration substitutions
         if config:
             for key, value in config.items():
                 code = code.replace(f"{{{{{key}}}}}", str(value))
-        
+
         return code
 
     def _get_iot_dashboard_template(self) -> str:

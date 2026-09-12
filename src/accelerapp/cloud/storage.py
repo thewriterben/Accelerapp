@@ -3,14 +3,14 @@ Cloud storage service for managing generated code artifacts.
 Supports multiple cloud storage providers (S3, Azure Blob, GCS).
 """
 
-from typing import Dict, Any, Optional, List, BinaryIO
-from abc import ABC, abstractmethod
-from enum import Enum
-from datetime import datetime
-import os
-import json
 import hashlib
+import json
+import os
+from abc import ABC, abstractmethod
+from datetime import datetime
+from enum import Enum
 from pathlib import Path
+from typing import Any, BinaryIO, Dict, List, Optional
 
 
 class CloudStorageProvider(Enum):
@@ -327,7 +327,9 @@ class CloudStorageService:
             "provider": self.active_provider,
         }
 
-    def download_artifact(self, artifact_id: str, artifact_type: str = "generated_code") -> Optional[bytes]:
+    def download_artifact(
+        self, artifact_id: str, artifact_type: str = "generated_code"
+    ) -> Optional[bytes]:
         """
         Download an artifact from cloud storage.
 
@@ -377,7 +379,9 @@ class CloudStorageService:
 
         return [obj.to_dict() for obj in objects[:limit]]
 
-    def get_artifact_info(self, artifact_id: str, artifact_type: str = "generated_code") -> Optional[Dict[str, Any]]:
+    def get_artifact_info(
+        self, artifact_id: str, artifact_type: str = "generated_code"
+    ) -> Optional[Dict[str, Any]]:
         """
         Get artifact metadata.
 
@@ -453,7 +457,11 @@ class CloudStorageService:
 
             for artifact in artifacts:
                 try:
-                    artifact_id = artifact["key"].split("/", 1)[-1] if "/" in artifact["key"] else artifact["key"]
+                    artifact_id = (
+                        artifact["key"].split("/", 1)[-1]
+                        if "/" in artifact["key"]
+                        else artifact["key"]
+                    )
                     data = self.download_artifact(artifact_id, artifact_type)
 
                     if data:

@@ -3,12 +3,12 @@ Template management system for code generation.
 Handles template storage, versioning, and retrieval.
 """
 
-from typing import Dict, Any, List, Optional
+import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-import json
+from typing import Any, Dict, List, Optional
 
 
 class TemplateCategory(Enum):

@@ -169,6 +169,7 @@ def default_registry() -> Registry:
 
 # ── Board → Accelerapp platform routing ──────────────────────────────────────
 
+
 def platform_for_board(board: Board) -> Optional[str]:
     """
     Map a registry board onto an Accelerapp code-generation platform name

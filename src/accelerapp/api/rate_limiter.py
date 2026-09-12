@@ -3,12 +3,12 @@ Rate limiting for API calls and LLM requests.
 Prevents abuse and manages resource usage.
 """
 
+import threading
 import time
-from typing import Dict, Optional, Tuple
+from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from collections import deque
-import threading
+from typing import Dict, Optional, Tuple
 
 
 @dataclass

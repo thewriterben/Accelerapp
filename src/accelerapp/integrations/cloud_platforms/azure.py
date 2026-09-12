@@ -2,7 +2,7 @@
 Azure integration for Accelerapp.
 """
 
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 
 class AzureIntegration:
@@ -28,8 +28,7 @@ class AzureIntegration:
             ARM template configuration
         """
         schema_url = (
-            "https://schema.management.azure.com/schemas/"
-            "2019-04-01/deploymentTemplate.json#"
+            "https://schema.management.azure.com/schemas/" "2019-04-01/deploymentTemplate.json#"
         )
         config = {
             "$schema": schema_url,
@@ -79,8 +78,7 @@ class AzureIntegration:
             ARM template configuration
         """
         schema_url = (
-            "https://schema.management.azure.com/schemas/"
-            "2019-04-01/deploymentTemplate.json#"
+            "https://schema.management.azure.com/schemas/" "2019-04-01/deploymentTemplate.json#"
         )
         config = {
             "$schema": schema_url,
@@ -139,8 +137,7 @@ class AzureIntegration:
             ARM template configuration
         """
         schema_url = (
-            "https://schema.management.azure.com/schemas/"
-            "2019-04-01/deploymentTemplate.json#"
+            "https://schema.management.azure.com/schemas/" "2019-04-01/deploymentTemplate.json#"
         )
         config = {
             "$schema": schema_url,
