@@ -3,8 +3,7 @@ STM32 HAL code generator.
 Generates HAL-compatible initialization and driver code.
 """
 
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 
 class STM32HALGenerator:

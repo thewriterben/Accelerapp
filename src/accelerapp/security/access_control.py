@@ -3,7 +3,7 @@ Access control system for securing air-gapped deployments.
 """
 
 from enum import Enum
-from typing import Dict, List, Set
+from typing import Dict, Set
 
 
 class Permission(Enum):

@@ -4,7 +4,7 @@ Core ESP32-CAM module providing camera interface and configuration.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 
 class CameraModel(Enum):

@@ -5,7 +5,7 @@ Provides common functionality for all STM32 variants.
 
 from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from ..base import BasePlatform
 

@@ -5,9 +5,9 @@ Provides MJPEG, RTSP, and WebRTC streaming capabilities.
 
 import logging
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

@@ -3,7 +3,7 @@ Code optimization agents for performance, memory, and security analysis.
 These agents provide automated code improvement suggestions.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .base_agent import BaseAgent
 

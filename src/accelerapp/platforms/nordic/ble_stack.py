@@ -3,7 +3,7 @@ BLE stack integration for Nordic nRF platforms.
 Provides BLE service generation and SoftDevice configuration.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 
 class BLEStack:

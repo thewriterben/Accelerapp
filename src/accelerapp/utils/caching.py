@@ -6,7 +6,7 @@ Provides multi-level caching with TTL support and performance optimizations.
 import threading
 import time
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional
 
 
 class CacheManager:
