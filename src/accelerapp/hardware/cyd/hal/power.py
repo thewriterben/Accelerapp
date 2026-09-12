@@ -5,14 +5,15 @@ Provides power control and energy monitoring capabilities
 for ESP32 Cheap Yellow Display boards.
 """
 
-from typing import Dict, Any, Optional
 from dataclasses import dataclass
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, Optional
 
 
 class PowerMode(Enum):
     """Power management modes."""
+
     ACTIVE = "active"
     LIGHT_SLEEP = "light_sleep"
     DEEP_SLEEP = "deep_sleep"
@@ -22,6 +23,7 @@ class PowerMode(Enum):
 @dataclass
 class PowerConfig:
     """Power management configuration."""
+
     default_mode: PowerMode = PowerMode.ACTIVE
     auto_sleep_timeout: int = 300  # seconds
     wake_on_touch: bool = True
@@ -33,7 +35,7 @@ class PowerConfig:
 class PowerManager:
     """
     Power management for CYD hardware.
-    
+
     Provides capabilities for:
     - Power mode control (active, light sleep, deep sleep)
     - Energy monitoring and statistics
@@ -46,7 +48,7 @@ class PowerManager:
     def __init__(self, config: Optional[PowerConfig] = None):
         """
         Initialize power manager.
-        
+
         Args:
             config: Power configuration (uses defaults if None)
         """
@@ -60,10 +62,10 @@ class PowerManager:
     def set_power_mode(self, mode: PowerMode) -> bool:
         """
         Set device power mode.
-        
+
         Args:
             mode: Target power mode
-            
+
         Returns:
             True if mode change successful
         """
@@ -73,7 +75,7 @@ class PowerManager:
     def get_power_mode(self) -> PowerMode:
         """
         Get current power mode.
-        
+
         Returns:
             Current power mode
         """
@@ -82,10 +84,10 @@ class PowerManager:
     def enter_light_sleep(self, duration_ms: Optional[int] = None) -> bool:
         """
         Enter light sleep mode.
-        
+
         Args:
             duration_ms: Sleep duration in milliseconds (None for indefinite)
-            
+
         Returns:
             True if sleep entry successful
         """
@@ -96,10 +98,10 @@ class PowerManager:
     def enter_deep_sleep(self, duration_ms: Optional[int] = None) -> bool:
         """
         Enter deep sleep mode.
-        
+
         Args:
             duration_ms: Sleep duration in milliseconds (None for indefinite)
-            
+
         Returns:
             True if sleep entry successful
         """
@@ -113,18 +115,18 @@ class PowerManager:
         gpio: bool = False,
         gpio_pin: Optional[int] = None,
         timer: bool = False,
-        timer_ms: Optional[int] = None
+        timer_ms: Optional[int] = None,
     ) -> bool:
         """
         Configure wake-up sources.
-        
+
         Args:
             touch: Enable wake on touch
             gpio: Enable wake on GPIO
             gpio_pin: GPIO pin for wake-up
             timer: Enable timer wake-up
             timer_ms: Timer duration in milliseconds
-            
+
         Returns:
             True if configuration successful
         """
@@ -136,10 +138,10 @@ class PowerManager:
     def set_display_power(self, enabled: bool) -> bool:
         """
         Control display backlight power.
-        
+
         Args:
             enabled: True to turn on, False to turn off
-            
+
         Returns:
             True if power control successful
         """
@@ -149,7 +151,7 @@ class PowerManager:
     def get_display_power(self) -> bool:
         """
         Get display power state.
-        
+
         Returns:
             True if display is on
         """
@@ -158,7 +160,7 @@ class PowerManager:
     def get_uptime(self) -> float:
         """
         Get device uptime in seconds.
-        
+
         Returns:
             Uptime in seconds
         """
@@ -168,7 +170,7 @@ class PowerManager:
     def get_statistics(self) -> Dict[str, Any]:
         """
         Get power management statistics.
-        
+
         Returns:
             Dictionary of power statistics
         """
@@ -189,7 +191,7 @@ class PowerManager:
     def estimate_power_consumption(self) -> Dict[str, float]:
         """
         Estimate current power consumption.
-        
+
         Returns:
             Dictionary with power consumption estimates (mW)
         """
@@ -200,10 +202,10 @@ class PowerManager:
             PowerMode.LIGHT_SLEEP: 3.0,  # ~0.8mA @ 5V
             PowerMode.DEEP_SLEEP: 0.5,  # ~0.15mA @ 5V
         }
-        
+
         cpu = base_consumption.get(self._current_mode, 160.0)
         display = 75.0 if self._display_on else 0.0  # TFT backlight
-        
+
         return {
             "cpu_mw": cpu,
             "display_mw": display,
@@ -213,10 +215,10 @@ class PowerManager:
     def generate_code(self, platform: str = "arduino") -> str:
         """
         Generate platform-specific power management code.
-        
+
         Args:
             platform: Target platform (arduino, esp-idf, micropython)
-            
+
         Returns:
             Generated code string
         """
@@ -243,15 +245,15 @@ bool displayOn = true;
 void setupPowerManagement() {{
     // Configure wake-up sources
 """
-        
+
         if self.config.wake_on_touch:
             code += """    esp_sleep_enable_touchpad_wakeup();
 """
-        
+
         if self.config.wake_on_gpio and self.config.wake_gpio_pin is not None:
             code += f"""    esp_sleep_enable_ext0_wakeup(GPIO_NUM_{self.config.wake_gpio_pin}, 1);
 """
-        
+
         code += """}
 
 void enterLightSleep(uint64_t duration_ms) {
@@ -306,18 +308,18 @@ void resetActivityTimer() {
 
 void power_management_init() {{
 """
-        
+
         if self.config.wake_on_touch:
             code += """    // Configure touch wake-up
     esp_sleep_enable_touchpad_wakeup();
 """
-        
+
         if self.config.wake_on_gpio and self.config.wake_gpio_pin is not None:
             code += f"""    // Configure GPIO wake-up
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_{self.config.wake_gpio_pin}, 1);
     rtc_gpio_pullup_en(GPIO_NUM_{self.config.wake_gpio_pin});
 """
-        
+
         code += """}
 
 void enter_light_sleep(uint64_t duration_ms) {
@@ -354,12 +356,12 @@ display_on = True
 
 def setup_power_management():
 """
-        
+
         if self.config.wake_on_touch:
             code += """    # Configure touch wake-up
     esp32.wake_on_touch(True)
 """
-        
+
         if self.config.wake_on_gpio and self.config.wake_gpio_pin is not None:
             code += f"""    # Configure GPIO wake-up
     wake_pin = Pin({self.config.wake_gpio_pin}, Pin.IN, Pin.PULL_UP)
@@ -368,7 +370,7 @@ def setup_power_management():
         else:
             code += """    pass
 """
-        
+
         code += """
 def enter_light_sleep(duration_ms=None):
     if duration_ms:

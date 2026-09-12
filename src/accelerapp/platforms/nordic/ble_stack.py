@@ -3,7 +3,7 @@ BLE stack integration for Nordic nRF platforms.
 Provides BLE service generation and SoftDevice configuration.
 """
 
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 
 class BLEStack:
@@ -15,27 +15,27 @@ class BLEStack:
     def __init__(self, variant: str = "s140"):
         """
         Initialize BLE stack.
-        
+
         Args:
             variant: SoftDevice variant (s140 for nRF52, s340 for nRF53)
         """
         self.variant = variant
         self.services = []
-        
+
     def generate_service(self, service_config: Dict[str, Any]) -> str:
         """
         Generate BLE service implementation.
-        
+
         Args:
             service_config: Service configuration
-            
+
         Returns:
             Generated C code
         """
         service_name = service_config.get("name", "custom_service")
         uuid = service_config.get("uuid", "0x1234")
         characteristics = service_config.get("characteristics", [])
-        
+
         lines = [
             f"/* BLE {service_name} Service */",
             f'#include "ble_{service_name}.h"',
@@ -44,67 +44,75 @@ class BLEStack:
             f"#define {service_name.upper()}_UUID {uuid}",
             "",
         ]
-        
+
         # Generate characteristics
         for char in characteristics:
             char_name = char.get("name", "char")
             char_uuid = char.get("uuid", "0x1235")
-            lines.extend([
-                f"#define {char_name.upper()}_UUID {char_uuid}",
-            ])
-        
-        lines.extend([
-            "",
-            f"uint32_t ble_{service_name}_init(ble_{service_name}_t * p_{service_name}) {{",
-            "    uint32_t err_code;",
-            "    ble_uuid_t ble_uuid;",
-            "",
-            "    /* Initialize service structure */",
-            f"    p_{service_name}->conn_handle = BLE_CONN_HANDLE_INVALID;",
-            "",
-            "    /* Add service UUID */",
-            f"    ble_uuid.type = p_{service_name}->uuid_type;",
-            f"    ble_uuid.uuid = {service_name.upper()}_UUID;",
-            "",
-            f"    err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,",
-            f"                                         &ble_uuid,",
-            f"                                         &p_{service_name}->service_handle);",
-            "    VERIFY_SUCCESS(err_code);",
-            "",
-        ])
-        
+            lines.extend(
+                [
+                    f"#define {char_name.upper()}_UUID {char_uuid}",
+                ]
+            )
+
+        lines.extend(
+            [
+                "",
+                f"uint32_t ble_{service_name}_init(ble_{service_name}_t * p_{service_name}) {{",
+                "    uint32_t err_code;",
+                "    ble_uuid_t ble_uuid;",
+                "",
+                "    /* Initialize service structure */",
+                f"    p_{service_name}->conn_handle = BLE_CONN_HANDLE_INVALID;",
+                "",
+                "    /* Add service UUID */",
+                f"    ble_uuid.type = p_{service_name}->uuid_type;",
+                f"    ble_uuid.uuid = {service_name.upper()}_UUID;",
+                "",
+                f"    err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,",
+                f"                                         &ble_uuid,",
+                f"                                         &p_{service_name}->service_handle);",
+                "    VERIFY_SUCCESS(err_code);",
+                "",
+            ]
+        )
+
         # Add characteristics
         for char in characteristics:
             char_name = char.get("name", "char")
-            lines.extend([
-                f"    /* Add {char_name} characteristic */",
-                f"    err_code = {char_name}_char_add(p_{service_name});",
-                "    VERIFY_SUCCESS(err_code);",
+            lines.extend(
+                [
+                    f"    /* Add {char_name} characteristic */",
+                    f"    err_code = {char_name}_char_add(p_{service_name});",
+                    "    VERIFY_SUCCESS(err_code);",
+                    "",
+                ]
+            )
+
+        lines.extend(
+            [
+                "    return NRF_SUCCESS;",
+                "}",
                 "",
-            ])
-        
-        lines.extend([
-            "    return NRF_SUCCESS;",
-            "}",
-            "",
-        ])
-        
+            ]
+        )
+
         return "\n".join(lines)
-    
+
     def generate_advertising(self, adv_config: Dict[str, Any]) -> str:
         """
         Generate BLE advertising configuration.
-        
+
         Args:
             adv_config: Advertising configuration
-            
+
         Returns:
             Generated C code
         """
         device_name = adv_config.get("device_name", "Nordic_Device")
         interval = adv_config.get("interval", 300)  # in units of 0.625ms
         timeout = adv_config.get("timeout", 180)  # seconds
-        
+
         lines = [
             "/* BLE Advertising Configuration */",
             '#include "ble_advertising.h"',
@@ -117,7 +125,7 @@ class BLEStack:
             "",
             "    memset(&init, 0, sizeof(init));",
             "",
-            f'    init.advdata.name_type = BLE_ADVDATA_FULL_NAME;',
+            f"    init.advdata.name_type = BLE_ADVDATA_FULL_NAME;",
             "    init.advdata.include_appearance = true;",
             "    init.advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;",
             "",
@@ -137,16 +145,16 @@ class BLEStack:
             "}",
             "",
         ]
-        
+
         return "\n".join(lines)
-    
+
     def generate_gap_params(self, gap_config: Dict[str, Any]) -> str:
         """
         Generate GAP parameters configuration.
-        
+
         Args:
             gap_config: GAP configuration
-            
+
         Returns:
             Generated C code
         """
@@ -154,7 +162,7 @@ class BLEStack:
         appearance = gap_config.get("appearance", "BLE_APPEARANCE_GENERIC_TAG")
         min_conn_interval = gap_config.get("min_conn_interval", 20)
         max_conn_interval = gap_config.get("max_conn_interval", 75)
-        
+
         lines = [
             "/* GAP Parameters Configuration */",
             "void gap_params_init(void) {",
@@ -164,7 +172,7 @@ class BLEStack:
             "",
             "    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);",
             "",
-            f'    err_code = sd_ble_gap_device_name_set(&sec_mode,',
+            f"    err_code = sd_ble_gap_device_name_set(&sec_mode,",
             f'                                           (const uint8_t *)"{device_name}",',
             f'                                           strlen("{device_name}"));',
             "    APP_ERROR_CHECK(err_code);",
@@ -184,16 +192,16 @@ class BLEStack:
             "}",
             "",
         ]
-        
+
         return "\n".join(lines)
-    
+
     def generate_complete_ble_init(self, config: Dict[str, Any]) -> str:
         """
         Generate complete BLE stack initialization.
-        
+
         Args:
             config: Complete BLE configuration
-            
+
         Returns:
             Generated C code
         """
@@ -223,5 +231,5 @@ class BLEStack:
             "}",
             "",
         ]
-        
+
         return "\n".join(lines)

@@ -3,11 +3,12 @@ Anthropic provider implementation for online LLM integration.
 Supports cloud-based code generation using Anthropic's Claude models.
 """
 
-from typing import Dict, Any, List, Optional
 import json
-import urllib.request
-import urllib.error
 import os
+import urllib.error
+import urllib.request
+from typing import Any, Dict, List, Optional
+
 from .local_llm_service import LLMProvider
 
 

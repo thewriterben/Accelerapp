@@ -2,14 +2,14 @@
 Core services infrastructure for Phase 2: Database, Caching, and CDN.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class RDSAuroraConfig:
     """Configuration for RDS Aurora database."""
-    
+
     cluster_name: str
     engine: str = "aurora-postgresql"
     engine_version: str = "15.3"
@@ -30,7 +30,7 @@ class RDSAuroraConfig:
 @dataclass
 class RedisClusterConfig:
     """Configuration for Redis cache cluster."""
-    
+
     cluster_name: str
     node_type: str = "cache.r6g.large"
     num_cache_nodes: int = 2
@@ -49,7 +49,7 @@ class RedisClusterConfig:
 @dataclass
 class S3BucketConfig:
     """Configuration for S3 bucket."""
-    
+
     bucket_name: str
     versioning_enabled: bool = True
     encryption_enabled: bool = True
@@ -63,7 +63,7 @@ class S3BucketConfig:
 @dataclass
 class CloudFrontConfig:
     """Configuration for CloudFront CDN."""
-    
+
     distribution_name: str
     origin_domain_name: str
     price_class: str = "PriceClass_100"
@@ -83,7 +83,7 @@ class CloudFrontConfig:
 @dataclass
 class SecretsManagerConfig:
     """Configuration for AWS Secrets Manager."""
-    
+
     secret_name: str
     description: str = ""
     kms_key_id: Optional[str] = None
@@ -97,7 +97,7 @@ class CoreServicesManager:
     Manager for Phase 2 core services infrastructure.
     Handles RDS Aurora, Redis, S3, CloudFront, and Secrets Manager.
     """
-    
+
     def __init__(self):
         """Initialize core services manager."""
         self.rds_configs: Dict[str, RDSAuroraConfig] = {}
@@ -105,14 +105,14 @@ class CoreServicesManager:
         self.s3_configs: Dict[str, S3BucketConfig] = {}
         self.cloudfront_configs: Dict[str, CloudFrontConfig] = {}
         self.secrets_configs: Dict[str, SecretsManagerConfig] = {}
-    
+
     def generate_rds_aurora_template(self, config: RDSAuroraConfig) -> Dict[str, Any]:
         """
         Generate CloudFormation template for RDS Aurora database.
-        
+
         Args:
             config: RDS Aurora configuration
-            
+
         Returns:
             CloudFormation template as dictionary
         """
@@ -227,7 +227,9 @@ class CoreServicesManager:
                                 {
                                     "Sid": "Enable IAM User Permissions",
                                     "Effect": "Allow",
-                                    "Principal": {"AWS": {"Fn::Sub": "arn:aws:iam::${AWS::AccountId}:root"}},
+                                    "Principal": {
+                                        "AWS": {"Fn::Sub": "arn:aws:iam::${AWS::AccountId}:root"}
+                                    },
                                     "Action": "kms:*",
                                     "Resource": "*",
                                 }
@@ -273,17 +275,17 @@ class CoreServicesManager:
                 },
             },
         }
-        
+
         self.rds_configs[config.cluster_name] = config
         return template
-    
+
     def generate_redis_cluster_template(self, config: RedisClusterConfig) -> Dict[str, Any]:
         """
         Generate CloudFormation template for Redis cache cluster.
-        
+
         Args:
             config: Redis cluster configuration
-            
+
         Returns:
             CloudFormation template as dictionary
         """
@@ -388,58 +390,59 @@ class CoreServicesManager:
                 },
             },
         }
-        
+
         self.redis_configs[config.cluster_name] = config
         return template
-    
+
     def generate_s3_bucket_template(self, config: S3BucketConfig) -> Dict[str, Any]:
         """
         Generate CloudFormation template for S3 bucket.
-        
+
         Args:
             config: S3 bucket configuration
-            
+
         Returns:
             CloudFormation template as dictionary
         """
         bucket_properties: Dict[str, Any] = {
             "BucketName": config.bucket_name,
-            "BucketEncryption": {
-                "ServerSideEncryptionConfiguration": [
-                    {
-                        "ServerSideEncryptionByDefault": {
-                            "SSEAlgorithm": "AES256"
-                        }
-                    }
-                ]
-            } if config.encryption_enabled else None,
+            "BucketEncryption": (
+                {
+                    "ServerSideEncryptionConfiguration": [
+                        {"ServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}
+                    ]
+                }
+                if config.encryption_enabled
+                else None
+            ),
             "VersioningConfiguration": {
                 "Status": "Enabled" if config.versioning_enabled else "Suspended"
             },
-            "PublicAccessBlockConfiguration": {
-                "BlockPublicAcls": True,
-                "BlockPublicPolicy": True,
-                "IgnorePublicAcls": True,
-                "RestrictPublicBuckets": True,
-            } if config.public_access_block else None,
-            "Tags": [{"Key": k, "Value": v} for k, v in config.tags.items()] + [
+            "PublicAccessBlockConfiguration": (
+                {
+                    "BlockPublicAcls": True,
+                    "BlockPublicPolicy": True,
+                    "IgnorePublicAcls": True,
+                    "RestrictPublicBuckets": True,
+                }
+                if config.public_access_block
+                else None
+            ),
+            "Tags": [{"Key": k, "Value": v} for k, v in config.tags.items()]
+            + [
                 {"Key": "ManagedBy", "Value": "accelerapp"},
             ],
         }
-        
+
         # Remove None values
         bucket_properties = {k: v for k, v in bucket_properties.items() if v is not None}
-        
+
         if config.lifecycle_rules:
-            bucket_properties["LifecycleConfiguration"] = {
-                "Rules": config.lifecycle_rules
-            }
-        
+            bucket_properties["LifecycleConfiguration"] = {"Rules": config.lifecycle_rules}
+
         if config.cors_rules:
-            bucket_properties["CorsConfiguration"] = {
-                "CorsRules": config.cors_rules
-            }
-        
+            bucket_properties["CorsConfiguration"] = {"CorsRules": config.cors_rules}
+
         template = {
             "AWSTemplateFormatVersion": "2010-09-09",
             "Description": f"S3 bucket for {config.bucket_name}",
@@ -462,11 +465,14 @@ class CoreServicesManager:
                                     "Action": "s3:*",
                                     "Resource": [
                                         {"Fn::GetAtt": ["S3Bucket", "Arn"]},
-                                        {"Fn::Join": ["", [{"Fn::GetAtt": ["S3Bucket", "Arn"]}, "/*"]]},
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [{"Fn::GetAtt": ["S3Bucket", "Arn"]}, "/*"],
+                                            ]
+                                        },
                                     ],
-                                    "Condition": {
-                                        "Bool": {"aws:SecureTransport": "false"}
-                                    },
+                                    "Condition": {"Bool": {"aws:SecureTransport": "false"}},
                                 }
                             ],
                         },
@@ -490,17 +496,17 @@ class CoreServicesManager:
                 },
             },
         }
-        
+
         self.s3_configs[config.bucket_name] = config
         return template
-    
+
     def generate_cloudfront_template(self, config: CloudFrontConfig) -> Dict[str, Any]:
         """
         Generate CloudFormation template for CloudFront distribution.
-        
+
         Args:
             config: CloudFront configuration
-            
+
         Returns:
             CloudFormation template as dictionary
         """
@@ -576,31 +582,32 @@ class CoreServicesManager:
                 },
             },
         }
-        
+
         self.cloudfront_configs[config.distribution_name] = config
         return template
-    
+
     def generate_secrets_manager_template(self, config: SecretsManagerConfig) -> Dict[str, Any]:
         """
         Generate CloudFormation template for AWS Secrets Manager.
-        
+
         Args:
             config: Secrets Manager configuration
-            
+
         Returns:
             CloudFormation template as dictionary
         """
         secret_properties: Dict[str, Any] = {
             "Name": config.secret_name,
             "Description": config.description or f"Secrets for {config.secret_name}",
-            "Tags": [{"Key": k, "Value": v} for k, v in config.tags.items()] + [
+            "Tags": [{"Key": k, "Value": v} for k, v in config.tags.items()]
+            + [
                 {"Key": "ManagedBy", "Value": "accelerapp"},
             ],
         }
-        
+
         if config.kms_key_id:
             secret_properties["KmsKeyId"] = config.kms_key_id
-        
+
         template = {
             "AWSTemplateFormatVersion": "2010-09-09",
             "Description": f"Secrets Manager secret for {config.secret_name}",
@@ -622,7 +629,7 @@ class CoreServicesManager:
                 },
             },
         }
-        
+
         if config.rotation_enabled:
             template["Resources"]["RotationSchedule"] = {
                 "Type": "AWS::SecretsManager::RotationSchedule",
@@ -634,21 +641,21 @@ class CoreServicesManager:
                     },
                 },
             }
-            
+
             template["Parameters"] = {
                 "RotationLambdaArn": {
                     "Type": "String",
                     "Description": "ARN of the rotation Lambda function",
                 }
             }
-        
+
         self.secrets_configs[config.secret_name] = config
         return template
-    
+
     def get_all_configs(self) -> Dict[str, Any]:
         """
         Get all stored configurations.
-        
+
         Returns:
             Dictionary of all configurations by service type
         """

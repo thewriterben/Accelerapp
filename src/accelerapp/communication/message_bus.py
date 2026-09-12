@@ -3,13 +3,13 @@ Internal message bus for agent-to-agent communication.
 Provides pub/sub messaging system for collaborative code generation.
 """
 
-from typing import Dict, Any, List, Callable, Optional
-from enum import Enum, IntEnum
-from dataclasses import dataclass, field
-from datetime import datetime
-from queue import PriorityQueue, Queue, Empty
 import threading
 import uuid
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum, IntEnum
+from queue import Empty, PriorityQueue, Queue
+from typing import Any, Callable, Dict, List, Optional
 
 
 class MessagePriority(IntEnum):

@@ -3,9 +3,9 @@ Camera hardware module for Accelerapp.
 Provides ESP32-CAM support with streaming, AI processing, and remote access.
 """
 
-from enum import Enum
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional, List
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class CameraResolution(Enum):

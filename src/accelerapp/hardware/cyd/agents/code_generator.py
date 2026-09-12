@@ -4,13 +4,14 @@ Agentic code generator for CYD projects.
 Provides AI-powered code generation capabilities for CYD applications.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class CodeStyle(Enum):
     """Code generation styles."""
+
     MINIMAL = "minimal"
     DOCUMENTED = "documented"
     PRODUCTION = "production"
@@ -20,6 +21,7 @@ class CodeStyle(Enum):
 @dataclass
 class GenerationRequest:
     """Code generation request."""
+
     project_name: str
     description: str
     requirements: List[str]
@@ -31,6 +33,7 @@ class GenerationRequest:
 @dataclass
 class GeneratedCode:
     """Generated code result."""
+
     main_code: str
     header_files: Dict[str, str]
     config_files: Dict[str, str]
@@ -41,7 +44,7 @@ class GeneratedCode:
 class CYDCodeGenerator:
     """
     AI-powered code generator for CYD projects.
-    
+
     Provides capabilities for:
     - Automatic project structure generation
     - Context-aware code completion
@@ -57,10 +60,10 @@ class CYDCodeGenerator:
     def generate_project(self, request: GenerationRequest) -> GeneratedCode:
         """
         Generate complete CYD project code.
-        
+
         Args:
             request: Code generation request
-            
+
         Returns:
             Generated code package
         """
@@ -69,7 +72,7 @@ class CYDCodeGenerator:
         configs = self._generate_configs(request)
         docs = self._generate_documentation(request)
         deps = self._identify_dependencies(request)
-        
+
         return GeneratedCode(
             main_code=main_code,
             header_files=headers,
@@ -94,7 +97,7 @@ class CYDCodeGenerator:
         has_display = any(r in ["display", "screen", "tft"] for r in request.requirements)
         has_touch = any(r in ["touch", "touchscreen"] for r in request.requirements)
         has_wifi = any(r in ["wifi", "network", "internet"] for r in request.requirements)
-        
+
         includes = ["#include <Arduino.h>"]
         if has_display:
             includes.append("#include <Adafruit_ILI9341.h>")
@@ -103,7 +106,7 @@ class CYDCodeGenerator:
             includes.append("#include <XPT2046_Touchscreen.h>")
         if has_wifi:
             includes.append("#include <WiFi.h>")
-        
+
         code = f"""/*
  * {request.project_name}
  * {request.description}
@@ -122,19 +125,19 @@ class CYDCodeGenerator:
 #define TOUCH_IRQ 36
 
 """
-        
+
         if has_display:
             code += "Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);\n"
         if has_touch:
             code += "XPT2046_Touchscreen touch(TOUCH_CS, TOUCH_IRQ);\n"
-        
+
         code += """
 void setup() {
     Serial.begin(115200);
     Serial.println("Starting %s...");
     
 """ % request.project_name
-        
+
         if has_display:
             code += """    // Initialize display
     pinMode(TFT_BL, OUTPUT);
@@ -148,21 +151,21 @@ void setup() {
     tft.println("Ready!");
     
 """
-        
+
         if has_touch:
             code += """    // Initialize touch
     touch.begin();
     touch.setRotation(1);
     
 """
-        
+
         if has_wifi:
             code += """    // Initialize WiFi
     WiFi.mode(WIFI_STA);
     // WiFi.begin("SSID", "PASSWORD");
     
 """
-        
+
         code += """    Serial.println("Setup complete!");
 }
 
@@ -170,7 +173,7 @@ void loop() {
     // Main application loop
     
 """
-        
+
         if has_touch:
             code += """    // Check for touch input
     if (touch.touched()) {
@@ -181,11 +184,11 @@ void loop() {
     }
     
 """
-        
+
         code += """    delay(10);
 }
 """
-        
+
         return code.strip()
 
     def _generate_esp_idf_main(self, request: GenerationRequest) -> str:
@@ -226,7 +229,7 @@ void app_main(void) {{
         """Generate MicroPython main code."""
         has_display = any(r in ["display", "screen", "tft"] for r in request.requirements)
         has_touch = any(r in ["touch", "touchscreen"] for r in request.requirements)
-        
+
         code = f"""# {request.project_name}
 # {request.description}
 # 
@@ -237,7 +240,7 @@ from machine import Pin, SPI
 import time
 
 """
-        
+
         if has_display:
             code += """import ili9341
 
@@ -253,7 +256,7 @@ backlight = Pin(21, Pin.OUT)
 backlight.value(1)
 
 """
-        
+
         if has_touch:
             code += """import xpt2046
 
@@ -265,26 +268,26 @@ touch = xpt2046.Touch(
 )
 
 """
-        
+
         code += """def main():
     print("Starting %s...")
     
     while True:
 """ % request.project_name
-        
+
         if has_touch:
             code += """        if touch.touched():
             x, y = touch.get_touch()
             print(f"Touch at ({x}, {y})")
         
 """
-        
+
         code += """        time.sleep(0.01)
 
 if __name__ == "__main__":
     main()
 """
-        
+
         return code.strip()
 
     def _generate_headers(self, request: GenerationRequest) -> Dict[str, str]:
@@ -294,10 +297,10 @@ if __name__ == "__main__":
     def _generate_configs(self, request: GenerationRequest) -> Dict[str, str]:
         """Generate configuration files."""
         configs = {}
-        
+
         if request.platform == "arduino":
             configs["platformio.ini"] = self._generate_platformio_config(request)
-        
+
         return configs
 
     def _generate_platformio_config(self, request: GenerationRequest) -> str:
@@ -314,10 +317,10 @@ lib_deps =
     adafruit/Adafruit GFX Library
     paulstoffregen/XPT2046_Touchscreen
 """
-        
+
         if any(r in ["wifi", "network"] for r in request.requirements):
             config += "    # WiFi libraries included in framework\n"
-        
+
         return config.strip()
 
     def _generate_documentation(self, request: GenerationRequest) -> str:
@@ -361,29 +364,29 @@ Platform: {request.platform}
     def _identify_dependencies(self, request: GenerationRequest) -> List[str]:
         """Identify required dependencies."""
         deps = []
-        
+
         if any(r in ["display", "screen", "tft"] for r in request.requirements):
             deps.extend(["Adafruit_ILI9341", "Adafruit_GFX"])
-        
+
         if any(r in ["touch", "touchscreen"] for r in request.requirements):
             deps.append("XPT2046_Touchscreen")
-        
+
         if any(r in ["json", "data"] for r in request.requirements):
             deps.append("ArduinoJson")
-        
+
         if any(r in ["wifi", "network", "http"] for r in request.requirements):
             deps.append("WiFi")
-        
+
         return deps
 
     def optimize_code(self, code: str, level: int = 1) -> str:
         """
         Optimize generated code.
-        
+
         Args:
             code: Source code to optimize
             level: Optimization level (0-3)
-            
+
         Returns:
             Optimized code
         """
@@ -391,35 +394,35 @@ Platform: {request.platform}
         lines = code.split("\n")
         optimized = []
         prev_blank = False
-        
+
         for line in lines:
             is_blank = line.strip() == ""
             if is_blank and prev_blank:
                 continue
             optimized.append(line)
             prev_blank = is_blank
-        
+
         return "\n".join(optimized)
 
     def suggest_improvements(self, code: str) -> List[str]:
         """
         Suggest code improvements.
-        
+
         Args:
             code: Source code to analyze
-            
+
         Returns:
             List of improvement suggestions
         """
         suggestions = []
-        
+
         if "delay(" in code and "1000)" in code:
             suggestions.append("Consider using non-blocking delays for better responsiveness")
-        
+
         if "Serial.print" not in code:
             suggestions.append("Add serial debug output for easier troubleshooting")
-        
+
         if "while(1)" in code or "while (1)" in code:
             suggestions.append("Consider adding a watchdog timer for reliability")
-        
+
         return suggestions

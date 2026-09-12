@@ -10,15 +10,15 @@ This module provides comprehensive Meshtastic integration including:
 """
 
 from .device_interface import (
-    MeshtasticDevice,
-    DeviceDiscovery,
     ConnectionType,
+    DeviceDiscovery,
     DeviceInfo,
+    MeshtasticDevice,
 )
 from .firmware_manager import (
     FirmwareManager,
-    FirmwareVersion,
     FirmwareUpdateStatus,
+    FirmwareVersion,
 )
 from .network_manager import (
     MeshNetworkManager,

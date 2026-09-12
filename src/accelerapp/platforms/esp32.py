@@ -2,8 +2,9 @@
 ESP32 platform implementation with WiFi, Bluetooth, and Camera support.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 

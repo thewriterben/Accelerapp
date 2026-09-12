@@ -3,8 +3,8 @@ Utility modules for Accelerapp.
 Provides caching, async helpers, and performance profiling tools.
 """
 
+from .async_utils import gather_with_concurrency, run_async
 from .caching import CacheManager, cache_result
-from .async_utils import run_async, gather_with_concurrency
 from .performance import PerformanceProfiler, profile
 
 __all__ = [

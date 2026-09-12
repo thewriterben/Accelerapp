@@ -4,13 +4,14 @@ Example loader for CYD projects.
 Provides access to community examples and tutorials.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class ExampleCategory(Enum):
     """Example categories."""
+
     BASIC = "basic"
     DISPLAY = "display"
     TOUCH = "touch"
@@ -23,6 +24,7 @@ class ExampleCategory(Enum):
 @dataclass
 class Example:
     """Code example."""
+
     name: str
     category: ExampleCategory
     description: str
@@ -34,7 +36,7 @@ class Example:
 class ExampleLoader:
     """
     Loader for CYD code examples.
-    
+
     Provides curated examples for learning and reference.
     """
 
@@ -45,7 +47,7 @@ class ExampleLoader:
     def _load_examples(self) -> Dict[str, Example]:
         """Load built-in examples."""
         examples = {}
-        
+
         # Basic examples
         examples["hello_world"] = Example(
             name="Hello World",
@@ -55,7 +57,7 @@ class ExampleLoader:
             difficulty="beginner",
             tags=["display", "text", "basics"],
         )
-        
+
         examples["touch_demo"] = Example(
             name="Touch Demo",
             category=ExampleCategory.TOUCH,
@@ -64,7 +66,7 @@ class ExampleLoader:
             difficulty="beginner",
             tags=["touch", "input", "graphics"],
         )
-        
+
         examples["wifi_scanner"] = Example(
             name="WiFi Scanner",
             category=ExampleCategory.NETWORKING,
@@ -73,65 +75,65 @@ class ExampleLoader:
             difficulty="intermediate",
             tags=["wifi", "networking", "scanner"],
         )
-        
+
         return examples
 
     def get_example(self, name: str) -> Optional[Example]:
         """
         Get example by name.
-        
+
         Args:
             name: Example name
-            
+
         Returns:
             Example or None if not found
         """
         return self._examples.get(name)
 
     def list_examples(
-        self,
-        category: Optional[ExampleCategory] = None,
-        difficulty: Optional[str] = None
+        self, category: Optional[ExampleCategory] = None, difficulty: Optional[str] = None
     ) -> List[Example]:
         """
         List examples with optional filtering.
-        
+
         Args:
             category: Filter by category
             difficulty: Filter by difficulty
-            
+
         Returns:
             List of examples
         """
         examples = list(self._examples.values())
-        
+
         if category:
             examples = [e for e in examples if e.category == category]
-        
+
         if difficulty:
             examples = [e for e in examples if e.difficulty == difficulty]
-        
+
         return examples
 
     def search_examples(self, query: str) -> List[Example]:
         """
         Search examples by keyword.
-        
+
         Args:
             query: Search query
-            
+
         Returns:
             List of matching examples
         """
         query = query.lower()
         results = []
-        
+
         for example in self._examples.values():
-            if (query in example.name.lower() or
-                query in example.description.lower() or
-                any(query in tag for tag in example.tags)):
+            if (
+                query in example.name.lower()
+                or query in example.description.lower()
+                or any(query in tag for tag in example.tags)
+            ):
                 results.append(example)
-        
+
         return results
 
     def _get_hello_world_example(self) -> str:

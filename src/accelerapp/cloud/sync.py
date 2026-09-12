@@ -3,13 +3,13 @@ Cloud sync service for synchronizing configurations and deployments.
 Provides real-time sync capabilities between local and cloud environments.
 """
 
-from typing import Dict, Any, Optional, List, Callable
-from datetime import datetime
-from enum import Enum
-import json
 import hashlib
+import json
 import threading
 import time
+from datetime import datetime
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 
 class SyncStatus(Enum):
@@ -334,9 +334,7 @@ class CloudSyncService:
         if not original:
             return None
 
-        return self.sync_resource(
-            original.resource_type, original.resource_id, original.direction
-        )
+        return self.sync_resource(original.resource_type, original.resource_id, original.direction)
 
     def enable_auto_sync(self, interval: Optional[int] = None) -> None:
         """

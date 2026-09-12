@@ -63,16 +63,26 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    # 3.12, not 3.11. pyproject's [tool.black] target-version includes py312, and
+    # black's safety check re-parses its own output with the *running* interpreter:
+    # under 3.11 it cannot parse code targeted at 3.12 and warns
+    # "Python 3.11 cannot parse code formatted for Python 3.12". Match the highest
+    # version the project claims to support (requires-python = ">=3.8", classifiers
+    # and the test matrix both go to 3.12) rather than narrowing target-version,
+    # which would drop a supported version to suit the linter.
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
-    
+        python-version: '3.12'
+
+    # Pinned. These were unpinned, so the next black release could reformat the
+    # tree and turn main red without a commit touching it -- which is roughly how
+    # this job came to be red for the best part of a year.
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install black flake8 isort mypy bandit
-    
+        pip install black==26.5.1 flake8 isort==9.0.1 mypy bandit
+
     - name: Check code formatting with black
       run: |
         black --check --line-length=100 src/
@@ -81,10 +91,18 @@ jobs:
       run: |
         isort --check-only --profile black --line-length=100 src/
     
+    # Still red, and deliberately left so. black + isort took this from 4,728
+    # findings to 519; the remainder are not formatting but code: 123 unused
+    # imports, 98 f-strings with no placeholders, 245 whitespace-only lines inside
+    # docstrings (black does not touch string contents), 23 unused locals, 6 bare
+    # excepts, 1 shadowed name, 1 misplaced import. Fixing those is a judgement
+    # call per finding, not a reformat, so it is its own change rather than
+    # smuggled into this one -- and an ignore-list that hid them would be worse
+    # than the red.
     - name: Lint with flake8
       run: |
         flake8 src/ --max-line-length=100 --extend-ignore=E203,E266,E501,W503 --statistics
-    
+
     - name: Type check with mypy
       run: |
         mypy src/ --ignore-missing-imports --check-untyped-defs || true

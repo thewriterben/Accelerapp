@@ -2,8 +2,8 @@
 GitHub Actions integration for Accelerapp.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

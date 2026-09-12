@@ -32,7 +32,9 @@ class IAgent(Protocol):
         """Check if agent can handle a task."""
         ...
 
-    def generate(self, spec: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def generate(
+        self, spec: Dict[str, Any], context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Generate output based on specification."""
         ...
 

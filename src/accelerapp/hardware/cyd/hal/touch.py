@@ -5,13 +5,14 @@ Provides abstraction for the resistive touch controller
 commonly used in ESP32 Cheap Yellow Display boards.
 """
 
-from typing import Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, Optional, Tuple
 
 
 class TouchEvent(Enum):
     """Touch event types."""
+
     TOUCH_DOWN = "down"
     TOUCH_UP = "up"
     TOUCH_MOVE = "move"
@@ -20,6 +21,7 @@ class TouchEvent(Enum):
 @dataclass
 class TouchPoint:
     """Touch point data."""
+
     x: int
     y: int
     pressure: int
@@ -29,6 +31,7 @@ class TouchPoint:
 @dataclass
 class TouchConfig:
     """XPT2046 touch controller configuration."""
+
     cs_pin: int = 33
     irq_pin: int = 36
     spi_frequency: int = 2000000  # 2 MHz
@@ -48,7 +51,7 @@ class TouchConfig:
 class TouchController:
     """
     XPT2046 resistive touch controller driver for CYD.
-    
+
     Provides high-level interface for touch operations including:
     - Touch detection and coordinate reading
     - Calibration support
@@ -60,7 +63,7 @@ class TouchController:
     def __init__(self, config: Optional[TouchConfig] = None):
         """
         Initialize touch controller.
-        
+
         Args:
             config: Touch configuration (uses defaults if None)
         """
@@ -72,7 +75,7 @@ class TouchController:
     def initialize(self) -> bool:
         """
         Initialize the touch controller hardware.
-        
+
         Returns:
             True if initialization successful
         """
@@ -82,7 +85,7 @@ class TouchController:
     def read_touch(self) -> Optional[TouchPoint]:
         """
         Read current touch position and pressure.
-        
+
         Returns:
             TouchPoint object if touch detected, None otherwise
         """
@@ -92,26 +95,23 @@ class TouchController:
     def is_touched(self) -> bool:
         """
         Check if screen is currently being touched.
-        
+
         Returns:
             True if touch detected
         """
         return False
 
     def calibrate(
-        self,
-        display_width: int = 320,
-        display_height: int = 240,
-        sample_points: int = 3
+        self, display_width: int = 320, display_height: int = 240, sample_points: int = 3
     ) -> Dict[str, int]:
         """
         Calibrate touch screen coordinates.
-        
+
         Args:
             display_width: Display width in pixels
             display_height: Display height in pixels
             sample_points: Number of calibration points
-            
+
         Returns:
             Calibration parameters
         """
@@ -126,21 +126,21 @@ class TouchController:
     def map_coordinates(self, raw_x: int, raw_y: int) -> Tuple[int, int]:
         """
         Map raw touch coordinates to display coordinates.
-        
+
         Args:
             raw_x: Raw X coordinate from sensor
             raw_y: Raw Y coordinate from sensor
-            
+
         Returns:
             Tuple of (display_x, display_y)
         """
         # Apply calibration mapping
         x_range = self.config.x_max - self.config.x_min
         y_range = self.config.y_max - self.config.y_min
-        
+
         x = int(((raw_x - self.config.x_min) * 320) / x_range)
         y = int(((raw_y - self.config.y_min) * 240) / y_range)
-        
+
         # Apply transformations
         if self.config.swap_xy:
             x, y = y, x
@@ -148,13 +148,13 @@ class TouchController:
             x = 320 - x
         if self.config.invert_y:
             y = 240 - y
-            
+
         return (x, y)
 
     def get_capabilities(self) -> Dict[str, Any]:
         """
         Get touch controller capabilities.
-        
+
         Returns:
             Dictionary of touch capabilities
         """
@@ -174,10 +174,10 @@ class TouchController:
     def generate_code(self, platform: str = "arduino") -> str:
         """
         Generate platform-specific touch initialization code.
-        
+
         Args:
             platform: Target platform (arduino, esp-idf, micropython)
-            
+
         Returns:
             Generated code string
         """

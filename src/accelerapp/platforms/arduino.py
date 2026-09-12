@@ -2,8 +2,9 @@
 Arduino platform implementation with comprehensive peripheral support.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 

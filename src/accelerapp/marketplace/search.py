@@ -2,7 +2,8 @@
 Template search and filtering functionality.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from .template import TemplateMetadata
 
 

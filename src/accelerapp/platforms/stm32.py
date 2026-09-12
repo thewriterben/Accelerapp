@@ -2,8 +2,9 @@
 STM32 platform implementation for industrial applications.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 

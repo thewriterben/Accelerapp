@@ -3,8 +3,9 @@ M5Stack platform implementation.
 M5Stack is an ESP32-based modular development platform with built-in display, buttons, and sensors.
 """
 
-from typing import Dict, Any, List
 from pathlib import Path
+from typing import Any, Dict, List
+
 from .base import BasePlatform
 
 
@@ -175,7 +176,7 @@ class M5StackPlatform(BasePlatform):
     def _generate_m5stack_main(self, spec: Dict[str, Any]) -> str:
         """Generate M5Stack main.cpp file."""
         model = spec.get("m5stack_model", "core").lower()
-        
+
         lines = [
             f"// Auto-generated M5Stack firmware for {spec.get('device_name', 'Unknown')}",
             f"// Platform: M5Stack {model.capitalize()}",
@@ -216,7 +217,7 @@ class M5StackPlatform(BasePlatform):
             lines.extend(
                 [
                     "    // Initialize WiFi",
-                    "    M5.Lcd.println(\"Connecting to WiFi...\");",
+                    '    M5.Lcd.println("Connecting to WiFi...");',
                     "    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);",
                     "    while (WiFi.status() != WL_CONNECTED) {",
                     "        delay(500);",
@@ -224,7 +225,7 @@ class M5StackPlatform(BasePlatform):
                     "    }",
                     '    M5.Lcd.println("");',
                     '    M5.Lcd.println("WiFi Connected!");',
-                    "    M5.Lcd.print(\"IP: \");",
+                    '    M5.Lcd.print("IP: ");',
                     "    M5.Lcd.println(WiFi.localIP());",
                     "",
                 ]
@@ -243,7 +244,7 @@ class M5StackPlatform(BasePlatform):
         lines.extend(
             [
                 "",
-                "    M5.Lcd.println(\"Ready!\");",
+                '    M5.Lcd.println("Ready!");',
                 "}",
                 "",
                 "void loop() {",
@@ -354,7 +355,7 @@ class M5StackPlatform(BasePlatform):
     def _generate_platformio_config(self, spec: Dict[str, Any]) -> str:
         """Generate PlatformIO configuration for M5Stack."""
         model = spec.get("m5stack_model", "core").lower()
-        
+
         # Select appropriate board
         board_mapping = {
             "core": "m5stack-core-esp32",

@@ -2,11 +2,11 @@
 Job queue system for cloud generation service.
 """
 
-from typing import Dict, Any, Optional, List, Callable
-from queue import PriorityQueue
+import threading
 from dataclasses import dataclass, field
 from datetime import datetime
-import threading
+from queue import PriorityQueue
+from typing import Any, Callable, Dict, List, Optional
 
 
 @dataclass(order=True)

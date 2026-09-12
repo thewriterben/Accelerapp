@@ -2,9 +2,10 @@
 Marketplace web interface API.
 """
 
-from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
-from accelerapp.marketplace import TemplateRegistry, TemplateSearch, TemplateMetadata
+from typing import Any, Dict, List, Optional
+
+from accelerapp.marketplace import TemplateMetadata, TemplateRegistry, TemplateSearch
 
 
 @dataclass

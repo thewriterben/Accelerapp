@@ -3,10 +3,10 @@ Central coordination service for agent collaboration.
 Manages agent registration, task routing, and collaboration strategies.
 """
 
-from typing import Dict, Any, List, Optional, Callable
-from enum import Enum
-from dataclasses import dataclass
 import time
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 
 class CoordinationStrategy(Enum):

@@ -3,24 +3,22 @@ Multi-platform support module for Accelerapp.
 Provides platform abstraction and specialized implementations.
 """
 
-from .base import BasePlatform
 from .arduino import ArduinoPlatform
+from .base import BasePlatform
 from .esp32 import ESP32Platform
-from .stm32 import STM32Platform
-from .micropython import MicroPythonPlatform
-from .raspberry_pi_pico import RaspberryPiPicoPlatform
-from .raspberry_pi import RaspberryPiPlatform
 from .m5stack import M5StackPlatform
-
-# Enhanced STM32 platforms
-from .stm32.f4_series import STM32F4Platform
-from .stm32.h7_series import STM32H7Platform
+from .micropython import MicroPythonPlatform
 
 # Nordic nRF platforms
 from .nordic.nrf52 import NRF52Platform
 from .nordic.nrf53 import NRF53Platform
+from .raspberry_pi import RaspberryPiPlatform
+from .raspberry_pi_pico import RaspberryPiPicoPlatform
+from .stm32 import STM32Platform
 
-
+# Enhanced STM32 platforms
+from .stm32.f4_series import STM32F4Platform
+from .stm32.h7_series import STM32H7Platform
 
 __all__ = [
     "BasePlatform",
@@ -35,7 +33,6 @@ __all__ = [
     "STM32H7Platform",
     "NRF52Platform",
     "NRF53Platform",
-
     "get_platform",
 ]
 
@@ -69,7 +66,6 @@ def get_platform(platform_name: str) -> BasePlatform:
         "nrf52840": NRF52Platform,
         "nrf53": NRF53Platform,
         "nrf5340": NRF53Platform,
-
     }
 
     platform_class = platforms.get(platform_name.lower())

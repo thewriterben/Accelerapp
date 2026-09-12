@@ -3,10 +3,10 @@ Motion detection module for ESP32-CAM.
 Provides frame differencing, PIR integration, and QR code scanning.
 """
 
-from typing import Dict, Any, Optional, List, Callable
-from enum import Enum
-from dataclasses import dataclass, field
 import logging
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

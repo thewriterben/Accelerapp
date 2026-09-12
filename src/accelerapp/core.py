@@ -3,9 +3,10 @@ Core orchestration module for Accelerapp.
 Coordinates firmware, software, and UI generation.
 """
 
-from typing import Dict, Any, Optional
-import yaml
 from pathlib import Path
+from typing import Any, Dict, Optional
+
+import yaml
 
 
 class AccelerappCore:

@@ -4,9 +4,9 @@ Provides enhanced service management with lifecycle control, health monitoring, 
 """
 
 from .container import ServiceContainer, ServiceLifecycle
-from .lifecycle import LifecycleManager, LifecycleState, ILifecycleAware
-from .health import ServiceHealthMonitor, HealthStatus, HealthCheckResult
-from .proxies import ServiceProxy, create_proxy, logging_proxy, performance_proxy, monitored_proxy
+from .health import HealthCheckResult, HealthStatus, ServiceHealthMonitor
+from .lifecycle import ILifecycleAware, LifecycleManager, LifecycleState
+from .proxies import ServiceProxy, create_proxy, logging_proxy, monitored_proxy, performance_proxy
 
 __all__ = [
     "ServiceContainer",

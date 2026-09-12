@@ -2,11 +2,11 @@
 Template metadata and package structures.
 """
 
-from typing import Dict, Any, List, Optional
+import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-import json
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

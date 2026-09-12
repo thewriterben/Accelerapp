@@ -3,9 +3,9 @@ STM32CubeMX integration for project generation.
 Generates CubeMX-compatible project files and configurations.
 """
 
-from typing import Dict, Any, List
-from pathlib import Path
 import json
+from pathlib import Path
+from typing import Any, Dict, List
 
 
 class CubeMXIntegration:
@@ -18,33 +18,33 @@ class CubeMXIntegration:
         """Initialize CubeMX integration."""
         self.project_name = ""
         self.mcu_name = ""
-        
+
     def generate_ioc_file(self, config: Dict[str, Any], output_path: Path) -> bool:
         """
         Generate STM32CubeMX .ioc configuration file.
-        
+
         Args:
             config: Project configuration
             output_path: Output path for .ioc file
-            
+
         Returns:
             True if successful
         """
         self.project_name = config.get("project_name", "STM32Project")
         self.mcu_name = config.get("mcu", "STM32F401RETx")
-        
+
         ioc_content = self._build_ioc_content(config)
-        
+
         output_path.write_text(ioc_content)
         return True
-    
+
     def _build_ioc_content(self, config: Dict[str, Any]) -> str:
         """
         Build .ioc file content.
-        
+
         Args:
             config: Project configuration
-            
+
         Returns:
             IOC file content as string
         """
@@ -93,14 +93,14 @@ class CubeMXIntegration:
             f"ProjectManager.UnderRoot=true",
             f"ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false",
         ]
-        
+
         # Add peripheral configurations
         if config.get("peripherals"):
             for peripheral in config["peripherals"]:
                 lines.extend(self._generate_peripheral_ioc(peripheral))
-        
+
         return "\n".join(lines)
-    
+
     def _get_mcu_family(self) -> str:
         """Get MCU family from MCU name."""
         if "F4" in self.mcu_name:
@@ -112,7 +112,7 @@ class CubeMXIntegration:
         elif "L4" in self.mcu_name:
             return "STM32L4"
         return "STM32F4"
-    
+
     def _get_package(self) -> str:
         """Get MCU package from MCU name."""
         # Extract package from MCU name (simplified)
@@ -121,65 +121,69 @@ class CubeMXIntegration:
         elif "LQFP100" in self.mcu_name:
             return "LQFP100"
         return "LQFP64"
-    
+
     def _generate_peripheral_ioc(self, peripheral: Dict[str, Any]) -> List[str]:
         """Generate IOC configuration for a peripheral."""
         lines = []
         ptype = peripheral.get("type", "gpio")
-        
+
         if ptype == "uart":
             instance = peripheral.get("instance", "USART2")
-            lines.extend([
-                f"{instance}.BaudRate={peripheral.get('baudrate', 115200)}",
-                f"{instance}.IPParameters=BaudRate",
-                f"{instance}.Mode=MODE_TX_RX",
-            ])
+            lines.extend(
+                [
+                    f"{instance}.BaudRate={peripheral.get('baudrate', 115200)}",
+                    f"{instance}.IPParameters=BaudRate",
+                    f"{instance}.Mode=MODE_TX_RX",
+                ]
+            )
         elif ptype == "i2c":
             instance = peripheral.get("instance", "I2C1")
-            lines.extend([
-                f"{instance}.ClockSpeed={peripheral.get('clock_speed', 100000)}",
-                f"{instance}.IPParameters=ClockSpeed",
-            ])
-        
+            lines.extend(
+                [
+                    f"{instance}.ClockSpeed={peripheral.get('clock_speed', 100000)}",
+                    f"{instance}.IPParameters=ClockSpeed",
+                ]
+            )
+
         return lines
-    
+
     def generate_project_files(self, config: Dict[str, Any], output_dir: Path) -> Dict[str, str]:
         """
         Generate complete STM32CubeIDE project structure.
-        
+
         Args:
             config: Project configuration
             output_dir: Output directory
-            
+
         Returns:
             Dictionary of generated files
         """
         files = {}
-        
+
         # Create project structure
         (output_dir / "Core" / "Src").mkdir(parents=True, exist_ok=True)
         (output_dir / "Core" / "Inc").mkdir(parents=True, exist_ok=True)
         (output_dir / "Drivers").mkdir(parents=True, exist_ok=True)
-        
+
         # Generate .project file
         project_file = output_dir / f".project"
         project_content = self._generate_eclipse_project(config)
         project_file.write_text(project_content)
         files[".project"] = str(project_file)
-        
+
         # Generate .cproject file
         cproject_file = output_dir / f".cproject"
         cproject_content = self._generate_eclipse_cproject(config)
         cproject_file.write_text(cproject_content)
         files[".cproject"] = str(cproject_file)
-        
+
         # Generate .ioc file
         ioc_file = output_dir / f"{config.get('project_name', 'project')}.ioc"
         self.generate_ioc_file(config, ioc_file)
         files[".ioc"] = str(ioc_file)
-        
+
         return files
-    
+
     def _generate_eclipse_project(self, config: Dict[str, Any]) -> str:
         """Generate Eclipse .project file."""
         project_name = config.get("project_name", "STM32Project")
@@ -210,7 +214,7 @@ class CubeMXIntegration:
     </natures>
 </projectDescription>
 """
-    
+
     def _generate_eclipse_cproject(self, config: Dict[str, Any]) -> str:
         """Generate Eclipse .cproject file (simplified)."""
         return """<?xml version="1.0" encoding="UTF-8" standalone="no"?>

@@ -4,14 +4,15 @@ CYD hardware simulator for digital twin.
 Provides virtual CYD hardware simulation for testing and development.
 """
 
-from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class SimulationMode(Enum):
     """Simulation modes."""
+
     REALTIME = "realtime"
     ACCELERATED = "accelerated"
     STEP_BY_STEP = "step_by_step"
@@ -20,6 +21,7 @@ class SimulationMode(Enum):
 @dataclass
 class SimulatedState:
     """Simulated hardware state."""
+
     timestamp: datetime
     display_buffer: List[List[int]]  # 2D array of pixel colors
     touch_points: List[Tuple[int, int]]
@@ -32,7 +34,7 @@ class SimulatedState:
 class CYDSimulator:
     """
     Virtual hardware simulator for CYD.
-    
+
     Provides:
     - Display frame buffer simulation
     - Touch input simulation
@@ -45,7 +47,7 @@ class CYDSimulator:
     def __init__(self, mode: SimulationMode = SimulationMode.REALTIME):
         """
         Initialize CYD simulator.
-        
+
         Args:
             mode: Simulation mode
         """
@@ -83,19 +85,19 @@ class CYDSimulator:
     def step(self, delta_time: float = 0.01) -> None:
         """
         Advance simulation by time step.
-        
+
         Args:
             delta_time: Time step in seconds
         """
         if not self._running:
             return
-        
+
         self._simulation_time += delta_time
-        
+
         # Update temperature based on power consumption
         if self._power_consumption > 0:
             self._temperature += 0.01 * self._power_consumption * delta_time
-        
+
         # Passive cooling
         if self._temperature > 25.0:
             self._temperature -= 0.02 * delta_time
@@ -103,7 +105,7 @@ class CYDSimulator:
     def set_pixel(self, x: int, y: int, color: int) -> None:
         """
         Set pixel in simulated display.
-        
+
         Args:
             x, y: Pixel coordinates
             color: RGB565 color value
@@ -114,10 +116,10 @@ class CYDSimulator:
     def get_pixel(self, x: int, y: int) -> Optional[int]:
         """
         Get pixel from simulated display.
-        
+
         Args:
             x, y: Pixel coordinates
-            
+
         Returns:
             RGB565 color value or None if out of bounds
         """
@@ -128,7 +130,7 @@ class CYDSimulator:
     def fill_rectangle(self, x: int, y: int, w: int, h: int, color: int) -> None:
         """
         Fill rectangle in simulated display.
-        
+
         Args:
             x, y: Top-left corner
             w, h: Width and height
@@ -141,7 +143,7 @@ class CYDSimulator:
     def simulate_touch(self, x: int, y: int) -> None:
         """
         Simulate touch input.
-        
+
         Args:
             x, y: Touch coordinates
         """
@@ -151,7 +153,7 @@ class CYDSimulator:
     def get_touch_points(self) -> List[Tuple[int, int]]:
         """
         Get simulated touch points.
-        
+
         Returns:
             List of (x, y) touch coordinates
         """
@@ -164,7 +166,7 @@ class CYDSimulator:
     def set_gpio(self, pin: int, state: bool) -> None:
         """
         Set GPIO pin state.
-        
+
         Args:
             pin: Pin number
             state: Pin state (True=HIGH, False=LOW)
@@ -174,10 +176,10 @@ class CYDSimulator:
     def get_gpio(self, pin: int) -> Optional[bool]:
         """
         Get GPIO pin state.
-        
+
         Args:
             pin: Pin number
-            
+
         Returns:
             Pin state or None if not configured
         """
@@ -186,7 +188,7 @@ class CYDSimulator:
     def set_cpu_frequency(self, frequency: int) -> None:
         """
         Set simulated CPU frequency.
-        
+
         Args:
             frequency: Frequency in MHz (80, 160, or 240)
         """
@@ -202,7 +204,7 @@ class CYDSimulator:
             160: 0.08,
             240: 0.16,
         }.get(self._cpu_frequency, 0.16)
-        
+
         # Display consumption (if any pixels are non-black)
         display_on = any(
             self._display_buffer[y][x] != 0x0000
@@ -210,21 +212,21 @@ class CYDSimulator:
             for x in range(self._width)
         )
         display_power = 0.075 if display_on else 0.0
-        
+
         # GPIO power (estimate)
         gpio_power = len(self._gpio_states) * 0.001
-        
+
         self._power_consumption = cpu_power + display_power + gpio_power
 
     def get_state(self) -> SimulatedState:
         """
         Get current simulated state.
-        
+
         Returns:
             Current simulation state
         """
         self._update_power_consumption()
-        
+
         return SimulatedState(
             timestamp=datetime.now(),
             display_buffer=self._display_buffer,
@@ -238,10 +240,10 @@ class CYDSimulator:
     def export_display_buffer(self, format: str = "rgb565") -> bytes:
         """
         Export display buffer.
-        
+
         Args:
             format: Output format (rgb565, rgb888, png)
-            
+
         Returns:
             Display buffer data
         """
@@ -249,24 +251,25 @@ class CYDSimulator:
             data = bytearray()
             for row in self._display_buffer:
                 for pixel in row:
-                    data.extend(pixel.to_bytes(2, byteorder='big'))
+                    data.extend(pixel.to_bytes(2, byteorder="big"))
             return bytes(data)
-        
+
         return b""
 
     def get_statistics(self) -> Dict[str, Any]:
         """
         Get simulation statistics.
-        
+
         Returns:
             Statistics dictionary
         """
         pixel_count = sum(
-            1 for y in range(self._height)
+            1
+            for y in range(self._height)
             for x in range(self._width)
             if self._display_buffer[y][x] != 0x0000
         )
-        
+
         return {
             "simulation_time": self._simulation_time,
             "running": self._running,
@@ -282,7 +285,7 @@ class CYDSimulator:
     def inject_event(self, event_type: str, data: Dict[str, Any]) -> None:
         """
         Inject external event into simulation.
-        
+
         Args:
             event_type: Type of event (touch, gpio, temperature, etc.)
             data: Event data
@@ -291,13 +294,13 @@ class CYDSimulator:
             x = data.get("x", 0)
             y = data.get("y", 0)
             self.simulate_touch(x, y)
-        
+
         elif event_type == "gpio":
             pin = data.get("pin")
             state = data.get("state", False)
             if pin is not None:
                 self.set_gpio(pin, state)
-        
+
         elif event_type == "temperature":
             temp = data.get("temperature", 25.0)
             self._temperature = temp
@@ -305,7 +308,7 @@ class CYDSimulator:
     def create_snapshot(self) -> Dict[str, Any]:
         """
         Create simulation snapshot.
-        
+
         Returns:
             Snapshot data
         """

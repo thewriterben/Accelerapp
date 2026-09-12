@@ -2,10 +2,12 @@
 Command-line interface for Accelerapp.
 """
 
-import click
 from pathlib import Path
-from .core import AccelerappCore
+
+import click
+
 from . import __version__
+from .core import AccelerappCore
 
 
 @click.group()

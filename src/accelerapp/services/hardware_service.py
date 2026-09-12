@@ -79,8 +79,10 @@ class HardwareService(BaseService):
     def get_health(self) -> Dict[str, Any]:
         """Get service health status."""
         health = super().get_health()
-        health.update({
-            "registered_devices": len(self._devices),
-            "devices": list(self._devices.keys()),
-        })
+        health.update(
+            {
+                "registered_devices": len(self._devices),
+                "devices": list(self._devices.keys()),
+            }
+        )
         return health

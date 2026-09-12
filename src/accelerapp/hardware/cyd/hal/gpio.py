@@ -5,13 +5,14 @@ Provides unified GPIO control and peripheral management
 for ESP32-2432S028 (CYD) boards.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class PinMode(Enum):
     """GPIO pin modes."""
+
     INPUT = "input"
     OUTPUT = "output"
     INPUT_PULLUP = "input_pullup"
@@ -21,6 +22,7 @@ class PinMode(Enum):
 
 class PinState(Enum):
     """GPIO pin states."""
+
     LOW = 0
     HIGH = 1
 
@@ -28,6 +30,7 @@ class PinState(Enum):
 @dataclass
 class PinConfig:
     """GPIO pin configuration."""
+
     pin_number: int
     mode: PinMode
     initial_state: Optional[PinState] = None
@@ -37,7 +40,7 @@ class PinConfig:
 class GPIOManager:
     """
     GPIO manager for CYD hardware.
-    
+
     Provides unified interface for GPIO operations including:
     - Pin configuration and management
     - Digital I/O operations
@@ -83,79 +86,74 @@ class GPIOManager:
         pin: int,
         mode: PinMode,
         initial_state: Optional[PinState] = None,
-        label: Optional[str] = None
+        label: Optional[str] = None,
     ) -> bool:
         """
         Configure a GPIO pin.
-        
+
         Args:
             pin: Pin number
             mode: Pin mode (input/output)
             initial_state: Initial pin state (for outputs)
             label: Optional label for the pin
-            
+
         Returns:
             True if configuration successful
         """
         if pin in self.RESERVED_PINS:
             return False
-            
-        config = PinConfig(
-            pin_number=pin,
-            mode=mode,
-            initial_state=initial_state,
-            label=label
-        )
-        
+
+        config = PinConfig(pin_number=pin, mode=mode, initial_state=initial_state, label=label)
+
         self._pins[pin] = config
         if initial_state is not None:
             self._pin_states[pin] = initial_state
-            
+
         return True
 
     def digital_write(self, pin: int, state: PinState) -> bool:
         """
         Write digital value to pin.
-        
+
         Args:
             pin: Pin number
             state: Pin state (HIGH/LOW)
-            
+
         Returns:
             True if write successful
         """
         if pin not in self._pins:
             return False
-            
+
         config = self._pins[pin]
         if config.mode != PinMode.OUTPUT:
             return False
-            
+
         self._pin_states[pin] = state
         return True
 
     def digital_read(self, pin: int) -> Optional[PinState]:
         """
         Read digital value from pin.
-        
+
         Args:
             pin: Pin number
-            
+
         Returns:
             Pin state or None if error
         """
         if pin not in self._pins:
             return None
-            
+
         return self._pin_states.get(pin, PinState.LOW)
 
     def analog_read(self, pin: int) -> Optional[int]:
         """
         Read analog value from pin (ADC).
-        
+
         Args:
             pin: Pin number (must be ADC-capable)
-            
+
         Returns:
             ADC value (0-4095 for 12-bit) or None if error
         """
@@ -163,38 +161,38 @@ class GPIOManager:
         adc_pins = [32, 33, 34, 35, 36, 39]
         if pin not in adc_pins:
             return None
-            
+
         # Simulated value
         return 0
 
     def pwm_write(self, pin: int, duty_cycle: int, frequency: int = 5000) -> bool:
         """
         Write PWM signal to pin.
-        
+
         Args:
             pin: Pin number
             duty_cycle: Duty cycle (0-255)
             frequency: PWM frequency in Hz
-            
+
         Returns:
             True if write successful
         """
         if pin not in self._pins:
             return False
-            
+
         # Validate duty cycle
         if not 0 <= duty_cycle <= 255:
             return False
-            
+
         return True
 
     def get_pin_info(self, pin: int) -> Optional[Dict[str, Any]]:
         """
         Get information about a pin.
-        
+
         Args:
             pin: Pin number
-            
+
         Returns:
             Pin information dictionary or None
         """
@@ -226,7 +224,7 @@ class GPIOManager:
     def get_available_pins(self) -> List[int]:
         """
         Get list of available GPIO pins.
-        
+
         Returns:
             List of available pin numbers
         """
@@ -235,7 +233,7 @@ class GPIOManager:
     def get_reserved_pins(self) -> Dict[int, str]:
         """
         Get dictionary of reserved pins.
-        
+
         Returns:
             Dictionary mapping pin numbers to functions
         """
@@ -244,10 +242,10 @@ class GPIOManager:
     def generate_code(self, platform: str = "arduino") -> str:
         """
         Generate platform-specific GPIO initialization code.
-        
+
         Args:
             platform: Target platform (arduino, esp-idf, micropython)
-            
+
         Returns:
             Generated code string
         """
@@ -263,7 +261,7 @@ class GPIOManager:
     def _generate_arduino_code(self) -> str:
         """Generate Arduino GPIO configuration code."""
         lines = ["// GPIO Configuration"]
-        
+
         for pin, config in self._pins.items():
             mode_map = {
                 PinMode.INPUT: "INPUT",
@@ -271,14 +269,14 @@ class GPIOManager:
                 PinMode.INPUT_PULLUP: "INPUT_PULLUP",
                 PinMode.INPUT_PULLDOWN: "INPUT_PULLDOWN",
             }
-            
+
             comment = f" // {config.label}" if config.label else ""
             lines.append(f"pinMode({pin}, {mode_map[config.mode]});{comment}")
-            
+
             if config.initial_state and config.mode == PinMode.OUTPUT:
                 state = "HIGH" if config.initial_state == PinState.HIGH else "LOW"
                 lines.append(f"digitalWrite({pin}, {state});")
-        
+
         return "\n".join(lines)
 
     def _generate_esp_idf_code(self) -> str:
@@ -289,7 +287,7 @@ class GPIOManager:
             "",
             "void gpio_init() {",
         ]
-        
+
         for pin, config in self._pins.items():
             mode_map = {
                 PinMode.INPUT: "GPIO_MODE_INPUT",
@@ -297,19 +295,21 @@ class GPIOManager:
                 PinMode.INPUT_PULLUP: "GPIO_MODE_INPUT",
                 PinMode.INPUT_PULLDOWN: "GPIO_MODE_INPUT",
             }
-            
+
             comment = f" // {config.label}" if config.label else ""
-            lines.append(f"    gpio_set_direction(GPIO_NUM_{pin}, {mode_map[config.mode]});{comment}")
-            
+            lines.append(
+                f"    gpio_set_direction(GPIO_NUM_{pin}, {mode_map[config.mode]});{comment}"
+            )
+
             if config.mode == PinMode.INPUT_PULLUP:
                 lines.append(f"    gpio_set_pull_mode(GPIO_NUM_{pin}, GPIO_PULLUP_ONLY);")
             elif config.mode == PinMode.INPUT_PULLDOWN:
                 lines.append(f"    gpio_set_pull_mode(GPIO_NUM_{pin}, GPIO_PULLDOWN_ONLY);")
-            
+
             if config.initial_state and config.mode == PinMode.OUTPUT:
                 level = 1 if config.initial_state == PinState.HIGH else 0
                 lines.append(f"    gpio_set_level(GPIO_NUM_{pin}, {level});")
-        
+
         lines.append("}")
         return "\n".join(lines)
 
@@ -320,7 +320,7 @@ class GPIOManager:
             "from machine import Pin",
             "",
         ]
-        
+
         for pin, config in self._pins.items():
             mode_map = {
                 PinMode.INPUT: "Pin.IN",
@@ -328,14 +328,14 @@ class GPIOManager:
                 PinMode.INPUT_PULLUP: "Pin.IN, Pin.PULL_UP",
                 PinMode.INPUT_PULLDOWN: "Pin.IN, Pin.PULL_DOWN",
             }
-            
+
             var_name = config.label.lower().replace(" ", "_") if config.label else f"pin_{pin}"
             comment = f"  # {config.label}" if config.label else ""
-            
+
             lines.append(f"{var_name} = Pin({pin}, {mode_map[config.mode]}){comment}")
-            
+
             if config.initial_state and config.mode == PinMode.OUTPUT:
                 value = 1 if config.initial_state == PinState.HIGH else 0
                 lines.append(f"{var_name}.value({value})")
-        
+
         return "\n".join(lines)

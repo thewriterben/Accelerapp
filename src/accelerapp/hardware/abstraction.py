@@ -3,9 +3,9 @@ Hardware abstraction layer core implementation.
 Provides unified interface for hardware components and conflict detection.
 """
 
-from typing import Dict, Any, List, Optional, Set
-from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set
 
 
 @dataclass

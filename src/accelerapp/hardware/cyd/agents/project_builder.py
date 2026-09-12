@@ -4,14 +4,15 @@ Automated project builder for CYD applications.
 Provides end-to-end project generation and setup automation.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 class BuildSystem(Enum):
     """Build system types."""
+
     PLATFORMIO = "platformio"
     ARDUINO_CLI = "arduino-cli"
     ESP_IDF = "esp-idf"
@@ -21,6 +22,7 @@ class BuildSystem(Enum):
 @dataclass
 class ProjectSpec:
     """Project specification."""
+
     name: str
     description: str
     author: str
@@ -34,6 +36,7 @@ class ProjectSpec:
 @dataclass
 class ProjectStructure:
     """Generated project structure."""
+
     root_dir: str
     source_files: Dict[str, str]
     config_files: Dict[str, str]
@@ -44,7 +47,7 @@ class ProjectStructure:
 class ProjectBuilder:
     """
     Automated project builder for CYD.
-    
+
     Provides:
     - Complete project scaffolding
     - Build system configuration
@@ -61,11 +64,11 @@ class ProjectBuilder:
     def create_project(self, spec: ProjectSpec, output_dir: str) -> ProjectStructure:
         """
         Create complete project structure.
-        
+
         Args:
             spec: Project specification
             output_dir: Output directory path
-            
+
         Returns:
             Generated project structure
         """
@@ -76,25 +79,25 @@ class ProjectBuilder:
             docs={},
             scripts={},
         )
-        
+
         # Generate source files
         structure.source_files["main.cpp"] = self._generate_main_file(spec)
         structure.source_files["config.h"] = self._generate_config_header(spec)
-        
+
         # Generate configuration
         if spec.build_system == BuildSystem.PLATFORMIO:
             structure.config_files["platformio.ini"] = self._generate_platformio_ini(spec)
         elif spec.build_system == BuildSystem.ARDUINO_CLI:
             structure.config_files["sketch.json"] = self._generate_arduino_json(spec)
-        
+
         # Generate documentation
         structure.docs["README.md"] = self._generate_readme(spec)
         structure.docs["LICENSE"] = self._generate_license(spec)
-        
+
         # Generate utility scripts
         structure.scripts["build.sh"] = self._generate_build_script(spec)
         structure.scripts["upload.sh"] = self._generate_upload_script(spec)
-        
+
         return structure
 
     def _generate_main_file(self, spec: ProjectSpec) -> str:
@@ -103,7 +106,7 @@ class ProjectBuilder:
         has_display = "display" in features
         has_touch = "touch" in features
         has_wifi = "wifi" in features
-        
+
         code = f"""/*
  * {spec.name} - {spec.description}
  * Author: {spec.author}
@@ -114,21 +117,21 @@ class ProjectBuilder:
 #include "config.h"
 #include <Arduino.h>
 """
-        
+
         if has_display:
             code += "#include <Adafruit_ILI9341.h>\n#include <SPI.h>\n"
         if has_touch:
             code += "#include <XPT2046_Touchscreen.h>\n"
         if has_wifi:
             code += "#include <WiFi.h>\n"
-        
+
         code += "\n"
-        
+
         if has_display:
             code += "Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);\n"
         if has_touch:
             code += "XPT2046_Touchscreen touch(TOUCH_CS, TOUCH_IRQ);\n"
-        
+
         code += """
 void setup() {
     Serial.begin(115200);
@@ -140,7 +143,7 @@ void setup() {
     Serial.println("=================================");
     
 """ % (spec.name, spec.version)
-        
+
         if has_display:
             code += """    // Initialize display
     pinMode(TFT_BL, OUTPUT);
@@ -151,7 +154,7 @@ void setup() {
     Serial.println("Display initialized");
     
 """
-        
+
         if has_touch:
             code += """    // Initialize touch
     touch.begin();
@@ -159,14 +162,14 @@ void setup() {
     Serial.println("Touch initialized");
     
 """
-        
+
         if has_wifi:
             code += """    // Initialize WiFi
     WiFi.mode(WIFI_STA);
     Serial.println("WiFi initialized");
     
 """
-        
+
         code += """    Serial.println("Setup complete!");
 }
 
@@ -174,7 +177,7 @@ void loop() {
     // Main application loop
     
 """
-        
+
         if has_touch:
             code += """    // Handle touch input
     if (touch.touched()) {
@@ -185,11 +188,11 @@ void loop() {
     }
     
 """
-        
+
         code += """    delay(10);
 }
 """
-        
+
         return code.strip()
 
     def _generate_config_header(self, spec: ProjectSpec) -> str:
@@ -240,7 +243,7 @@ void loop() {
     def _generate_platformio_ini(self, spec: ProjectSpec) -> str:
         """Generate PlatformIO configuration."""
         deps = spec.dependencies or []
-        
+
         config = f"""; PlatformIO Project Configuration for {spec.name}
 
 [env:esp32]
@@ -266,10 +269,10 @@ lib_deps =
     adafruit/Adafruit GFX Library @ ^1.11.5
     paulstoffregen/XPT2046_Touchscreen @ ^1.4
 """
-        
+
         for dep in deps:
             config += f"    {dep}\n"
-        
+
         return config.strip()
 
     def _generate_arduino_json(self, spec: ProjectSpec) -> str:
@@ -291,7 +294,7 @@ lib_deps =
     def _generate_readme(self, spec: ProjectSpec) -> str:
         """Generate README documentation."""
         features = spec.features or []
-        
+
         return f"""# {spec.name}
 
 {spec.description}
@@ -438,22 +441,22 @@ fi
     def validate_project(self, structure: ProjectStructure) -> List[str]:
         """
         Validate generated project.
-        
+
         Args:
             structure: Project structure to validate
-            
+
         Returns:
             List of validation errors (empty if valid)
         """
         errors = []
-        
+
         if "main.cpp" not in structure.source_files:
             errors.append("Missing main source file")
-        
+
         if "README.md" not in structure.docs:
             errors.append("Missing README documentation")
-        
+
         if not structure.config_files:
             errors.append("Missing build configuration")
-        
+
         return errors

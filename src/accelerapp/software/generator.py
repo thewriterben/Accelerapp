@@ -2,8 +2,8 @@
 Software generator for host-side drivers and APIs.
 """
 
-from typing import Dict, Any
 from pathlib import Path
+from typing import Any, Dict
 
 
 class SoftwareGenerator:

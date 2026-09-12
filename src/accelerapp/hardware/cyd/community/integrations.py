@@ -8,13 +8,14 @@ Provides integration with popular community projects:
 - Home automation projects
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class ProjectType(Enum):
     """Community project types."""
+
     MARAUDER = "esp32marauder"
     NERDMINER = "nerdminer"
     LVGL_DEMO = "lvgl_demo"
@@ -28,6 +29,7 @@ class ProjectType(Enum):
 @dataclass
 class ProjectInfo:
     """Community project information."""
+
     name: str
     project_type: ProjectType
     description: str
@@ -40,7 +42,7 @@ class ProjectInfo:
 class CommunityIntegration:
     """
     Integration with CYD community projects.
-    
+
     Provides tools to:
     - Discover and catalog community projects
     - Generate code compatible with popular projects
@@ -100,10 +102,10 @@ class CommunityIntegration:
     def get_project_info(self, project_type: ProjectType) -> Optional[ProjectInfo]:
         """
         Get information about a community project.
-        
+
         Args:
             project_type: Type of project
-            
+
         Returns:
             Project information or None if not found
         """
@@ -112,7 +114,7 @@ class CommunityIntegration:
     def list_projects(self) -> List[ProjectInfo]:
         """
         List all available community projects.
-        
+
         Returns:
             List of project information
         """
@@ -121,7 +123,7 @@ class CommunityIntegration:
     def register_custom_project(self, project: ProjectInfo) -> None:
         """
         Register a custom community project.
-        
+
         Args:
             project: Project information to register
         """
@@ -130,10 +132,10 @@ class CommunityIntegration:
     def generate_project_config(self, project_type: ProjectType) -> Dict[str, Any]:
         """
         Generate project-specific configuration.
-        
+
         Args:
             project_type: Type of project
-            
+
         Returns:
             Configuration dictionary
         """
@@ -169,7 +171,7 @@ class CommunityIntegration:
     def generate_marauder_integration(self) -> str:
         """
         Generate ESP32 Marauder integration code.
-        
+
         Returns:
             Integration code
         """
@@ -214,7 +216,7 @@ void scanWiFi() {
     def generate_nerdminer_integration(self) -> str:
         """
         Generate NerdMiner integration code.
-        
+
         Returns:
             Integration code
         """
@@ -266,7 +268,7 @@ void displayMiningStats() {
     def generate_lvgl_integration(self) -> str:
         """
         Generate LVGL graphics library integration.
-        
+
         Returns:
             Integration code
         """

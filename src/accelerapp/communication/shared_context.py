@@ -3,10 +3,10 @@ Shared context management for agent collaboration.
 Provides shared state and context synchronization across agents.
 """
 
-from typing import Dict, Any, Optional, List
-from enum import Enum
-from datetime import datetime
 import threading
+from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class ContextScope(Enum):

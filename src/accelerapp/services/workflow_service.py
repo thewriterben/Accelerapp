@@ -79,19 +79,23 @@ class Workflow:
         for step in self.steps:
             try:
                 result = step.action(ctx)
-                results.append({
-                    "step": step.name,
-                    "status": "success",
-                    "result": result,
-                })
+                results.append(
+                    {
+                        "step": step.name,
+                        "status": "success",
+                        "result": result,
+                    }
+                )
                 # Update context with step result
                 ctx.update(result)
             except Exception as e:
-                results.append({
-                    "step": step.name,
-                    "status": "error",
-                    "error": str(e),
-                })
+                results.append(
+                    {
+                        "step": step.name,
+                        "status": "error",
+                        "error": str(e),
+                    }
+                )
                 break  # Stop on first error
 
         return {
@@ -182,8 +186,10 @@ class WorkflowService(BaseService):
     def get_health(self) -> Dict[str, Any]:
         """Get service health status."""
         health = super().get_health()
-        health.update({
-            "registered_workflows": len(self._workflows),
-            "workflows": list(self._workflows.keys()),
-        })
+        health.update(
+            {
+                "registered_workflows": len(self._workflows),
+                "workflows": list(self._workflows.keys()),
+            }
+        )
         return health

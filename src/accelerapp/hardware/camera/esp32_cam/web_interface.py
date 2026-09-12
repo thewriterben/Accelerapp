@@ -3,9 +3,9 @@ Web interface module for ESP32-CAM.
 Provides REST API and web UI for camera control.
 """
 
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

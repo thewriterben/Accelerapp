@@ -2,10 +2,12 @@
 Export visual specifications to various formats.
 """
 
-from typing import Dict, Any
 import json
-import yaml
 from pathlib import Path
+from typing import Any, Dict
+
+import yaml
+
 from .specification import VisualSpecification
 
 

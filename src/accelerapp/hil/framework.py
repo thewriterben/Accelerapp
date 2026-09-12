@@ -2,10 +2,10 @@
 HIL testing framework core.
 """
 
-from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 
 class TestStatus(Enum):

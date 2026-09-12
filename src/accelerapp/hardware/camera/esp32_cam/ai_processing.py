@@ -3,10 +3,10 @@ AI Processing module for ESP32-CAM with TinyML integration.
 Supports object detection, face recognition, and edge AI inference.
 """
 
-from typing import Dict, Any, List, Optional, Tuple
-from enum import Enum
-from dataclasses import dataclass, field
 import logging
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 

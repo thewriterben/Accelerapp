@@ -3,8 +3,9 @@ Meshtastic Agent for mesh networking device generation.
 Specialized in LoRa mesh network configurations and Meshtastic firmware.
 """
 
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 from .base_agent import BaseAgent
 
 

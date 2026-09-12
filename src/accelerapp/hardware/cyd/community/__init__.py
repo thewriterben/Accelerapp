@@ -5,9 +5,9 @@ Provides integration with popular CYD projects and templates
 from the witnessmenow/ESP32-Cheap-Yellow-Display community.
 """
 
-from .integrations import CommunityIntegration, ProjectType, ProjectInfo
-from .templates import TemplateManager, TemplateType, Template
-from .examples import ExampleLoader, ExampleCategory, Example
+from .examples import Example, ExampleCategory, ExampleLoader
+from .integrations import CommunityIntegration, ProjectInfo, ProjectType
+from .templates import Template, TemplateManager, TemplateType
 
 __all__ = [
     "CommunityIntegration",

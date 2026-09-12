@@ -5,14 +5,15 @@ Provides temperature and performance monitoring capabilities
 for ESP32 Cheap Yellow Display boards.
 """
 
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class SensorType(Enum):
     """Sensor types available on CYD."""
+
     TEMPERATURE = "temperature"
     LIGHT = "light"
     PERFORMANCE = "performance"
@@ -22,6 +23,7 @@ class SensorType(Enum):
 @dataclass
 class SensorReading:
     """Sensor reading data."""
+
     sensor_type: SensorType
     value: float
     unit: str
@@ -31,7 +33,7 @@ class SensorReading:
 class SensorMonitor:
     """
     Sensor monitoring for CYD hardware.
-    
+
     Provides monitoring capabilities for:
     - Internal temperature sensor (ESP32)
     - Light sensor (LDR on pin 34)
@@ -51,7 +53,7 @@ class SensorMonitor:
     def read_temperature(self) -> Optional[float]:
         """
         Read internal temperature sensor.
-        
+
         Returns:
             Temperature in Celsius or None if unavailable
         """
@@ -62,7 +64,7 @@ class SensorMonitor:
     def read_light_level(self) -> Optional[int]:
         """
         Read ambient light level from LDR.
-        
+
         Returns:
             Light level (0-4095 from 12-bit ADC) or None if unavailable
         """
@@ -72,7 +74,7 @@ class SensorMonitor:
     def read_cpu_frequency(self) -> int:
         """
         Read current CPU frequency.
-        
+
         Returns:
             CPU frequency in MHz
         """
@@ -82,7 +84,7 @@ class SensorMonitor:
     def read_free_heap(self) -> int:
         """
         Read free heap memory.
-        
+
         Returns:
             Free heap in bytes
         """
@@ -91,7 +93,7 @@ class SensorMonitor:
     def read_heap_size(self) -> int:
         """
         Read total heap size.
-        
+
         Returns:
             Total heap in bytes
         """
@@ -100,7 +102,7 @@ class SensorMonitor:
     def read_cpu_usage(self) -> float:
         """
         Estimate CPU usage.
-        
+
         Returns:
             CPU usage percentage (0-100)
         """
@@ -109,7 +111,7 @@ class SensorMonitor:
     def get_system_stats(self) -> Dict[str, Any]:
         """
         Get comprehensive system statistics.
-        
+
         Returns:
             Dictionary of system statistics
         """
@@ -125,90 +127,80 @@ class SensorMonitor:
     def record_reading(self, reading: SensorReading) -> None:
         """
         Record a sensor reading.
-        
+
         Args:
             reading: Sensor reading to record
         """
         self._readings.append(reading)
-        
+
         # Limit stored readings
         if len(self._readings) > self._max_readings:
-            self._readings = self._readings[-self._max_readings:]
+            self._readings = self._readings[-self._max_readings :]
 
     def get_readings(
-        self,
-        sensor_type: Optional[SensorType] = None,
-        limit: int = 100
+        self, sensor_type: Optional[SensorType] = None, limit: int = 100
     ) -> List[SensorReading]:
         """
         Get historical sensor readings.
-        
+
         Args:
             sensor_type: Filter by sensor type (None for all)
             limit: Maximum number of readings to return
-            
+
         Returns:
             List of sensor readings
         """
         readings = self._readings
-        
+
         if sensor_type:
             readings = [r for r in readings if r.sensor_type == sensor_type]
-        
+
         return readings[-limit:]
 
-    def get_average(
-        self,
-        sensor_type: SensorType,
-        minutes: int = 5
-    ) -> Optional[float]:
+    def get_average(self, sensor_type: SensorType, minutes: int = 5) -> Optional[float]:
         """
         Get average sensor reading over time period.
-        
+
         Args:
             sensor_type: Type of sensor
             minutes: Time period in minutes
-            
+
         Returns:
             Average value or None if no data
         """
         now = datetime.now()
         readings = [
-            r for r in self._readings
-            if r.sensor_type == sensor_type
-            and (now - r.timestamp).total_seconds() < minutes * 60
+            r
+            for r in self._readings
+            if r.sensor_type == sensor_type and (now - r.timestamp).total_seconds() < minutes * 60
         ]
-        
+
         if not readings:
             return None
-        
+
         return sum(r.value for r in readings) / len(readings)
 
-    def get_min_max(
-        self,
-        sensor_type: SensorType,
-        minutes: int = 5
-    ) -> Optional[Dict[str, float]]:
+    def get_min_max(self, sensor_type: SensorType, minutes: int = 5) -> Optional[Dict[str, float]]:
         """
         Get min/max sensor readings over time period.
-        
+
         Args:
             sensor_type: Type of sensor
             minutes: Time period in minutes
-            
+
         Returns:
             Dictionary with min and max values or None
         """
         now = datetime.now()
         readings = [
-            r for r in self._readings
-            if r.sensor_type == sensor_type
-            and (now - r.timestamp).total_seconds() < minutes * 60
+            r
+            for r in self._readings
+            if r.sensor_type == sensor_type and (now - r.timestamp).total_seconds() < minutes * 60
         ]
-        
+
         if not readings:
             return None
-        
+
         values = [r.value for r in readings]
         return {
             "min": min(values),
@@ -222,10 +214,10 @@ class SensorMonitor:
     def generate_code(self, platform: str = "arduino") -> str:
         """
         Generate platform-specific sensor monitoring code.
-        
+
         Args:
             platform: Target platform (arduino, esp-idf, micropython)
-            
+
         Returns:
             Generated code string
         """

@@ -3,7 +3,7 @@ Specialized prompts for different agent types in code generation.
 Provides optimized prompts for firmware, software, UI, and other tasks.
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 class PromptTemplates:
