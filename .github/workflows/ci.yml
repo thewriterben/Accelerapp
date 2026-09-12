@@ -98,11 +98,22 @@ jobs:
     # judgement calls -- among them one real runtime bug, a second
     # `class WebSocketClient` shadowing the first in the same module.
     #
-    # The remaining 2 are one line, `src/accelerapp/core/__init__.py:58`. isort
-    # regroups that `from .container import ...` and strips the `# noqa` off it;
-    # three approaches failed the same way, so it is recorded rather than fought
-    # a fourth time. An ignore-list entry would hide the two real F401s it is
-    # sitting next to, which is worse than two lines of red.
+    # The last 2 were one line, `src/accelerapp/core/__init__.py:58`, and three
+    # attempts at placing a `# noqa` there failed the same way -- isort regroups
+    # the line and strips the marker. The fix was not a fourth placement. That
+    # file's `__all__` was a plain list followed by a second block that read
+    #
+    #     try: __all__.extend([...]); except NameError: pass
+    #
+    # as though the v2.0 names were exported conditionally. They were not: the
+    # list holds string literals, so the extend cannot raise NameError and the
+    # guard had never once fired. pyflakes honours a plain module-level
+    # `__all__` and not one built inside a `try`, so folding the two together
+    # took the count to 0 and changed nothing at runtime -- 31 exported names
+    # before and after, verified by importing both revisions.
+    #
+    # No ignore-list entry was added. `--extend-ignore=F401` would have hidden
+    # every genuine unused import in the tree to silence two that were not.
     - name: Lint with flake8
       run: |
         flake8 src/ --max-line-length=100 --extend-ignore=E203,E266,E501,W503 --statistics
