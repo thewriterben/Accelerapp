@@ -201,16 +201,16 @@ public:
     bool begin();
     void handleClient();
     void stop();
-    
+
     int getClientCount();
     unsigned long getFrameCount();
-    
+
 private:
     WebServer* server;
     int port;
     int clientCount;
     unsigned long frameCount;
-    
+
     void handleStream();
     void handleCapture();
 };
@@ -246,33 +246,33 @@ void MJPEGStream::handleClient() {{
 
 void MJPEGStream::handleStream() {{
     WiFiClient client = server->client();
-    
+
     String response = "HTTP/1.1 200 OK\\r\\n";
     response += "Content-Type: " + String(STREAM_CONTENT_TYPE) + "\\r\\n\\r\\n";
     server->sendContent(response);
-    
+
     clientCount++;
-    
+
     while (client.connected()) {{
         camera_fb_t* fb = esp_camera_fb_get();
         if (!fb) {{
             continue;
         }}
-        
+
         String header = String(STREAM_BOUNDARY);
         char partHeader[64];
         sprintf(partHeader, STREAM_PART, fb->len);
         header += partHeader;
-        
+
         server->sendContent(header);
         client.write(fb->buf, fb->len);
-        
+
         esp_camera_fb_return(fb);
         frameCount++;
-        
+
         delay({self.config.frame_interval_ms});
     }}
-    
+
     clientCount--;
 }}
 
@@ -282,11 +282,11 @@ void MJPEGStream::handleCapture() {{
         server->send(500, "text/plain", "Camera capture failed");
         return;
     }}
-    
+
     server->sendHeader("Content-Type", "image/jpeg");
     server->sendHeader("Content-Length", String(fb->len));
     server->send_P(200, "image/jpeg", (const char*)fb->buf, fb->len);
-    
+
     esp_camera_fb_return(fb);
 }}
 

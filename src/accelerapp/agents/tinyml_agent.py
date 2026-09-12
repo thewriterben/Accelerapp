@@ -148,7 +148,7 @@ class TinyMLAgent(BaseAgent):
             "#include <stdint.h>",
             "#include <stdbool.h>",
             "",
-            f"// Model configuration",
+            "// Model configuration",
             f"#define INPUT_SHAPE_0 {input_shape[0] if len(input_shape) > 0 else 1}",
             f"#define INPUT_SHAPE_1 {input_shape[1] if len(input_shape) > 1 else 1}",
             f"#define INPUT_SHAPE_2 {input_shape[2] if len(input_shape) > 2 else 1}",

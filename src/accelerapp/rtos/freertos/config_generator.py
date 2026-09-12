@@ -52,15 +52,15 @@ class FreeRTOSConfigGenerator:
             " *----------------------------------------------------------*/",
             "",
             "/* Kernel configuration */",
-            f"#define configUSE_PREEMPTION              1",
-            f"#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0",
+            "#define configUSE_PREEMPTION              1",
+            "#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0",
             f"#define configUSE_TICKLESS_IDLE           {1 if config.get('tickless_idle') else 0}",
             f"#define configCPU_CLOCK_HZ                ({cpu_clock}UL)",
             f"#define configTICK_RATE_HZ                ({tick_rate_hz})",
             f"#define configMAX_PRIORITIES              ({max_priorities})",
             f"#define configMINIMAL_STACK_SIZE          ((uint16_t){minimal_stack_size})",
             f"#define configTOTAL_HEAP_SIZE             ((size_t){total_heap_size})",
-            f"#define configMAX_TASK_NAME_LEN           (16)",
+            "#define configMAX_TASK_NAME_LEN           (16)",
             "",
         ]
 
@@ -68,15 +68,15 @@ class FreeRTOSConfigGenerator:
         lines.extend(
             [
                 "/* Feature configuration */",
-                f"#define configUSE_16_BIT_TICKS            0",
-                f"#define configIDLE_SHOULD_YIELD           1",
-                f"#define configUSE_TASK_NOTIFICATIONS      1",
+                "#define configUSE_16_BIT_TICKS            0",
+                "#define configIDLE_SHOULD_YIELD           1",
+                "#define configUSE_TASK_NOTIFICATIONS      1",
                 f"#define configUSE_MUTEXES                 {1 if config.get('use_mutexes', True) else 0}",
                 f"#define configUSE_RECURSIVE_MUTEXES       {1 if config.get('use_recursive_mutexes') else 0}",
                 f"#define configUSE_COUNTING_SEMAPHORES     {1 if config.get('use_counting_semaphores', True) else 0}",
                 f"#define configUSE_QUEUE_SETS              {1 if config.get('use_queue_sets') else 0}",
-                f"#define configUSE_TIME_SLICING            1",
-                f"#define configUSE_NEWLIB_REENTRANT        0",
+                "#define configUSE_TIME_SLICING            1",
+                "#define configUSE_NEWLIB_REENTRANT        0",
                 "",
             ]
         )
@@ -86,8 +86,8 @@ class FreeRTOSConfigGenerator:
             [
                 "/* Memory allocation related definitions */",
                 f"#define configSUPPORT_STATIC_ALLOCATION   {1 if config.get('static_allocation') else 0}",
-                f"#define configSUPPORT_DYNAMIC_ALLOCATION  1",
-                f"#define configAPPLICATION_ALLOCATED_HEAP  0",
+                "#define configSUPPORT_DYNAMIC_ALLOCATION  1",
+                "#define configAPPLICATION_ALLOCATED_HEAP  0",
                 "",
             ]
         )
@@ -100,7 +100,7 @@ class FreeRTOSConfigGenerator:
                 f"#define configUSE_TICK_HOOK               {1 if config.get('use_tick_hook') else 0}",
                 f"#define configCHECK_FOR_STACK_OVERFLOW    {config.get('stack_overflow_check', 2)}",
                 f"#define configUSE_MALLOC_FAILED_HOOK      {1 if config.get('use_malloc_failed_hook', True) else 0}",
-                f"#define configUSE_DAEMON_TASK_STARTUP_HOOK 0",
+                "#define configUSE_DAEMON_TASK_STARTUP_HOOK 0",
                 "",
             ]
         )
@@ -109,8 +109,8 @@ class FreeRTOSConfigGenerator:
         lines.extend(
             [
                 "/* Co-routine definitions */",
-                f"#define configUSE_CO_ROUTINES             0",
-                f"#define configMAX_CO_ROUTINE_PRIORITIES   (2)",
+                "#define configUSE_CO_ROUTINES             0",
+                "#define configMAX_CO_ROUTINE_PRIORITIES   (2)",
                 "",
             ]
         )
