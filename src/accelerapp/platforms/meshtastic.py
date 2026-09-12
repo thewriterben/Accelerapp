@@ -172,7 +172,7 @@ void setup() {{
     Serial.println("=================================");
     Serial.println("Meshtastic Node: {device_name}");
     Serial.println("=================================");
-    
+
     // Initialize node state
     nodeState.nodeId = NODE_ID;
     nodeState.hopCount = 0;
@@ -180,7 +180,7 @@ void setup() {{
     nodeState.lastSNR = 0;
     nodeState.messagesSent = 0;
     nodeState.messagesReceived = 0;
-    
+
     // Initialize LoRa radio
     Serial.print("Initializing LoRa radio... ");
     int state = radio.begin();
@@ -191,7 +191,7 @@ void setup() {{
         Serial.println(state);
         while (true);
     }}
-    
+
     // Configure radio parameters
     radio.setFrequency(LORA_FREQUENCY);
     radio.setBandwidth(LORA_BANDWIDTH);
@@ -199,17 +199,17 @@ void setup() {{
     radio.setCodingRate(LORA_CODING_RATE);
     radio.setSyncWord(LORA_SYNC_WORD);
     radio.setOutputPower(LORA_POWER);
-    
+
     Serial.println("Radio configured:");
     Serial.print("  Frequency: "); Serial.print(LORA_FREQUENCY); Serial.println(" MHz");
     Serial.print("  Bandwidth: "); Serial.print(LORA_BANDWIDTH); Serial.println(" kHz");
     Serial.print("  Spreading Factor: "); Serial.println(LORA_SPREADING_FACTOR);
     Serial.print("  Power: "); Serial.print(LORA_POWER); Serial.println(" dBm");
-    
+
     {"initializeWiFi();" if "wifi" in features else ""}
     {"initializeBluetooth();" if "bluetooth" in features else ""}
     {"initializeGPS();" if "gps" in features else ""}
-    
+
     Serial.println("Node ready!");
     Serial.println();
 }}
@@ -218,13 +218,13 @@ void loop() {{
     // Check for incoming messages
     String message;
     int state = radio.receive(message);
-    
+
     if (state == RADIOLIB_ERR_NONE) {{
         // Message received successfully
         nodeState.messagesReceived++;
         nodeState.lastRSSI = radio.getRSSI();
         nodeState.lastSNR = radio.getSNR();
-        
+
         Serial.print("Received [");
         Serial.print(nodeState.messagesReceived);
         Serial.print("] RSSI: ");
@@ -233,28 +233,28 @@ void loop() {{
         Serial.print(nodeState.lastSNR);
         Serial.print(" dB, Data: ");
         Serial.println(message);
-        
+
         handleMeshMessage(message);
     }} else if (state != RADIOLIB_ERR_RX_TIMEOUT) {{
         // Other error occurred
         Serial.print("Receive failed, code ");
         Serial.println(state);
     }}
-    
+
     // Periodic beacon transmission
     static unsigned long lastBeacon = 0;
     if (millis() - lastBeacon > BEACON_INTERVAL_MS) {{
         sendBeacon();
         lastBeacon = millis();
     }}
-    
+
     delay(10);
 }}
 
 void handleMeshMessage(String message) {{
     // Parse and process mesh message
     // This is a simplified implementation
-    
+
     // Check message type (beacon, data, ack, etc.)
     if (message.startsWith("BEACON:")) {{
         // Process beacon message
@@ -267,7 +267,7 @@ void handleMeshMessage(String message) {{
 
 void sendBeacon() {{
     String beacon = "BEACON:" + String(NODE_ID, HEX);
-    
+
     int state = radio.transmit(beacon);
     if (state == RADIOLIB_ERR_NONE) {{
         nodeState.messagesSent++;
@@ -282,7 +282,7 @@ void sendBeacon() {{
 
 void sendMeshMessage(String message, uint32_t destination) {{
     String packet = "DATA:" + String(NODE_ID, HEX) + ">" + String(destination, HEX) + ":" + message;
-    
+
     int state = radio.transmit(packet);
     if (state == RADIOLIB_ERR_NONE) {{
         nodeState.messagesSent++;
@@ -358,12 +358,12 @@ board = ttgo-t-beam
 framework = arduino
 
 ; Build flags
-build_flags = 
+build_flags =
     -DDEVICE_NAME="{device_name}"
     -DCORE_DEBUG_LEVEL=3
 
 ; Library dependencies
-lib_deps = 
+lib_deps =
     jgromes/RadioLib@^6.0.0
     mikalhart/TinyGPSPlus@^1.0.3
 
@@ -372,7 +372,7 @@ upload_speed = 921600
 monitor_speed = 115200
 
 ; Serial monitor
-monitor_filters = 
+monitor_filters =
     default
     time
 """
@@ -467,7 +467,7 @@ SX1262 radio = new Module(8, 3, 2, 4);
 void setup() {{
     Serial.begin(115200);
     Serial.println("{device_name} (nRF52) starting...");
-    
+
     // Initialize radio
     int state = radio.begin();
     if (state == RADIOLIB_ERR_NONE) {{

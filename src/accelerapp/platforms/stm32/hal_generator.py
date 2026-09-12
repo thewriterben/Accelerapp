@@ -3,8 +3,7 @@ STM32 HAL code generator.
 Generates HAL-compatible initialization and driver code.
 """
 
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 
 class STM32HALGenerator:
@@ -201,8 +200,8 @@ class STM32HALGenerator:
             f"static TIM_HandleTypeDef htim{instance[-1]};",
             "",
             f"static void MX_{instance}_Init(void) {{",
-            f"    TIM_ClockConfigTypeDef sClockSourceConfig = {{0}};",
-            f"    TIM_MasterConfigTypeDef sMasterConfig = {{0}};",
+            "    TIM_ClockConfigTypeDef sClockSourceConfig = {0};",
+            "    TIM_MasterConfigTypeDef sMasterConfig = {0};",
             "",
             f"    htim{instance[-1]}.Instance = {instance};",
             f"    htim{instance[-1]}.Init.Prescaler = {prescaler} - 1;",
@@ -248,7 +247,7 @@ class STM32HALGenerator:
             [
                 "",
                 f"static void MX_{instance}_Init(void) {{",
-                f"    ADC_ChannelConfTypeDef sConfig = {{0}};",
+                "    ADC_ChannelConfTypeDef sConfig = {0};",
                 "",
                 f"    hadc{instance[-1]}.Instance = {instance};",
                 f"    hadc{instance[-1]}.Init.Resolution = ADC_RESOLUTION_{resolution};",

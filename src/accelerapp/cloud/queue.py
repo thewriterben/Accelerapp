@@ -84,7 +84,7 @@ class JobQueue:
         try:
             queued_job = self.queue.get(timeout=timeout)
             return queued_job.job_data
-        except:
+        except Exception:
             return None
 
     def start_processing(self, processor: Callable[[Dict[str, Any]], Dict[str, Any]]):

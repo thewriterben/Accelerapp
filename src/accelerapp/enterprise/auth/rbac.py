@@ -4,7 +4,7 @@ Implements fine-grained permissions and role management.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set
 
 
 @dataclass

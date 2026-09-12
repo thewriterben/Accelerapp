@@ -6,7 +6,7 @@ Tracks security events, generates audit trails, and ensures compliance.
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 
 class AuditEventType(Enum):

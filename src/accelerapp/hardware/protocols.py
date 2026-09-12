@@ -3,9 +3,9 @@ Hardware communication protocols support.
 Provides I2C, SPI, and CAN protocol specifications and code generation.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 
 class ProtocolType(Enum):
@@ -133,7 +133,7 @@ bool i2cRead(uint8_t reg, uint8_t* data, size_t len) {{
     Wire.beginTransmission(I2C_ADDRESS);
     Wire.write(reg);
     if(Wire.endTransmission(false) != 0) return false;
-    
+
     Wire.requestFrom(I2C_ADDRESS, len);
     for(size_t i = 0; i < len && Wire.available(); i++) {{
         data[i] = Wire.read();
@@ -176,7 +176,7 @@ bool i2cRead(uint8_t reg, uint8_t* data, size_t len) {{
     Wire.beginTransmission(I2C_ADDRESS);
     Wire.write(reg);
     if(Wire.endTransmission(false) != 0) return false;
-    
+
     size_t received = Wire.requestFrom((uint8_t)I2C_ADDRESS, len);
     for(size_t i = 0; i < received; i++) {{
         data[i] = Wire.read();
@@ -271,11 +271,11 @@ void setupSPI() {{
 void spiTransfer(uint8_t* txData, uint8_t* rxData, size_t len) {{
     digitalWrite(SPI_CS_PIN, LOW);
     SPI.beginTransaction(spiSettings);
-    
+
     for(size_t i = 0; i < len; i++) {{
         rxData[i] = SPI.transfer(txData[i]);
     }}
-    
+
     SPI.endTransaction();
     digitalWrite(SPI_CS_PIN, HIGH);
 }}
@@ -284,11 +284,11 @@ void spiTransfer(uint8_t* txData, uint8_t* rxData, size_t len) {{
 void spiWrite(uint8_t* data, size_t len) {{
     digitalWrite(SPI_CS_PIN, LOW);
     SPI.beginTransaction(spiSettings);
-    
+
     for(size_t i = 0; i < len; i++) {{
         SPI.transfer(data[i]);
     }}
-    
+
     SPI.endTransaction();
     digitalWrite(SPI_CS_PIN, HIGH);
 }}
@@ -404,7 +404,7 @@ HAL_StatusTypeDef spiWrite(uint8_t* data, uint16_t len) {{
 void setupCAN() {{
     can_general_config_t g_config = CAN_GENERAL_CONFIG_DEFAULT(CAN_TX_PIN, CAN_RX_PIN, CAN_MODE_NORMAL);
     can_timing_config_t t_config;
-    
+
     // Set timing based on baudrate
     switch(CAN_BAUDRATE) {{
         case 125000:  t_config = CAN_TIMING_CONFIG_125KBITS(); break;
@@ -413,9 +413,9 @@ void setupCAN() {{
         case 1000000: t_config = CAN_TIMING_CONFIG_1MBITS(); break;
         default:      t_config = CAN_TIMING_CONFIG_500KBITS();
     }}
-    
+
     can_filter_config_t f_config = CAN_FILTER_CONFIG_ACCEPT_ALL();
-    
+
     // Install CAN driver
     can_driver_install(&g_config, &t_config, &f_config);
     can_start();
@@ -428,7 +428,7 @@ esp_err_t canSend(uint32_t id, uint8_t* data, uint8_t len, bool extended) {{
     message.data_length_code = len;
     message.flags = extended ? CAN_MSG_FLAG_EXTD : CAN_MSG_FLAG_NONE;
     memcpy(message.data, data, len);
-    
+
     return can_transmit(&message, pdMS_TO_TICKS(1000));
 }}
 
@@ -442,13 +442,13 @@ esp_err_t canReceive(can_message_t* message, uint32_t timeout_ms) {{
     @staticmethod
     def _generate_stm32_can(config: CANConfig) -> str:
         """Generate STM32 CAN code."""
-        code = f"""
+        code = """
 // CAN Configuration for STM32
 #include "stm32f4xx_hal.h"
 
 CAN_HandleTypeDef hcan1;
 
-void setupCAN() {{
+void setupCAN() {
     hcan1.Instance = CAN1;
     hcan1.Init.Prescaler = 16;  // Adjust based on clock and desired baudrate
     hcan1.Init.Mode = CAN_MODE_NORMAL;
@@ -461,9 +461,9 @@ void setupCAN() {{
     hcan1.Init.AutoRetransmission = ENABLE;
     hcan1.Init.ReceiveFifoLocked = DISABLE;
     hcan1.Init.TransmitFifoPriority = DISABLE;
-    
+
     HAL_CAN_Init(&hcan1);
-    
+
     // Configure filter to accept all messages
     CAN_FilterTypeDef filter;
     filter.FilterBank = 0;
@@ -475,14 +475,14 @@ void setupCAN() {{
     filter.FilterMaskIdLow = 0x0000;
     filter.FilterFIFOAssignment = CAN_RX_FIFO0;
     filter.FilterActivation = ENABLE;
-    
+
     HAL_CAN_ConfigFilter(&hcan1, &filter);
     HAL_CAN_Start(&hcan1);
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-}}
+}
 
 // Send CAN message
-HAL_StatusTypeDef canSend(uint32_t id, uint8_t* data, uint8_t len, bool extended) {{
+HAL_StatusTypeDef canSend(uint32_t id, uint8_t* data, uint8_t len, bool extended) {
     CAN_TxHeaderTypeDef header;
     header.StdId = extended ? 0 : id;
     header.ExtId = extended ? id : 0;
@@ -490,24 +490,24 @@ HAL_StatusTypeDef canSend(uint32_t id, uint8_t* data, uint8_t len, bool extended
     header.RTR = CAN_RTR_DATA;
     header.DLC = len;
     header.TransmitGlobalTime = DISABLE;
-    
+
     uint32_t mailbox;
     return HAL_CAN_AddTxMessage(&hcan1, &header, data, &mailbox);
-}}
+}
 
 // Receive CAN message
-HAL_StatusTypeDef canReceive(uint32_t* id, uint8_t* data, uint8_t* len, bool* extended) {{
+HAL_StatusTypeDef canReceive(uint32_t* id, uint8_t* data, uint8_t* len, bool* extended) {
     CAN_RxHeaderTypeDef header;
     HAL_StatusTypeDef status = HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &header, data);
-    
-    if(status == HAL_OK) {{
+
+    if(status == HAL_OK) {
         *id = (header.IDE == CAN_ID_EXT) ? header.ExtId : header.StdId;
         *len = header.DLC;
         *extended = (header.IDE == CAN_ID_EXT);
-    }}
-    
+    }
+
     return status;
-}}
+}
 """
         return code.strip()
 
@@ -558,45 +558,45 @@ class DeviceDriverGenerator:
 class BME280 {
 private:
     int32_t t_fine;
-    
+
 public:
     bool begin() {
         // Configure sensor
         uint8_t ctrl_hum = 0x01;  // Humidity oversampling x1
         i2cWrite(BME280_REG_CTRL_HUM, &ctrl_hum, 1);
-        
+
         uint8_t ctrl_meas = 0x27; // Temp/Press oversampling x1, normal mode
         i2cWrite(BME280_REG_CTRL_MEAS, &ctrl_meas, 1);
-        
+
         uint8_t config = 0xA0;    // Standby 1000ms, filter off
         i2cWrite(BME280_REG_CONFIG, &config, 1);
-        
+
         return true;
     }
-    
+
     float readTemperature() {
         uint8_t data[3];
         i2cRead(BME280_REG_TEMP_MSB, data, 3);
         int32_t adc_T = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4);
-        
+
         // Simplified temperature calculation (requires calibration data)
         return adc_T / 100.0;
     }
-    
+
     float readHumidity() {
         uint8_t data[2];
         i2cRead(BME280_REG_HUM_MSB, data, 2);
         int32_t adc_H = (data[0] << 8) | data[1];
-        
+
         // Simplified humidity calculation (requires calibration data)
         return adc_H / 1024.0;
     }
-    
+
     float readPressure() {
         uint8_t data[3];
         i2cRead(BME280_REG_PRESS_MSB, data, 3);
         int32_t adc_P = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4);
-        
+
         // Simplified pressure calculation (requires calibration data)
         return adc_P / 256.0;
     }
@@ -626,29 +626,29 @@ public:
         uint8_t pwr_mgmt = 0x00;
         return i2cWrite(MPU6050_REG_PWR_MGMT_1, &pwr_mgmt, 1);
     }
-    
+
     void readAccel(float* x, float* y, float* z) {
         uint8_t data[6];
         i2cRead(MPU6050_REG_ACCEL_XOUT, data, 6);
-        
+
         int16_t ax = (data[0] << 8) | data[1];
         int16_t ay = (data[2] << 8) | data[3];
         int16_t az = (data[4] << 8) | data[5];
-        
+
         // Convert to g (assuming ±2g range)
         *x = ax / 16384.0;
         *y = ay / 16384.0;
         *z = az / 16384.0;
     }
-    
+
     void readGyro(float* x, float* y, float* z) {
         uint8_t data[6];
         i2cRead(MPU6050_REG_GYRO_XOUT, data, 6);
-        
+
         int16_t gx = (data[0] << 8) | data[1];
         int16_t gy = (data[2] << 8) | data[3];
         int16_t gz = (data[4] << 8) | data[5];
-        
+
         // Convert to deg/s (assuming ±250°/s range)
         *x = gx / 131.0;
         *y = gy / 131.0;
@@ -679,42 +679,42 @@ public:
 class INA219 {
 private:
     float currentLSB;
-    
+
 public:
     bool begin() {
         // Configure for 16V, 400mA range
         uint8_t config[2] = {0x19, 0x9F};
         i2cWrite(INA219_REG_CONFIG, config, 2);
-        
+
         // Set calibration
         uint8_t cal[2] = {0x10, 0x00};
         i2cWrite(INA219_REG_CALIBRATION, cal, 2);
-        
+
         currentLSB = 0.1;  // 0.1mA per bit
         return true;
     }
-    
+
     float readBusVoltage() {
         uint8_t data[2];
         i2cRead(INA219_REG_BUS_V, data, 2);
         int16_t value = (data[0] << 8) | data[1];
         return (value >> 3) * 0.004;  // LSB = 4mV
     }
-    
+
     float readShuntVoltage() {
         uint8_t data[2];
         i2cRead(INA219_REG_SHUNT_V, data, 2);
         int16_t value = (data[0] << 8) | data[1];
         return value * 0.01;  // LSB = 10uV
     }
-    
+
     float readCurrent() {
         uint8_t data[2];
         i2cRead(INA219_REG_CURRENT, data, 2);
         int16_t value = (data[0] << 8) | data[1];
         return value * currentLSB;
     }
-    
+
     float readPower() {
         uint8_t data[2];
         i2cRead(INA219_REG_POWER, data, 2);

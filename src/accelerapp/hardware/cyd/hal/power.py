@@ -273,13 +273,13 @@ void enterDeepSleep(uint64_t duration_ms) {
 void checkPowerTimeout() {
     unsigned long currentTime = millis();
     unsigned long idleTime = (currentTime - lastActivityTime) / 1000;
-    
+
     // Auto-dim display
     if (displayOn && idleTime > DISPLAY_TIMEOUT) {
         digitalWrite(21, LOW);  // Turn off backlight
         displayOn = false;
     }
-    
+
     // Auto-sleep
     if (idleTime > AUTO_SLEEP_TIMEOUT) {
         enterLightSleep(0);  // Sleep indefinitely

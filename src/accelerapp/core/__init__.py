@@ -11,8 +11,12 @@ from .interfaces import BaseService, IAgent, IPlugin, IRepository, IService
 
 # Phase 2 enhanced imports (v2.0)
 # Configuration Management
+# Optional dependencies: these names are imported for re-export and are listed
+# in __all__ below. That __all__ is assigned (or extended) inside the same
+# try/except ImportError guard, and pyflakes only honours a plain top-level
+# __all__ -- so it reports these as unused. They are not; hence the markers.
 try:
-    from .config import (
+    from .config import (  # noqa: F401
         AppConfig,
         ConfigurationManager,
         MonitoringConfig,
@@ -25,7 +29,7 @@ except ImportError:
 
 # Exception Handling - prefer new, fallback to old
 try:
-    from .exceptions import (
+    from .exceptions import (  # noqa: F401
         AccelerappException,
         CacheError,
         CircuitBreakerError,
@@ -49,7 +53,7 @@ except ImportError:
 
 # Enhanced DI Container (v2.0)
 try:
-    from .container import LifecycleManager
+    from .container import LifecycleManager  # noqa: F401
     from .container import ServiceContainer as EnhancedServiceContainer
     from .container import ServiceHealthMonitor, ServiceLifecycle
 
@@ -60,13 +64,19 @@ except ImportError:
 
 # Event-Driven Architecture (v2.0)
 try:
-    from .events import Event, EventBus, EventStore, Saga, SagaOrchestrator
+    from .events import (  # noqa: F401
+        Event,
+        EventBus,
+        EventStore,
+        Saga,
+        SagaOrchestrator,
+    )
 except ImportError:
     # Events not available in legacy version
     pass
 
 # Import AccelerappCore from the legacy core.py for backward compatibility
-import sys
+import sys  # noqa: F401
 from pathlib import Path
 
 # Get parent directory and import from core.py

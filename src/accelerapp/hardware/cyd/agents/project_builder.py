@@ -6,8 +6,7 @@ Provides end-to-end project generation and setup automation.
 
 from dataclasses import dataclass
 from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict, List
 
 
 class BuildSystem(Enum):
@@ -136,12 +135,12 @@ class ProjectBuilder:
 void setup() {
     Serial.begin(115200);
     delay(100);
-    
+
     Serial.println("=================================");
     Serial.printf("Starting %s\\n", PROJECT_NAME);
     Serial.printf("Version: %s\\n", PROJECT_VERSION);
     Serial.println("=================================");
-    
+
 """ % (spec.name, spec.version)
 
         if has_display:
@@ -152,7 +151,7 @@ void setup() {
     tft.setRotation(1);
     tft.fillScreen(ILI9341_BLACK);
     Serial.println("Display initialized");
-    
+
 """
 
         if has_touch:
@@ -160,14 +159,14 @@ void setup() {
     touch.begin();
     touch.setRotation(1);
     Serial.println("Touch initialized");
-    
+
 """
 
         if has_wifi:
             code += """    // Initialize WiFi
     WiFi.mode(WIFI_STA);
     Serial.println("WiFi initialized");
-    
+
 """
 
         code += """    Serial.println("Setup complete!");
@@ -175,7 +174,7 @@ void setup() {
 
 void loop() {
     // Main application loop
-    
+
 """
 
         if has_touch:
@@ -186,7 +185,7 @@ void loop() {
         int y = map(p.y, 200, 3800, 0, 240);
         Serial.printf("Touch at (%d, %d)\\n", x, y);
     }
-    
+
 """
 
         code += """    delay(10);
@@ -259,12 +258,12 @@ monitor_filters = esp32_exception_decoder
 upload_speed = 921600
 
 ; Build flags
-build_flags = 
+build_flags =
     -D PROJECT_NAME=\\"{spec.name}\\"
     -D PROJECT_VERSION=\\"{spec.version}\\"
 
 ; Dependencies
-lib_deps = 
+lib_deps =
     adafruit/Adafruit ILI9341 @ ^1.5.12
     adafruit/Adafruit GFX Library @ ^1.11.5
     paulstoffregen/XPT2046_Touchscreen @ ^1.4

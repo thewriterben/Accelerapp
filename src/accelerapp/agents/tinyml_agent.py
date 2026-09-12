@@ -3,7 +3,7 @@ TinyML Agent specialized in Edge AI and on-device machine learning.
 Supports TinyML integration for microcontrollers and embedded systems.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .base_agent import BaseAgent
 
@@ -148,7 +148,7 @@ class TinyMLAgent(BaseAgent):
             "#include <stdint.h>",
             "#include <stdbool.h>",
             "",
-            f"// Model configuration",
+            "// Model configuration",
             f"#define INPUT_SHAPE_0 {input_shape[0] if len(input_shape) > 0 else 1}",
             f"#define INPUT_SHAPE_1 {input_shape[1] if len(input_shape) > 1 else 1}",
             f"#define INPUT_SHAPE_2 {input_shape[2] if len(input_shape) > 2 else 1}",
@@ -267,7 +267,6 @@ class TinyMLAgent(BaseAgent):
         Returns:
             Conversion results and optimized model
         """
-        model_path = spec.get("model_path", "")
         optimization_level = spec.get("optimization_level", "standard")
 
         conversion_steps = [
