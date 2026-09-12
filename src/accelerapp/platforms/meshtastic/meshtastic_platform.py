@@ -234,12 +234,12 @@ logger = logging.getLogger(__name__)
 
 class MeshtasticClient:
     """Client for Meshtastic device communication."""
-    
+
     def __init__(self, device_port: str):
         """Initialize Meshtastic client."""
         self.device_port = device_port
         self.connected = False
-        
+
     def connect(self) -> bool:
         """Connect to Meshtastic device."""
         try:
@@ -252,7 +252,7 @@ class MeshtasticClient:
         except Exception as e:
             logger.error(f"Failed to connect: {e}")
             return False
-            
+
     def send_message(self, message: str, channel: int = 0) -> bool:
         """Send text message."""
         if not self.connected:
@@ -261,7 +261,7 @@ class MeshtasticClient:
         logger.info(f"Sending message: {message}")
         # Implement actual message sending
         return True
-        
+
     def get_node_info(self) -> Optional[Dict[str, Any]]:
         """Get mesh network node information."""
         if not self.connected:

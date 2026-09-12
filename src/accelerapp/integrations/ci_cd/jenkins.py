@@ -32,19 +32,19 @@ class JenkinsIntegration:
 
         pipeline = f"""pipeline {{
     agent any
-    
+
     environment {{
         PROJECT_NAME = '{project_name}'
         PYTHON_VERSION = '3.10'
     }}
-    
+
     stages {{
         stage('Checkout') {{
             steps {{
                 checkout scm
             }}
         }}
-        
+
         stage('Setup') {{
             steps {{
                 sh '''
@@ -55,7 +55,7 @@ class JenkinsIntegration:
                 '''
             }}
         }}
-        
+
         stage('Test') {{
             steps {{
                 sh '''
@@ -71,7 +71,7 @@ class JenkinsIntegration:
                 }}
             }}
         }}
-        
+
         stage('Generate Firmware') {{
             steps {{
                 script {{
@@ -89,14 +89,14 @@ class JenkinsIntegration:
         pipeline += """                }
             }
         }}
-        
+
         stage('Archive Artifacts') {{
             steps {{
                 archiveArtifacts artifacts: 'output/**/*', fingerprint: true
             }}
         }}
     }}
-    
+
     post {{
         always {{
             cleanWs()
@@ -130,13 +130,13 @@ class JenkinsIntegration:
             credentialsId('github-credentials')
         }}
     }}
-    
+
     orphanedItemStrategy {{
         discardOldItems {{
             numToKeep(10)
         }}
     }}
-    
+
     triggers {{
         periodic(5)
     }}
@@ -157,7 +157,7 @@ class JenkinsIntegration:
         """
         pipeline = """pipeline {
     agent { label 'hardware-test-runner' }
-    
+
     parameters {
         choice(
             name: 'PLATFORM',
@@ -171,14 +171,14 @@ class JenkinsIntegration:
             description: 'Target hardware platform'
         )
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
+
         stage('Generate Firmware') {
             steps {
                 sh '''
@@ -188,7 +188,7 @@ class JenkinsIntegration:
                 '''
             }
         }
-        
+
         stage('Upload to Hardware') {
             steps {
                 sh '''
@@ -198,7 +198,7 @@ class JenkinsIntegration:
                 '''
             }
         }
-        
+
         stage('Run HIL Tests') {
             steps {
                 sh 'pytest tests/hil/ --platform ${params.PLATFORM}'

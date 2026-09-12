@@ -370,7 +370,7 @@ class AIProcessor:
             "    int num_detections = 0;",
             "    ",
             "    // Placeholder detection",
-            f"    if (num_detections < max_results) {{",
+            "    if (num_detections < max_results) {",
             '        results[num_detections].label = "object";',
             "        results[num_detections].confidence = 0.85f;",
             "        results[num_detections].x = 0;",

@@ -50,48 +50,48 @@ class CubeMXIntegration:
         """
         lines = [
             "#MicroXplorer Configuration settings - do not modify",
-            f"File.Version=6",
-            f"KeepUserPlacement=false",
+            "File.Version=6",
+            "KeepUserPlacement=false",
             f"Mcu.Family={self._get_mcu_family()}",
-            f"Mcu.IP0=NVIC",
-            f"Mcu.IP1=RCC",
-            f"Mcu.IPNb=2",
+            "Mcu.IP0=NVIC",
+            "Mcu.IP1=RCC",
+            "Mcu.IPNb=2",
             f"Mcu.Name={self.mcu_name}",
             f"Mcu.Package={self._get_package()}",
-            f"Mcu.Pin0=PC13-ANTI_TAMP",
-            f"Mcu.Pin1=PA13",
-            f"Mcu.Pin2=PA14",
-            f"Mcu.PinsNb=3",
-            f"Mcu.ThirdPartyNb=0",
-            f"Mcu.UserConstants=",
+            "Mcu.Pin0=PC13-ANTI_TAMP",
+            "Mcu.Pin1=PA13",
+            "Mcu.Pin2=PA14",
+            "Mcu.PinsNb=3",
+            "Mcu.ThirdPartyNb=0",
+            "Mcu.UserConstants=",
             f"Mcu.UserName={self.mcu_name}",
-            f"ProjectManager.AskForMigrate=true",
-            f"ProjectManager.BackupPrevious=false",
-            f"ProjectManager.CompilerOptimize=6",
-            f"ProjectManager.ComputerToolchain=false",
-            f"ProjectManager.CoupleFile=false",
-            f"ProjectManager.CustomerFirmwarePackage=",
-            f"ProjectManager.DefaultFWLocation=true",
-            f"ProjectManager.DeletePrevious=true",
+            "ProjectManager.AskForMigrate=true",
+            "ProjectManager.BackupPrevious=false",
+            "ProjectManager.CompilerOptimize=6",
+            "ProjectManager.ComputerToolchain=false",
+            "ProjectManager.CoupleFile=false",
+            "ProjectManager.CustomerFirmwarePackage=",
+            "ProjectManager.DefaultFWLocation=true",
+            "ProjectManager.DeletePrevious=true",
             f"ProjectManager.DeviceId={self.mcu_name}",
-            f"ProjectManager.FirmwarePackage=STM32Cube FW_F4 V1.27.0",
-            f"ProjectManager.FreePins=false",
-            f"ProjectManager.HalAssertFull=false",
-            f"ProjectManager.HeapSize=0x200",
-            f"ProjectManager.KeepUserCode=true",
-            f"ProjectManager.LastFirmware=true",
-            f"ProjectManager.LibraryCopy=1",
-            f"ProjectManager.MainLocation=Core/Src",
-            f"ProjectManager.NoMain=false",
-            f"ProjectManager.PreviousToolchain=",
-            f"ProjectManager.ProjectBuild=false",
+            "ProjectManager.FirmwarePackage=STM32Cube FW_F4 V1.27.0",
+            "ProjectManager.FreePins=false",
+            "ProjectManager.HalAssertFull=false",
+            "ProjectManager.HeapSize=0x200",
+            "ProjectManager.KeepUserCode=true",
+            "ProjectManager.LastFirmware=true",
+            "ProjectManager.LibraryCopy=1",
+            "ProjectManager.MainLocation=Core/Src",
+            "ProjectManager.NoMain=false",
+            "ProjectManager.PreviousToolchain=",
+            "ProjectManager.ProjectBuild=false",
             f"ProjectManager.ProjectFileName={self.project_name}.ioc",
             f"ProjectManager.ProjectName={self.project_name}",
-            f"ProjectManager.StackSize=0x400",
-            f"ProjectManager.TargetToolchain=STM32CubeIDE",
-            f"ProjectManager.ToolChainLocation=",
-            f"ProjectManager.UnderRoot=true",
-            f"ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false",
+            "ProjectManager.StackSize=0x400",
+            "ProjectManager.TargetToolchain=STM32CubeIDE",
+            "ProjectManager.ToolChainLocation=",
+            "ProjectManager.UnderRoot=true",
+            "ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false",
         ]
 
         # Add peripheral configurations
@@ -166,13 +166,13 @@ class CubeMXIntegration:
         (output_dir / "Drivers").mkdir(parents=True, exist_ok=True)
 
         # Generate .project file
-        project_file = output_dir / f".project"
+        project_file = output_dir / ".project"
         project_content = self._generate_eclipse_project(config)
         project_file.write_text(project_content)
         files[".project"] = str(project_file)
 
         # Generate .cproject file
-        cproject_file = output_dir / f".cproject"
+        cproject_file = output_dir / ".cproject"
         cproject_content = self._generate_eclipse_cproject(config)
         cproject_file.write_text(cproject_content)
         files[".cproject"] = str(cproject_file)
@@ -222,9 +222,9 @@ class CubeMXIntegration:
 <cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
     <storageModule moduleId="org.eclipse.cdt.core.settings">
         <cconfiguration id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug">
-            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" 
-                           id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug" 
-                           moduleId="org.eclipse.cdt.core.settings" 
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider"
+                           id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug"
+                           moduleId="org.eclipse.cdt.core.settings"
                            name="Debug">
                 <externalSettings/>
                 <extensions>

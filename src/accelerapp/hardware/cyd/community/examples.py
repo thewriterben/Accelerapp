@@ -156,14 +156,14 @@ void setup() {
     // Turn on backlight
     pinMode(TFT_BL, OUTPUT);
     digitalWrite(TFT_BL, HIGH);
-    
+
     // Initialize display
     tft.begin();
     tft.setRotation(1);
-    
+
     // Clear screen
     tft.fillScreen(ILI9341_BLACK);
-    
+
     // Display hello world
     tft.setTextSize(3);
     tft.setTextColor(ILI9341_WHITE);
@@ -199,16 +199,16 @@ void setup() {
     // Initialize backlight
     pinMode(TFT_BL, OUTPUT);
     digitalWrite(TFT_BL, HIGH);
-    
+
     // Initialize display
     tft.begin();
     tft.setRotation(1);
     tft.fillScreen(ILI9341_BLACK);
-    
+
     // Initialize touch
     touch.begin();
     touch.setRotation(1);
-    
+
     // Draw instructions
     tft.setTextSize(2);
     tft.setTextColor(ILI9341_WHITE);
@@ -219,18 +219,18 @@ void setup() {
 void loop() {
     if (touch.touched()) {
         TS_Point p = touch.getPoint();
-        
+
         // Map touch coordinates to display
         int x = map(p.x, 200, 3800, 0, 320);
         int y = map(p.y, 200, 3800, 0, 240);
-        
+
         // Constrain to screen bounds
         x = constrain(x, 0, 319);
         y = constrain(y, 0, 239);
-        
+
         // Draw a circle at touch point
         tft.fillCircle(x, y, 5, ILI9341_CYAN);
-        
+
         // Display coordinates
         tft.fillRect(0, 220, 320, 20, ILI9341_BLACK);
         tft.setTextSize(1);
@@ -238,7 +238,7 @@ void loop() {
         tft.setCursor(10, 225);
         tft.printf("X: %d  Y: %d", x, y);
     }
-    
+
     delay(50);
 }
 """
@@ -261,17 +261,17 @@ void setup() {
     // Initialize backlight
     pinMode(TFT_BL, OUTPUT);
     digitalWrite(TFT_BL, HIGH);
-    
+
     // Initialize display
     tft.begin();
     tft.setRotation(1);
     tft.fillScreen(ILI9341_BLACK);
-    
+
     // Set WiFi to station mode
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
     delay(100);
-    
+
     // Display title
     tft.setTextSize(2);
     tft.setTextColor(ILI9341_CYAN);
@@ -286,13 +286,13 @@ void loop() {
     tft.setTextColor(ILI9341_WHITE);
     tft.setCursor(10, 45);
     tft.println("Scanning...");
-    
+
     int n = WiFi.scanNetworks();
-    
+
     tft.fillRect(0, 40, 320, 200, ILI9341_BLACK);
     tft.setCursor(10, 45);
     tft.printf("Found %d networks\\n\\n", n);
-    
+
     // Display networks
     int y = 65;
     for (int i = 0; i < n && i < 8; i++) {
@@ -306,20 +306,20 @@ void loop() {
         } else {
             color = ILI9341_RED;
         }
-        
+
         tft.setCursor(10, y);
         tft.setTextColor(color);
-        
+
         // Display SSID and RSSI
         String ssid = WiFi.SSID(i);
         if (ssid.length() > 20) {
             ssid = ssid.substring(0, 20) + "...";
         }
         tft.printf("%s (%d)\\n", ssid.c_str(), rssi);
-        
+
         y += 20;
     }
-    
+
     // Wait before next scan
     delay(5000);
 }

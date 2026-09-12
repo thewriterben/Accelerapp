@@ -140,10 +140,10 @@ DashboardData data;
 void setupDashboard() {
     // Initialize display
     setupDisplay();
-    
+
     // Connect to WiFi
     connectWiFi();
-    
+
     // Draw dashboard layout
     drawDashboard();
 }
@@ -151,12 +151,12 @@ void setupDashboard() {
 void connectWiFi() {
     tft.setCursor(10, 100);
     tft.print("Connecting WiFi...");
-    
+
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
     }
-    
+
     tft.fillScreen(ILI9341_BLACK);
     tft.setCursor(10, 100);
     tft.print("Connected!");
@@ -165,29 +165,29 @@ void connectWiFi() {
 
 void drawDashboard() {
     tft.fillScreen(ILI9341_BLACK);
-    
+
     // Title
     tft.setTextSize(2);
     tft.setTextColor(ILI9341_CYAN);
     tft.setCursor(10, 10);
     tft.println("IoT Dashboard");
-    
+
     // Sensor sections
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_WHITE);
-    
+
     // Temperature
     tft.setCursor(10, 50);
     tft.print("Temperature:");
-    
+
     // Humidity
     tft.setCursor(10, 90);
     tft.print("Humidity:");
-    
+
     // Light
     tft.setCursor(10, 130);
     tft.print("Light:");
-    
+
     // Status
     tft.setCursor(10, 170);
     tft.print("Status:");
@@ -199,19 +199,19 @@ void updateDashboard() {
     tft.setCursor(150, 50);
     tft.setTextColor(ILI9341_GREEN);
     tft.printf("%.1f C", data.temperature);
-    
+
     // Update humidity
     tft.fillRect(150, 90, 100, 16, ILI9341_BLACK);
     tft.setCursor(150, 90);
     tft.setTextColor(ILI9341_BLUE);
     tft.printf("%.1f %%", data.humidity);
-    
+
     // Update light
     tft.fillRect(150, 130, 100, 16, ILI9341_BLACK);
     tft.setCursor(150, 130);
     tft.setTextColor(ILI9341_YELLOW);
     tft.printf("%d", data.lightLevel);
-    
+
     // Update status
     tft.fillRect(150, 170, 100, 16, ILI9341_BLACK);
     tft.setCursor(150, 170);
@@ -225,10 +225,10 @@ void loop() {
     data.humidity = readHumidity();
     data.lightLevel = readLightLevel();
     data.deviceStatus = true;
-    
+
     // Update display
     updateDashboard();
-    
+
     delay(2000);
 }
 """
@@ -256,14 +256,14 @@ const int NUM_SENSORS = sizeof(sensors) / sizeof(sensors[0]);
 
 void setupSensorDisplay() {
     setupDisplay();
-    
+
     // Draw layout
     tft.fillScreen(ILI9341_BLACK);
     tft.setTextSize(2);
     tft.setTextColor(ILI9341_CYAN);
     tft.setCursor(10, 10);
     tft.println("Sensor Monitor");
-    
+
     // Draw sensor labels
     int y = 50;
     for (int i = 0; i < NUM_SENSORS; i++) {
@@ -280,13 +280,13 @@ void updateSensorDisplay() {
     for (int i = 0; i < NUM_SENSORS; i++) {
         // Clear old value
         tft.fillRect(150, y, 150, 20, ILI9341_BLACK);
-        
+
         // Draw new value
         tft.setTextSize(2);
         tft.setTextColor(sensors[i].color);
         tft.setCursor(150, y);
         tft.printf("%.1f %s", sensors[i].value, sensors[i].unit);
-        
+
         y += 40;
     }
 }
@@ -297,10 +297,10 @@ void loop() {
     sensors[1].value = readHumidity();
     sensors[2].value = readPressure();
     sensors[3].value = readLightLevel();
-    
+
     // Update display
     updateSensorDisplay();
-    
+
     delay(1000);
 }
 """
@@ -334,7 +334,7 @@ WeatherData weather;
 void setupWeatherStation() {
     setupDisplay();
     connectWiFi();
-    
+
     drawWeatherUI();
 }
 
@@ -342,24 +342,24 @@ void connectWiFi() {
     tft.setCursor(10, 100);
     tft.setTextSize(1);
     tft.print("Connecting to WiFi...");
-    
+
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
     }
-    
+
     tft.fillScreen(ILI9341_BLACK);
 }
 
 void drawWeatherUI() {
     tft.fillScreen(ILI9341_BLACK);
-    
+
     // Title
     tft.setTextSize(2);
     tft.setTextColor(ILI9341_CYAN);
     tft.setCursor(10, 10);
     tft.print("Weather Station");
-    
+
     // City
     tft.setTextSize(1);
     tft.setCursor(10, 35);
@@ -369,18 +369,18 @@ void drawWeatherUI() {
 void fetchWeather() {
     if (WiFi.status() == WL_CONNECTED) {
         HTTPClient http;
-        
-        String url = String(API_URL) + "?q=" + CITY + 
+
+        String url = String(API_URL) + "?q=" + CITY +
                      "&appid=" + API_KEY + "&units=metric";
-        
+
         http.begin(url);
         int httpCode = http.GET();
-        
+
         if (httpCode == 200) {
             String payload = http.getString();
             parseWeatherData(payload);
         }
-        
+
         http.end();
     }
 }
@@ -388,7 +388,7 @@ void fetchWeather() {
 void parseWeatherData(String json) {
     DynamicJsonDocument doc(1024);
     deserializeJson(doc, json);
-    
+
     weather.description = doc["weather"][0]["description"].as<String>();
     weather.temperature = doc["main"]["temp"];
     weather.humidity = doc["main"]["humidity"];
@@ -399,36 +399,36 @@ void parseWeatherData(String json) {
 void updateWeatherDisplay() {
     // Clear data area
     tft.fillRect(0, 60, 320, 180, ILI9341_BLACK);
-    
+
     int y = 70;
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_WHITE);
-    
+
     // Description
     tft.setCursor(10, y);
     tft.print(weather.description);
     y += 30;
-    
+
     // Temperature
     tft.setCursor(10, y);
     tft.setTextColor(ILI9341_RED);
     tft.setTextSize(3);
     tft.printf("%.1f C", weather.temperature);
     y += 40;
-    
+
     // Humidity
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_BLUE);
     tft.setCursor(10, y);
     tft.printf("Humidity: %.0f%%", weather.humidity);
     y += 20;
-    
+
     // Pressure
     tft.setTextColor(ILI9341_GREEN);
     tft.setCursor(10, y);
     tft.printf("Pressure: %d hPa", weather.pressure);
     y += 20;
-    
+
     // Wind
     tft.setTextColor(ILI9341_YELLOW);
     tft.setCursor(10, y);

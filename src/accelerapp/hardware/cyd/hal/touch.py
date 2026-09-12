@@ -215,11 +215,11 @@ void setupTouch() {{
 bool getTouchPoint(int16_t* x, int16_t* y) {{
     if (touch.touched()) {{
         TS_Point p = touch.getPoint();
-        
+
         // Map raw coordinates to display coordinates
         *x = map(p.x, TOUCH_X_MIN, TOUCH_X_MAX, 0, 320);
         *y = map(p.y, TOUCH_Y_MIN, TOUCH_Y_MAX, 0, 240);
-        
+
         return true;
     }}
     return false;
@@ -257,11 +257,11 @@ void xpt2046_init() {{
     // Configure CS pin
     gpio_set_direction(TOUCH_CS_PIN, GPIO_MODE_OUTPUT);
     gpio_set_level(TOUCH_CS_PIN, 1);
-    
+
     // Configure IRQ pin
     gpio_set_direction(TOUCH_IRQ_PIN, GPIO_MODE_INPUT);
     gpio_set_pull_mode(TOUCH_IRQ_PIN, GPIO_PULLUP_ONLY);
-    
+
     // Configure SPI device
     spi_device_interface_config_t devcfg = {{
         .clock_speed_hz = {self.config.spi_frequency},
@@ -269,7 +269,7 @@ void xpt2046_init() {{
         .spics_io_num = TOUCH_CS_PIN,
         .queue_size = 1,
     }};
-    
+
     spi_bus_add_device(SPI2_HOST, &devcfg, &touch_spi_handle);
 }}
 
@@ -313,7 +313,7 @@ def setup_touch():
         polarity=0,
         phase=0
     )
-    
+
     # Initialize touch controller
     touch = xpt2046.Touch(
         spi,
@@ -322,10 +322,10 @@ def setup_touch():
         width=320,
         height=240
     )
-    
+
     # Set calibration
     touch.calibrate(TOUCH_X_MIN, TOUCH_X_MAX, TOUCH_Y_MIN, TOUCH_Y_MAX)
-    
+
     return touch
 
 def get_touch_point(touch):

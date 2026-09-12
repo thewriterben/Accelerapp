@@ -112,7 +112,7 @@ class FreeRTOSTaskGenerator:
 
         lines = [
             f"    /* Create {task_name} task */",
-            f"    xTaskCreate(",
+            "    xTaskCreate(",
             f"        {task_name}_task,",
             f'        "{task_name}",',
             f"        {stack_size},",

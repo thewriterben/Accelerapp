@@ -85,19 +85,19 @@ class {library_name} {{
 public:
     {library_name}();
     ~{library_name}();
-    
+
     // Initialize hardware
     bool begin();
-    
+
     // Main update loop
     void update();
-    
+
     // Hardware control methods
     void digitalWrite(uint8_t pin, uint8_t value);
     int digitalRead(uint8_t pin);
     void analogWrite(uint8_t pin, int value);
     int analogRead(uint8_t pin);
-    
+
 private:
     bool _initialized;
 }};
@@ -132,7 +132,7 @@ bool {library_name}::begin() {{
     if (_initialized) {{
         return true;
     }}
-    
+
     // Initialize hardware
     _initialized = true;
     return true;
@@ -142,7 +142,7 @@ void {library_name}::update() {{
     if (!_initialized) {{
         return;
     }}
-    
+
     // Update loop
 }}
 
@@ -184,7 +184,7 @@ int {library_name}::analogRead(uint8_t pin) {{
 
 void setup() {{
     Serial.begin(9600);
-    
+
     if (device.begin()) {{
         Serial.println("{library_name} initialized successfully");
     }} else {{
@@ -194,7 +194,7 @@ void setup() {{
 
 void loop() {{
     device.update();
-    
+
     // Example usage
     device.digitalWrite(LED_BUILTIN, HIGH);
     delay(1000);
