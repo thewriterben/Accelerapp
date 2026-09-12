@@ -70,7 +70,6 @@ class FirmwareAgent(BaseAgent):
         Returns:
             Generated firmware
         """
-        platform = spec.get("platform", "arduino")
         task_type = spec.get("task_type", "generate")
 
         if task_type == "generate":
@@ -93,7 +92,6 @@ class FirmwareAgent(BaseAgent):
             Generated firmware code
         """
         platform = spec.get("platform", "arduino")
-        peripherals = spec.get("peripherals", [])
 
         # Use platform-specific generation
         from ..platforms import get_platform

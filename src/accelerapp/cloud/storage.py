@@ -447,7 +447,7 @@ class CloudStorageService:
                             results["synced"].append(artifact_id)
                         else:
                             results["failed"].append(artifact_id)
-                    except Exception as e:
+                    except Exception:
                         results["failed"].append(str(file_path))
 
         elif direction == "download":

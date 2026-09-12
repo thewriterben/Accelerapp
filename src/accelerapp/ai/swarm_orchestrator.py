@@ -277,7 +277,7 @@ class AgentSwarmOrchestrator:
 
         for i, subtask_spec in enumerate(subtasks):
             task_id = f"{coordination_id}_subtask_{i}"
-            task = self.submit_task(
+            self.submit_task(
                 task_id=task_id,
                 task_type=subtask_spec.get("type", "generic"),
                 data=subtask_spec.get("data", {}),

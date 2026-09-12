@@ -70,7 +70,6 @@ class AIAgent(BaseAgent):
             Optimization results
         """
         code = spec.get("code", "")
-        platform = spec.get("platform", "generic")
 
         # AI optimization patterns
         optimizations = []
@@ -119,7 +118,6 @@ class AIAgent(BaseAgent):
         Returns:
             Analysis results
         """
-        components = spec.get("components", [])
         peripherals = spec.get("peripherals", [])
 
         analysis = {
@@ -211,7 +209,6 @@ class AIAgent(BaseAgent):
             Pattern suggestions
         """
         peripherals = spec.get("peripherals", [])
-        platform = spec.get("platform", "arduino")
 
         patterns = []
 

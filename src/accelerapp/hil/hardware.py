@@ -174,7 +174,7 @@ class DeviceAdapter:
             time.sleep(duration)
             self.hardware.digital_write(pin, False)
             return True
-        except:
+        except Exception:
             return False
 
     def test_button(self, pin: int, timeout: float = 5.0) -> Optional[bool]:
@@ -194,7 +194,7 @@ class DeviceAdapter:
         try:
             self.hardware.set_pin_mode(pin, PinMode.INPUT_PULLUP)
             return self.hardware.digital_read(pin)
-        except:
+        except Exception:
             return None
 
     def test_analog_sensor(self, pin: int) -> Optional[int]:
@@ -212,7 +212,7 @@ class DeviceAdapter:
 
         try:
             return self.hardware.analog_read(pin)
-        except:
+        except Exception:
             return None
 
     def get_device_info(self) -> Dict[str, Any]:

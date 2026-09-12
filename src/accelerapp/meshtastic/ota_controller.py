@@ -138,8 +138,6 @@ class OTAController:
         # Simulate WiFi OTA update process
         # In real implementation, would use HTTP POST to device
 
-        ip_address = device_info.get("ip_address") if device_info else "192.168.1.100"
-
         # Simulate update steps
         steps = [
             ("connecting", 10),
@@ -182,8 +180,6 @@ class OTAController:
         # Simulate BLE OTA update process
         # In real implementation, would use BLE library
 
-        mac_address = device_info.get("mac_address") if device_info else "00:00:00:00:00:00"
-
         # Simulate update
         progress.status = "uploading"
         total_bytes = progress.total_bytes
@@ -214,8 +210,6 @@ class OTAController:
 
         # Simulate serial flashing
         # In real implementation, would use esptool or nrfutil
-
-        port = device_info.get("port") if device_info else "/dev/ttyUSB0"
 
         # Simulate update
         total_bytes = progress.total_bytes

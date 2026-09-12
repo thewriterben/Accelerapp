@@ -113,7 +113,6 @@ class PeripheralConflictResolver:
         Returns:
             List of alternative configurations
         """
-        peripheral_type = peripheral_config.get("type")
         alternatives = []
 
         # Platform-specific alternative suggestions
