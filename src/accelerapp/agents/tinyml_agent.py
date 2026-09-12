@@ -267,7 +267,6 @@ class TinyMLAgent(BaseAgent):
         Returns:
             Conversion results and optimized model
         """
-        model_path = spec.get("model_path", "")
         optimization_level = spec.get("optimization_level", "standard")
 
         conversion_steps = [

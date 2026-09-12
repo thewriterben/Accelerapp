@@ -286,10 +286,10 @@ Generate comprehensive tests covering edge cases and error conditions.""",
         if not base_prompt:
             return None
 
-        template = self.templates[template_name]
-
-        # Add optimization hints
-        hints = "\n\n".join([f"- {hint}" for hint in template.optimization_hints])
+        # NOTE: the template's own `optimization_hints` are not applied here. The
+        # line that built them from this template discarded the result, so the
+        # hints have never reached a prompt; what follows appends a fixed sentence
+        # per goal instead. Recorded rather than guessed at -- see the issue.
 
         if optimization_goal == "clarity":
             optimized = (

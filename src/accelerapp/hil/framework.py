@@ -127,7 +127,7 @@ class TestCase:
         finally:
             try:
                 self.teardown()
-            except:
+            except Exception:
                 pass
 
     def execute(self):

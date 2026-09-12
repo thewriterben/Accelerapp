@@ -109,7 +109,6 @@ class BLEStack:
         Returns:
             Generated C code
         """
-        device_name = adv_config.get("device_name", "Nordic_Device")
         interval = adv_config.get("interval", 300)  # in units of 0.625ms
         timeout = adv_config.get("timeout", 180)  # seconds
 

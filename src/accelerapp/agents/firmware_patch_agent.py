@@ -239,7 +239,6 @@ class FirmwarePatchAgent(BaseAgent):
             Available updates
         """
         device_id = spec.get("device_id")
-        device_type = spec.get("device_type", "generic")
 
         if not device_id:
             return {"status": "error", "message": "device_id is required"}
@@ -424,7 +423,7 @@ class FirmwarePatchAgent(BaseAgent):
                 patch += 1
 
             return f"{major}.{minor}.{patch}"
-        except:
+        except Exception:
             return "1.0.1"
 
     def get_capabilities(self) -> List[str]:
