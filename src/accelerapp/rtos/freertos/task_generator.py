@@ -27,8 +27,6 @@ class FreeRTOSTaskGenerator:
             Generated C code for task function
         """
         task_name = task_config.get("name", "task")
-        task_config.get("priority", "tskIDLE_PRIORITY")
-        task_config.get("stack_size", 128)
         period_ms = task_config.get("period_ms", 1000)
 
         lines = [
