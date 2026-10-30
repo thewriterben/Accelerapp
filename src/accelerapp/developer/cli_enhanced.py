@@ -5,7 +5,6 @@ Provides interactive terminal interface with progress bars and wizards.
 
 from typing import Any, Dict, List, Optional
 
-from rich import print as rprint
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
@@ -26,12 +25,12 @@ class EnhancedCLI:
     def show_banner(self) -> None:
         """Display application banner."""
         banner = """
-  █████╗  ██████╗ ██████╗███████╗██╗     ███████╗██████╗  █████╗ ██████╗ ██████╗ 
+  █████╗  ██████╗ ██████╗███████╗██╗     ███████╗██████╗  █████╗ ██████╗ ██████╗
  ██╔══██╗██╔════╝██╔════╝██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗
  ███████║██║     ██║     █████╗  ██║     █████╗  ██████╔╝███████║██████╔╝██████╔╝
- ██╔══██║██║     ██║     ██╔══╝  ██║     ██╔══╝  ██╔══██╗██╔══██║██╔═══╝ ██╔═══╝ 
- ██║  ██║╚██████╗╚██████╗███████╗███████╗███████╗██║  ██║██║  ██║██║     ██║     
- ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝     
+ ██╔══██║██║     ██║     ██╔══╝  ██║     ██╔══╝  ██╔══██╗██╔══██║██╔═══╝ ██╔═══╝
+ ██║  ██║╚██████╗╚██████╗███████╗███████╗███████╗██║  ██║██║  ██║██║     ██║
+ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝
         """
         self.console.print(banner, style="bold cyan")
         self.console.print(

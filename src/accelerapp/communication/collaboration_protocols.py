@@ -5,7 +5,7 @@ Defines rules and patterns for agent collaboration.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 
 
 class ProtocolType(Enum):

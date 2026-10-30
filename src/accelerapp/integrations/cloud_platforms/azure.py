@@ -189,17 +189,17 @@ stages:
       inputs:
         versionSpec: '$(pythonVersion)'
       displayName: 'Use Python $(pythonVersion)'
-    
+
     - script: |
         python -m pip install --upgrade pip
         pip install -e .[dev]
       displayName: 'Install dependencies'
-    
+
     - script: |
         pytest tests/ --junitxml=test-results.xml
         black --check src/
       displayName: 'Run tests'
-    
+
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: 'test-results.xml'
@@ -216,7 +216,7 @@ stages:
     - script: |
         accelerapp generate --platform {platform} --config examples/config.yaml
       displayName: 'Generate {platform} firmware'
-    
+
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: 'output/'

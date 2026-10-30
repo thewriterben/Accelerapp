@@ -2,7 +2,7 @@
 Network utilities for ESP32-CAM.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 class NetworkHelper:

@@ -316,7 +316,7 @@ class CoreServicesManager:
                     "Type": "AWS::ElastiCache::ReplicationGroup",
                     "Properties": {
                         "ReplicationGroupId": config.cluster_name,
-                        "ReplicationGroupDescription": f"Redis cluster for Accelerapp",
+                        "ReplicationGroupDescription": "Redis cluster for Accelerapp",
                         "Engine": "redis",
                         "EngineVersion": config.engine_version,
                         "CacheNodeType": config.node_type,

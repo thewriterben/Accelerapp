@@ -4,7 +4,7 @@ Provides frame differencing, PIR integration, and QR code scanning.
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
@@ -236,14 +236,14 @@ public:
     void setThreshold(int threshold);
     void setSensitivity(int sensitivity);
     int getMotionLevel();
-    
+
 private:
     uint8_t* previousFrame;
     int frameWidth;
     int frameHeight;
     int threshold;
     int motionLevel;
-    
+
     int compareFrames(uint8_t* frame1, uint8_t* frame2);
 }};
 
@@ -257,8 +257,8 @@ private:
 #include "motion_detection.h"
 #include <stdlib.h>
 
-MotionDetector::MotionDetector() 
-    : previousFrame(nullptr), frameWidth(0), frameHeight(0), 
+MotionDetector::MotionDetector()
+    : previousFrame(nullptr), frameWidth(0), frameHeight(0),
       threshold(MOTION_THRESHOLD), motionLevel(0) {}
 
 bool MotionDetector::begin() {
@@ -269,7 +269,7 @@ bool MotionDetector::detectMotion(camera_fb_t* frame) {
     if (!frame || frame->format != PIXFORMAT_GRAYSCALE) {
         return false;
     }
-    
+
     if (previousFrame == nullptr) {
         frameWidth = frame->width;
         frameHeight = frame->height;
@@ -277,10 +277,10 @@ bool MotionDetector::detectMotion(camera_fb_t* frame) {
         memcpy(previousFrame, frame->buf, frame->len);
         return false;
     }
-    
+
     motionLevel = compareFrames(previousFrame, frame->buf);
     memcpy(previousFrame, frame->buf, frame->len);
-    
+
     return motionLevel > threshold;
 }
 
@@ -301,14 +301,14 @@ int MotionDetector::getMotionLevel() {
 int MotionDetector::compareFrames(uint8_t* frame1, uint8_t* frame2) {
     int diffSum = 0;
     int numPixels = frameWidth * frameHeight;
-    
+
     for (int i = 0; i < numPixels; i++) {
         int diff = abs(frame1[i] - frame2[i]);
         if (diff > threshold) {
             diffSum += diff;
         }
     }
-    
+
     return diffSum / numPixels;
 }
 """
@@ -385,7 +385,7 @@ public:
     bool begin();
     QRResult scan(camera_fb_t* frame);
     int getScanCount();
-    
+
 private:
     int scanCount;
 };
@@ -406,14 +406,14 @@ bool QRScanner::begin() {
 QRResult QRScanner::scan(camera_fb_t* frame) {
     QRResult result;
     result.found = false;
-    
+
     if (!frame) {
         return result;
     }
-    
+
     // Placeholder - would integrate with quirc or other QR library
     scanCount++;
-    
+
     return result;
 }
 

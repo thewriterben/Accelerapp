@@ -3,7 +3,7 @@ Code optimization agents for performance, memory, and security analysis.
 These agents provide automated code improvement suggestions.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .base_agent import BaseAgent
 
@@ -38,7 +38,6 @@ class PerformanceOptimizationAgent(BaseAgent):
             Analysis results and optimization suggestions
         """
         code = spec.get("code", "")
-        language = spec.get("language", "unknown")
 
         issues = []
         suggestions = []
@@ -174,7 +173,6 @@ class MemoryOptimizationAgent(BaseAgent):
             Analysis results and optimization suggestions
         """
         code = spec.get("code", "")
-        language = spec.get("language", "unknown")
         platform = spec.get("platform", "unknown")
 
         issues = []
@@ -328,7 +326,6 @@ class CodeQualityAgent(BaseAgent):
             Analysis results and quality suggestions
         """
         code = spec.get("code", "")
-        language = spec.get("language", "unknown")
 
         issues = []
         suggestions = []
@@ -491,7 +488,6 @@ class SecurityAnalysisAgent(BaseAgent):
             Security analysis results
         """
         code = spec.get("code", "")
-        language = spec.get("language", "unknown")
 
         vulnerabilities = []
         recommendations = []
@@ -670,7 +666,6 @@ class RefactoringAgent(BaseAgent):
             Refactoring suggestions
         """
         code = spec.get("code", "")
-        language = spec.get("language", "unknown")
 
         code_smells = []
         refactoring_suggestions = []

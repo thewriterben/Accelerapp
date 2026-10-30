@@ -6,7 +6,7 @@ Provides Prometheus-compatible metrics collection with thread safety.
 import threading
 import time
 from collections import deque
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 class Counter:

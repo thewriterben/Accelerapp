@@ -4,7 +4,7 @@ Saga pattern implementation for distributed transactions.
 
 import asyncio
 import logging
-from abc import ABC, abstractmethod
+from abc import ABC
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 

@@ -100,7 +100,7 @@ class CircuitBreaker:
             result = func(*args, **kwargs)
             self._on_success()
             return result
-        except self._expected_exception as e:
+        except self._expected_exception:
             self._on_failure()
             raise
 

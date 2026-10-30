@@ -3,7 +3,7 @@ BLE stack integration for Nordic nRF platforms.
 Provides BLE service generation and SoftDevice configuration.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 
 class BLEStack:
@@ -69,8 +69,8 @@ class BLEStack:
                 f"    ble_uuid.type = p_{service_name}->uuid_type;",
                 f"    ble_uuid.uuid = {service_name.upper()}_UUID;",
                 "",
-                f"    err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,",
-                f"                                         &ble_uuid,",
+                "    err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,",
+                "                                         &ble_uuid,",
                 f"                                         &p_{service_name}->service_handle);",
                 "    VERIFY_SUCCESS(err_code);",
                 "",
@@ -109,7 +109,6 @@ class BLEStack:
         Returns:
             Generated C code
         """
-        device_name = adv_config.get("device_name", "Nordic_Device")
         interval = adv_config.get("interval", 300)  # in units of 0.625ms
         timeout = adv_config.get("timeout", 180)  # seconds
 
@@ -125,7 +124,7 @@ class BLEStack:
             "",
             "    memset(&init, 0, sizeof(init));",
             "",
-            f"    init.advdata.name_type = BLE_ADVDATA_FULL_NAME;",
+            "    init.advdata.name_type = BLE_ADVDATA_FULL_NAME;",
             "    init.advdata.include_appearance = true;",
             "    init.advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;",
             "",
@@ -172,7 +171,7 @@ class BLEStack:
             "",
             "    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);",
             "",
-            f"    err_code = sd_ble_gap_device_name_set(&sec_mode,",
+            "    err_code = sd_ble_gap_device_name_set(&sec_mode,",
             f'                                           (const uint8_t *)"{device_name}",',
             f'                                           strlen("{device_name}"));',
             "    APP_ERROR_CHECK(err_code);",

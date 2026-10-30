@@ -3,7 +3,7 @@ Firmware Patch Agent for automatic firmware patching based on analytics.
 """
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .base_agent import BaseAgent
 
@@ -239,7 +239,6 @@ class FirmwarePatchAgent(BaseAgent):
             Available updates
         """
         device_id = spec.get("device_id")
-        device_type = spec.get("device_type", "generic")
 
         if not device_id:
             return {"status": "error", "message": "device_id is required"}
@@ -424,7 +423,7 @@ class FirmwarePatchAgent(BaseAgent):
                 patch += 1
 
             return f"{major}.{minor}.{patch}"
-        except:
+        except Exception:
             return "1.0.1"
 
     def get_capabilities(self) -> List[str]:

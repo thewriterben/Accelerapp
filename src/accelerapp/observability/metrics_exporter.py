@@ -4,7 +4,6 @@ Integrates with existing metrics collector to export to Prometheus.
 """
 
 import time
-from typing import Optional
 
 
 class PrometheusMetricsExporter:

@@ -3,11 +3,10 @@ Automated backup and disaster recovery system.
 Implements backup scheduling, retention policies, and recovery procedures.
 """
 
-import json
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 
 class BackupType(Enum):

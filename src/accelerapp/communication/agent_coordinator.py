@@ -6,7 +6,7 @@ Manages agent registration, task routing, and collaboration strategies.
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class CoordinationStrategy(Enum):

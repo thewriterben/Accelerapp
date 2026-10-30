@@ -2,8 +2,7 @@
 Pydantic configuration models for Accelerapp v2.0.
 """
 
-import os
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, validator
 

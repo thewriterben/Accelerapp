@@ -6,7 +6,7 @@ Supports offline code generation using Ollama models.
 import json
 import urllib.error
 import urllib.request
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .local_llm_service import LLMProvider
 

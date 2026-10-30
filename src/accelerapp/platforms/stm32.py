@@ -120,7 +120,7 @@ class STM32Platform(BasePlatform):
         """Generate STM32 main.c file."""
         lines = [
             f"// Auto-generated STM32 firmware for {spec.get('device_name', 'Unknown')}",
-            f"// Platform: STM32",
+            "// Platform: STM32",
             "",
             "#include <stdint.h>",
             "#include <stdbool.h>",

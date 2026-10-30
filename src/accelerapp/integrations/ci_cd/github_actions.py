@@ -54,20 +54,20 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python ${{{{ matrix.python-version }}}}
       uses: actions/setup-python@v4
       with:
         python-version: ${{{{ matrix.python-version }}}}
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -e .[dev]
-    
+
     - name: Run tests
       run: |
 """
@@ -78,20 +78,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: test
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    
+
     - name: Generate firmware
       run: |
         pip install -e .
         accelerapp generate --config examples/config.yaml
-    
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -120,29 +120,29 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    
+
     - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip
         pip install build twine
-    
+
     - name: Build package
       run: python -m build
-    
+
     - name: Publish to PyPI
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{{{ secrets.PYPI_TOKEN }}}}
       run: twine upload dist/*
-    
+
     - name: Create GitHub Release Assets
       uses: actions/upload-release-asset@v1
       with:
@@ -183,28 +183,28 @@ jobs:
         workflow += """
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    
+
     - name: Install dependencies
       run: pip install -e .[dev]
-    
+
     - name: Generate firmware
       run: |
         accelerapp generate \\
           --platform ${{ matrix.platform }} \\
           --config examples/config.yaml
-    
+
     - name: Upload to hardware
       run: |
         # Custom hardware upload script
         python scripts/upload_firmware.py \\
           --platform ${{ matrix.platform }} \\
           --firmware output/firmware/
-    
+
     - name: Run HIL tests
       run: pytest tests/hil/ --platform ${{ matrix.platform }}
 """

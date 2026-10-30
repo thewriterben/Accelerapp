@@ -6,7 +6,7 @@ Provides performance optimization and resource management recommendations.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 
 class OptimizationGoal(Enum):

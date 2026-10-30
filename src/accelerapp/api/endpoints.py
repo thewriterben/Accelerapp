@@ -5,15 +5,21 @@ Provides HTTP interface to Accelerapp functionality.
 
 import json
 import logging
-from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from .rate_limiter import APIKeyManager, RateLimiter, RateLimitRule
 
 # HTTP server support is optional
+# Optional dependencies: these names are imported for re-export and are listed
+# in __all__ below. That __all__ is assigned (or extended) inside the same
+# try/except ImportError guard, and pyflakes only honours a plain top-level
+# __all__ -- so it reports these as unused. They are not; hence the markers.
 try:
     from http.server import BaseHTTPRequestHandler, HTTPServer
-    from urllib.parse import parse_qs, urlparse
+    from urllib.parse import (  # noqa: F401
+        parse_qs,
+        urlparse,
+    )
 
     HTTP_AVAILABLE = True
 except ImportError:

@@ -257,28 +257,28 @@ int readLightLevel() {{
 // System stats
 void getSystemStats() {{
     Serial.println("=== System Statistics ===");
-    
+
     // Temperature
     float temp = readTemperature();
     Serial.print("Temperature: ");
     Serial.print(temp);
     Serial.println(" C");
-    
+
     // Light level
     int light = readLightLevel();
     Serial.print("Light Level: ");
     Serial.println(light);
-    
+
     // Heap
     Serial.print("Free Heap: ");
     Serial.print(ESP.getFreeHeap());
     Serial.println(" bytes");
-    
+
     // CPU frequency
     Serial.print("CPU Frequency: ");
     Serial.print(ESP.getCpuFreqMHz());
     Serial.println(" MHz");
-    
+
     Serial.println("========================");
 }}
 
@@ -305,7 +305,7 @@ void sensors_init() {{
     temp_sensor_config_t temp_config = TEMP_SENSOR_CONFIG_DEFAULT(-10, 80);
     temp_sensor_install(&temp_config, &temp_sensor);
     temp_sensor_enable(temp_sensor);
-    
+
     // Initialize ADC for LDR
     adc1_config_width(ADC_WIDTH_BIT_12);
     adc1_config_channel_atten(LDR_ADC_CHANNEL, ADC_ATTEN_DB_11);

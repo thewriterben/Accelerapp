@@ -155,7 +155,7 @@ class RaspberryPiPicoPlatform(BasePlatform):
         """Generate MicroPython main.py file for Raspberry Pi Pico."""
         lines = [
             f"# Auto-generated MicroPython firmware for {spec.get('device_name', 'Unknown')}",
-            f"# Platform: Raspberry Pi Pico (RP2040)",
+            "# Platform: Raspberry Pi Pico (RP2040)",
             "",
             "from machine import Pin, PWM, ADC",
             "import time",
@@ -196,7 +196,7 @@ class RaspberryPiPicoPlatform(BasePlatform):
 
             if ptype == "sensor":
                 lines.append(f"    value = {name}.read_u16()")
-                lines.append(f"    print('Sensor value:', value)")
+                lines.append("    print('Sensor value:', value)")
             elif ptype == "led":
                 lines.append(f"    {name}.value(1)")
                 lines.append("    time.sleep(1)")
@@ -220,7 +220,7 @@ class RaspberryPiPicoPlatform(BasePlatform):
         """Generate C main.c file for Raspberry Pi Pico."""
         lines = [
             f"// Auto-generated C firmware for {spec.get('device_name', 'Unknown')}",
-            f"// Platform: Raspberry Pi Pico (RP2040)",
+            "// Platform: Raspberry Pi Pico (RP2040)",
             "",
             "#include <stdio.h>",
             '#include "pico/stdlib.h"',
@@ -309,8 +309,8 @@ class RaspberryPiPicoPlatform(BasePlatform):
                 if 26 <= pin <= 28:
                     adc_channel = pin - 26
                     lines.append(f"        adc_select_input({adc_channel});")
-                    lines.append(f"        uint16_t result = adc_read();")
-                    lines.append(f'        printf("Sensor value: %d\\n", result);')
+                    lines.append("        uint16_t result = adc_read();")
+                    lines.append('        printf("Sensor value: %d\\n", result);')
 
         lines.extend(
             [

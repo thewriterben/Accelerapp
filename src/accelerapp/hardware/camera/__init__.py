@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
+from .esp32_cam.streaming import StreamConfig
+
 
 class CameraResolution(Enum):
     """Camera resolution options."""
@@ -180,7 +182,6 @@ class ESP32Camera:
 
 
 # Streaming components
-from .esp32_cam.streaming import StreamConfig
 
 
 class StreamingServer:

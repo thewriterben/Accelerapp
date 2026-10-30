@@ -166,9 +166,9 @@ class RaspberryPiPlatform(BasePlatform):
     def _generate_pi_python_main(self, spec: Dict[str, Any]) -> str:
         """Generate Python main.py file for Raspberry Pi."""
         lines = [
-            f"#!/usr/bin/env python3",
+            "#!/usr/bin/env python3",
             f"# Auto-generated Python code for {spec.get('device_name', 'Unknown')}",
-            f"# Platform: Raspberry Pi",
+            "# Platform: Raspberry Pi",
             "",
             "import time",
             "import signal",
@@ -268,7 +268,7 @@ class RaspberryPiPlatform(BasePlatform):
                 has_content = True
             elif ptype == "button":
                 lines.append(f"    if GPIO.input({name}_PIN) == GPIO.LOW:")
-                lines.append(f"        print('Button pressed')")
+                lines.append("        print('Button pressed')")
                 has_content = True
 
         if not has_content:
@@ -295,7 +295,7 @@ class RaspberryPiPlatform(BasePlatform):
         """Generate C++ main.cpp file for Raspberry Pi."""
         lines = [
             f"// Auto-generated C++ code for {spec.get('device_name', 'Unknown')}",
-            f"// Platform: Raspberry Pi",
+            "// Platform: Raspberry Pi",
             "",
             "#include <iostream>",
             "#include <signal.h>",
@@ -367,7 +367,7 @@ class RaspberryPiPlatform(BasePlatform):
                 lines.append("        delay(1000);")
             elif ptype == "button":
                 lines.append(f"        if (digitalRead({name}_PIN) == LOW) {{")
-                lines.append(f'            cout << "Button pressed" << endl;')
+                lines.append('            cout << "Button pressed" << endl;')
                 lines.append("        }")
 
         lines.extend(

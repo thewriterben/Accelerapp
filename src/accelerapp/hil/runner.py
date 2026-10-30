@@ -122,7 +122,7 @@ class TestRunner:
 <body>
     <h1>HIL Test Report</h1>
     <p>Generated: {report['timestamp']}</p>
-    
+
     <div class="summary">
         <h2>Summary</h2>
         <p>Total Tests: {summary['total']}</p>
@@ -131,7 +131,7 @@ class TestRunner:
         <p class="error">Errors: {summary['error']}</p>
         <p>Pass Rate: {summary['pass_rate']:.1f}%</p>
     </div>
-    
+
     <h2>Test Results</h2>
     <table>
         <tr>

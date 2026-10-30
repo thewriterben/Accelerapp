@@ -160,12 +160,12 @@ class TwinVisualizer:
         state = twin.get_current_state()
 
         lines = [
-            f"Digital Twin Status Report",
-            f"=" * 50,
+            "Digital Twin Status Report",
+            "=" * 50,
             f"Device ID: {device_id}",
             f"Connected: {state.get('connected', False)}",
-            f"",
-            f"Digital Pin States:",
+            "",
+            "Digital Pin States:",
         ]
 
         pin_states = state.get("pin_states", {})

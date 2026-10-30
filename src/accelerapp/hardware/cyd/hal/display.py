@@ -7,7 +7,7 @@ commonly used in ESP32 Cheap Yellow Display boards.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
 
 class DisplayRotation(Enum):
@@ -243,10 +243,10 @@ void setupDisplay() {{
     // Initialize backlight
     pinMode(TFT_BL, OUTPUT);
     digitalWrite(TFT_BL, HIGH);
-    
+
     // Initialize SPI
     SPI.begin(TFT_SCLK, TFT_MISO, TFT_MOSI, TFT_CS);
-    
+
     // Initialize display
     tft.begin();
     tft.setRotation({self.config.rotation.value});
@@ -279,7 +279,7 @@ void ili9341_init() {{
     gpio_set_direction(TFT_DC_PIN, GPIO_MODE_OUTPUT);
     gpio_set_direction(TFT_BL_PIN, GPIO_MODE_OUTPUT);
     gpio_set_level(TFT_BL_PIN, 1);
-    
+
     // Configure SPI bus
     spi_bus_config_t buscfg = {{
         .mosi_io_num = TFT_MOSI_PIN,
@@ -289,14 +289,14 @@ void ili9341_init() {{
         .quadhd_io_num = -1,
         .max_transfer_sz = {self.config.width * self.config.height * 2}
     }};
-    
+
     spi_device_interface_config_t devcfg = {{
         .clock_speed_hz = {self.config.spi_frequency},
         .mode = 0,
         .spics_io_num = TFT_CS_PIN,
         .queue_size = 7,
     }};
-    
+
     spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO);
     spi_bus_add_device(SPI2_HOST, &devcfg, &spi_handle);
 }}
@@ -321,7 +321,7 @@ def setup_display():
     # Initialize backlight
     backlight = Pin(TFT_BL, Pin.OUT)
     backlight.value(1)
-    
+
     # Initialize SPI
     spi = SPI(
         2,
@@ -332,7 +332,7 @@ def setup_display():
         mosi=Pin(TFT_MOSI),
         miso=Pin(TFT_MISO)
     )
-    
+
     # Initialize display
     display = ili9341.Display(
         spi,
@@ -340,7 +340,7 @@ def setup_display():
         cs=Pin(TFT_CS),
         rotation={self.config.rotation.value}
     )
-    
+
     return display, backlight
 """
         return code.strip()

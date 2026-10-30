@@ -6,8 +6,6 @@ import logging
 import traceback
 from typing import Any, Callable, Dict, List, Optional, Type
 
-from .hierarchy import AccelerappException
-
 logger = logging.getLogger(__name__)
 
 

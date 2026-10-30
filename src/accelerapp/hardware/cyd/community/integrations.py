@@ -186,7 +186,7 @@ void setupMarauder() {
     // Initialize WiFi in promiscuous mode
     WiFi.mode(WIFI_MODE_STA);
     esp_wifi_set_promiscuous(true);
-    
+
     // Setup display for results
     tft.fillScreen(ILI9341_BLACK);
     tft.setCursor(0, 0);
@@ -201,11 +201,11 @@ void scanWiFi() {
     tft.fillScreen(ILI9341_BLACK);
     tft.setCursor(0, 0);
     tft.printf("Found %d networks\\n", n);
-    
+
     for (int i = 0; i < n && i < 10; i++) {
-        tft.printf("%d: %s (%d)\\n", 
-            i + 1, 
-            WiFi.SSID(i).c_str(), 
+        tft.printf("%d: %s (%d)\\n",
+            i + 1,
+            WiFi.SSID(i).c_str(),
             WiFi.RSSI(i)
         );
     }
@@ -241,7 +241,7 @@ MiningStats stats = {0};
 void setupNerdMiner() {
     // Connect to WiFi
     WiFi.begin("SSID", "PASSWORD");
-    
+
     // Display mining interface
     tft.fillScreen(ILI9341_BLACK);
     tft.setTextColor(ILI9341_ORANGE);
@@ -256,7 +256,7 @@ void displayMiningStats() {
     tft.setCursor(10, 60);
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_CYAN);
-    
+
     tft.printf("Hashrate: %u H/s\\n", stats.hashrate);
     tft.printf("Shares: %u\\n", stats.shares);
     tft.printf("Valid: %u\\n", stats.valids);
@@ -287,12 +287,12 @@ static lv_color_t buf[SCREEN_WIDTH * 10];
 void display_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
     uint32_t w = (area->x2 - area->x1 + 1);
     uint32_t h = (area->y2 - area->y1 + 1);
-    
+
     tft.startWrite();
     tft.setAddrWindow(area->x1, area->y1, w, h);
     tft.writePixels((uint16_t*)&color_p->full, w * h);
     tft.endWrite();
-    
+
     lv_disp_flush_ready(disp);
 }
 
@@ -310,10 +310,10 @@ void touch_read(lv_indev_drv_t *indev, lv_indev_data_t *data) {
 
 void setupLVGL() {
     lv_init();
-    
+
     // Initialize display driver
     lv_disp_draw_buf_init(&draw_buf, buf, NULL, SCREEN_WIDTH * 10);
-    
+
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
     disp_drv.hor_res = SCREEN_WIDTH;
@@ -321,7 +321,7 @@ void setupLVGL() {
     disp_drv.flush_cb = display_flush;
     disp_drv.draw_buf = &draw_buf;
     lv_disp_drv_register(&disp_drv);
-    
+
     // Initialize touch driver
     static lv_indev_drv_t indev_drv;
     lv_indev_drv_init(&indev_drv);
@@ -335,7 +335,7 @@ void createLVGLDemo() {
     lv_obj_t *btn = lv_btn_create(lv_scr_act());
     lv_obj_set_size(btn, 120, 50);
     lv_obj_center(btn);
-    
+
     lv_obj_t *label = lv_label_create(btn);
     lv_label_set_text(label, "Click Me!");
     lv_obj_center(label);

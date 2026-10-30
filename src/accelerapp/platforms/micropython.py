@@ -111,7 +111,7 @@ class MicroPythonPlatform(BasePlatform):
         """Generate MicroPython main.py file."""
         lines = [
             f"# Auto-generated MicroPython firmware for {spec.get('device_name', 'Unknown')}",
-            f"# Platform: MicroPython",
+            "# Platform: MicroPython",
             "",
             "import machine",
             "import time",
@@ -180,7 +180,7 @@ class MicroPythonPlatform(BasePlatform):
 
             if ptype == "sensor":
                 lines.append(f"    value = {name}.read()")
-                lines.append(f"    print('Sensor value:', value)")
+                lines.append("    print('Sensor value:', value)")
             elif ptype == "led":
                 lines.append(f"    {name}.value(1)")
                 lines.append("    time.sleep(1)")

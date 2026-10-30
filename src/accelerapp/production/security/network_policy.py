@@ -6,7 +6,7 @@ Implements Kubernetes-style network policies with enforcement capabilities.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 
 class PolicyAction(Enum):

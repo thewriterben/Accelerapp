@@ -116,11 +116,11 @@ peripherals:
   - type: "led"
     pin: 13
     description: "Status LED"
-  
+
   - type: "sensor"
     pin: "A0"
     description: "Analog sensor input"
-  
+
   - type: "button"
     pin: 2
     description: "User input button"

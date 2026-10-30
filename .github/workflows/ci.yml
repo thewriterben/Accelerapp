@@ -91,14 +91,29 @@ jobs:
       run: |
         isort --check-only --profile black --line-length=100 src/
     
-    # Still red, and deliberately left so. black + isort took this from 4,728
-    # findings to 519; the remainder are not formatting but code: 123 unused
-    # imports, 98 f-strings with no placeholders, 245 whitespace-only lines inside
-    # docstrings (black does not touch string contents), 23 unused locals, 6 bare
-    # excepts, 1 shadowed name, 1 misplaced import. Fixing those is a judgement
-    # call per finding, not a reformat, so it is its own change rather than
-    # smuggled into this one -- and an ignore-list that hid them would be worse
-    # than the red.
+    # 4,728 -> 519 (black + isort) -> 2. The 519 were not formatting but code,
+    # and were fixed as code in three passes: 365 mechanical ones, then 100 dead
+    # imports with 21 re-exports marked `# noqa: F401` because a package's
+    # __init__ re-exporting a name is not an unused import, then the 31 that were
+    # judgement calls -- among them one real runtime bug, a second
+    # `class WebSocketClient` shadowing the first in the same module.
+    #
+    # The last 2 were one line, `src/accelerapp/core/__init__.py:58`, and three
+    # attempts at placing a `# noqa` there failed the same way -- isort regroups
+    # the line and strips the marker. The fix was not a fourth placement. That
+    # file's `__all__` was a plain list followed by a second block that read
+    #
+    #     try: __all__.extend([...]); except NameError: pass
+    #
+    # as though the v2.0 names were exported conditionally. They were not: the
+    # list holds string literals, so the extend cannot raise NameError and the
+    # guard had never once fired. pyflakes honours a plain module-level
+    # `__all__` and not one built inside a `try`, so folding the two together
+    # took the count to 0 and changed nothing at runtime -- 31 exported names
+    # before and after, verified by importing both revisions.
+    #
+    # No ignore-list entry was added. `--extend-ignore=F401` would have hidden
+    # every genuine unused import in the tree to silence two that were not.
     - name: Lint with flake8
       run: |
         flake8 src/ --max-line-length=100 --extend-ignore=E203,E266,E501,W503 --statistics

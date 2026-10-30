@@ -146,7 +146,7 @@ class ESP32Platform(BasePlatform):
         """Generate ESP32 main.cpp file."""
         lines = [
             f"// Auto-generated ESP32 firmware for {spec.get('device_name', 'Unknown')}",
-            f"// Platform: ESP32",
+            "// Platform: ESP32",
             "",
             "#include <Arduino.h>",
             '#include "config.h"',
@@ -216,12 +216,12 @@ class ESP32Platform(BasePlatform):
 
             if ptype == "sensor":
                 lines.append(f"    int sensorValue = analogRead({pin});")
-                lines.append(f"    Serial.println(sensorValue);")
+                lines.append("    Serial.println(sensorValue);")
             elif ptype == "led":
                 lines.append(f"    digitalWrite({pin}, HIGH);")
-                lines.append(f"    delay(1000);")
+                lines.append("    delay(1000);")
                 lines.append(f"    digitalWrite({pin}, LOW);")
-                lines.append(f"    delay(1000);")
+                lines.append("    delay(1000);")
 
         lines.extend(
             [

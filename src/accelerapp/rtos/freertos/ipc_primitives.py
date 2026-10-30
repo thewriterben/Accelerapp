@@ -3,7 +3,7 @@ FreeRTOS IPC (Inter-Process Communication) primitives.
 Generates code for queues, semaphores, mutexes, and event groups.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 
 class IPCPrimitives:
